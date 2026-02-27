@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Omnibees Roadmap</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #0a0d12;
+    --surface: #12161d;
+    --surface2: #1a1f29;
+    --border: #232836;
+    --accent: #4f8ef7;
+    --accent2: #f7a24f;
+    --text: #e8eaf0;
+    --muted: #6b7280;
+    --now: #4ff7a2;
+    --next: #4f8ef7;
+    --backlog: #f7a24f;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background-image:
+      linear-gradient(rgba(79,142,247,.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(79,142,247,.04) 1px, transparent 1px);
+    background-size: 48px 48px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .screen {
+    position: fixed; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    z-index: 10;
+    transition: opacity .4s, visibility .4s;
+  }
+  .screen.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+
+  #loginScreen { background: var(--bg); }
+
+  .login-box {
+    width: 380px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 48px 40px;
+    position: relative;
+    overflow: hidden;
+  }
+  .login-box::before {
+    content: '';
+    position: absolute;
+    top: -80px; left: -80px;
+    width: 220px; height: 220px;
+    background: radial-gradient(circle, rgba(79,142,247,.18) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .login-logo {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.6rem;
+    letter-spacing: -.5px;
+    margin-bottom: 6px;
+  }
+  .login-logo span { color: var(--accent); }
+  .login-sub { color: var(--muted); font-size: .85rem; margin-bottom: 36px; }
+
+  .field-label {
+    font-size: .75rem;
+    font-family: 'DM Mono', monospace;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+    display: block;
+  }
+
+  input[type="password"] {
+    width: 100%;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px 16px;
+    color: var(--text);
+    font-family: 'DM Mono', monospace;
+    font-size: .9rem;
+    outline: none;
+    transition: border-color .2s;
+    margin-bottom: 20px;
+  }
+  input:focus { border-color: var(--accent); }
+
+  .btn {
+    width: 100%;
+    padding: 13px;
+    border: none;
+    border-radius: 8px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: .9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: opacity .2s, transform .1s;
+  }
+  .btn:active { transform: scale(.98); }
+  .btn-primary { background: var(--accent); color: #fff; }
+  .btn-primary:hover { opacity: .88; }
+
+  .error-msg {
+    color: #f77474;
+    font-size: .8rem;
+    font-family: 'DM Mono', monospace;
+    margin-top: -12px;
+    margin-bottom: 16px;
+    display: none;
+  }
+  .error-msg.show { display: block; }
+
+  #app {
+    position: relative; z-index: 1;
+    min-height: 100vh;
+    display: flex; flex-direction: column;
+  }
+
+  header {
+    padding: 24px 40px;
+    display: flex; align-items: center; justify-content: space-between;
+    border-bottom: 1px solid var(--border);
+    background: rgba(10,13,18,.8);
+    backdrop-filter: blur(8px);
+    position: sticky; top: 0; z-index: 5;
+  }
+
+  .header-left h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.5rem;
+    letter-spacing: -.3px;
+  }
+  .header-left h1 span { color: var(--accent); }
+  .header-left p { color: var(--muted); font-size: .8rem; margin-top: 2px; }
+  .header-right { display: flex; align-items: center; gap: 16px; }
+  .last-updated { font-family: 'DM Mono', monospace; font-size: .72rem; color: var(--muted); }
+
+  .btn-sm { padding: 8px 16px; border-radius: 6px; font-size: .8rem; width: auto; }
+  .btn-ghost { background: transparent; border: 1px solid var(--border); color: var(--muted); }
+  .btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
+
+  .tabs {
+    display: flex;
+    padding: 0 40px;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface);
+  }
+  .tab {
+    padding: 16px 24px;
+    cursor: pointer;
+    font-size: .85rem;
+    font-weight: 500;
+    color: var(--muted);
+    border-bottom: 2px solid transparent;
+    transition: color .2s, border-color .2s;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .tab:hover { color: var(--text); }
+  .tab.active { color: var(--text); border-bottom-color: var(--accent); }
+  .tab-dot { width: 7px; height: 7px; border-radius: 50%; }
+
+  main { padding: 40px; flex: 1; }
+
+  .roadmap-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
+
+  .column-header { display: flex; align-items: center; gap: 10px; margin-bottom: 20px; }
+  .column-title {
+    font-family: 'DM Mono', monospace;
+    font-size: .78rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-weight: 500;
+  }
+  .column-badge {
+    font-family: 'DM Mono', monospace;
+    font-size: .7rem;
+    padding: 2px 8px;
+    border-radius: 99px;
+    background: var(--surface2);
+    color: var(--muted);
+  }
+  .col-indicator { width: 8px; height: 8px; border-radius: 2px; flex-shrink: 0; }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 18px 20px;
+    margin-bottom: 12px;
+    transition: border-color .2s, transform .15s;
+    position: relative;
+    overflow: hidden;
+    animation: fadeUp .3s ease both;
+  }
+  .card:hover { border-color: #2d3447; transform: translateY(-1px); }
+  .card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; }
+
+  .card-type {
+    font-family: 'DM Mono', monospace;
+    font-size: .68rem;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 8px;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .card-type-badge { padding: 2px 7px; border-radius: 4px; font-size: .65rem; }
+  .card-name { font-size: .92rem; font-weight: 500; line-height: 1.45; margin-bottom: 10px; }
+  .card-desc { font-size: .82rem; color: var(--muted); line-height: 1.5; margin-bottom: 6px; }
+  .card-meta { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+  .meta-tag {
+    font-family: 'DM Mono', monospace;
+    font-size: .68rem;
+    color: var(--muted);
+    background: var(--surface2);
+    padding: 3px 8px;
+    border-radius: 4px;
+  }
+
+  .col-now .card::before { background: var(--now); }
+  .col-now .col-indicator { background: var(--now); }
+  .col-now .column-title { color: var(--now); }
+
+  .col-next .card::before { background: var(--next); }
+  .col-next .col-indicator { background: var(--next); }
+  .col-next .column-title { color: var(--next); }
+
+  .col-backlog .card::before { background: var(--backlog); }
+  .col-backlog .col-indicator { background: var(--backlog); }
+  .col-backlog .column-title { color: var(--backlog); }
+
+  .type-epic .card-type-badge { background: rgba(79,142,247,.15); color: var(--accent); }
+  .type-release .card-type-badge { background: rgba(79,247,162,.1); color: var(--now); }
+
+  .loading-state { text-align: center; padding: 80px 20px; color: var(--muted); }
+  .spinner {
+    width: 32px; height: 32px;
+    border: 2px solid var(--border);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: spin .8s linear infinite;
+    margin: 0 auto 16px;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .empty-col {
+    border: 1px dashed var(--border);
+    border-radius: 10px;
+    padding: 32px 20px;
+    text-align: center;
+    color: var(--muted);
+    font-size: .8rem;
+    font-family: 'DM Mono', monospace;
+  }
+
+  .error-banner {
+    background: rgba(247,116,116,.08);
+    border: 1px solid rgba(247,116,116,.2);
+    border-radius: 10px;
+    padding: 20px 24px;
+    color: #f77474;
+    font-size: .85rem;
+    margin-bottom: 24px;
+    display: none;
+  }
+  .error-banner.show { display: block; }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @media (max-width: 900px) {
+    .roadmap-grid { grid-template-columns: 1fr; }
+    header { padding: 16px 20px; }
+    main { padding: 24px 20px; }
+    .tabs { padding: 0 20px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div class="screen" id="loginScreen">
+  <div class="login-box">
+    <div class="login-logo">Omni<span>Roadmap</span></div>
+    <div class="login-sub">Portal interno de produto · Omnibees</div>
+    <label class="field-label">Password de acesso</label>
+    <input type="password" id="loginInput" placeholder="••••••••" />
+    <div class="error-msg" id="loginError">Password incorreta. Tenta novamente.</div>
+    <button class="btn btn-primary" onclick="doLogin()">Entrar</button>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="app" style="display:none">
+  <header>
+    <div class="header-left">
+      <h1>Omni<span>Roadmap</span></h1>
+      <p>Omnibees Product · omnibees.aha.io</p>
+    </div>
+    <div class="header-right">
+      <span class="last-updated" id="lastUpdated"></span>
+      <button class="btn btn-ghost btn-sm" onclick="refreshData()">↻ Atualizar</button>
+      <button class="btn btn-ghost btn-sm" onclick="doLogout()">Sair</button>
+    </div>
+  </header>
+
+  <div class="tabs">
+    <div class="tab active" onclick="setTab('epics')" id="tab-epics">
+      <span class="tab-dot" style="background:var(--accent)"></span> Épicos
+    </div>
+    <div class="tab" onclick="setTab('releases')" id="tab-releases">
+      <span class="tab-dot" style="background:var(--accent2)"></span> Releases
+    </div>
+  </div>
+
+  <main>
+    <div class="error-banner" id="errorBanner"></div>
+    <div id="content">
+      <div class="loading-state"><div class="spinner"></div><p>A carregar dados do Aha!…</p></div>
+    </div>
+  </main>
+</div>
+
+<script>
+// ─── CONFIG ────────────────────────────────────────────────────────────────
+const SITE_PASSWORD = 'omnibees2024';   // ← altera esta password
+const WORKER_URL    = 'WORKER_URL_AQUI'; // ← após criar o Cloudflare Worker,
+                                          //   substitui por ex:
+                                          //   'https://aha-proxy.asaantunes.workers.dev'
+// ───────────────────────────────────────────────────────────────────────────
+
+// Status do Aha! → coluna (ajusta conforme os teus workflows)
+const NOW_STATUSES     = ['in progress', 'in development', 'under review', 'em progresso', 'started'];
+const NEXT_STATUSES    = ['planned', 'ready to develop', 'ready', 'next', 'a seguir', 'scheduled'];
+
+let currentTab = 'epics';
+let allData    = { epics: [], releases: [] };
+
+// ─── AUTH ──────────────────────────────────────────────────────────────────
+function doLogin() {
+  const pw = document.getElementById('loginInput').value;
+  if (pw === SITE_PASSWORD) {
+    document.getElementById('loginScreen').classList.add('hidden');
+    document.getElementById('app').style.display = 'flex';
+    document.getElementById('app').style.flexDirection = 'column';
+    loadData();
+  } else {
+    document.getElementById('loginError').classList.add('show');
+  }
+}
+document.getElementById('loginInput').addEventListener('keydown', e => {
+  if (e.key === 'Enter') doLogin();
+});
+
+function doLogout() {
+  allData = { epics: [], releases: [] };
+  document.getElementById('app').style.display = 'none';
+  document.getElementById('loginInput').value = '';
+  document.getElementById('loginScreen').classList.remove('hidden');
+}
+
+// ─── TABS ──────────────────────────────────────────────────────────────────
+function setTab(tab) {
+  currentTab = tab;
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('tab-' + tab).classList.add('active');
+  renderRoadmap();
+}
+
+// ─── API (via Cloudflare Worker) ───────────────────────────────────────────
+async function ahaGet(path) {
+  const url = `${WORKER_URL}?path=${encodeURIComponent(path)}`;
+  const res = await fetch(url);
+  if (!res.ok) throw new Error(`HTTP ${res.status}`);
+  return res.json();
+}
+
+async function loadData() {
+  showLoading();
+  hideError();
+  try {
+    const prods = await ahaGet('products');
+    const product = prods.products.find(p =>
+      p.name.toLowerCase().includes('omnibees')
+    ) || prods.products[0];
+    const ref = product.reference_prefix;
+
+    const [epicsRes, releasesRes] = await Promise.all([
+      ahaGet(`products/${ref}/epics?per_page=200`),
+      ahaGet(`products/${ref}/releases?per_page=200`)
+    ]);
+
+    allData.epics    = epicsRes.epics    || [];
+    allData.releases = releasesRes.releases || [];
+
+    const now = new Date();
+    document.getElementById('lastUpdated').textContent =
+      `Atualizado às ${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')}`;
+
+    renderRoadmap();
+  } catch (err) {
+    showError(`Erro ao carregar dados: ${err.message}. Verifica a configuração do Worker.`);
+  }
+}
+
+function refreshData() { loadData(); }
+
+// ─── CLASSIFY ──────────────────────────────────────────────────────────────
+function classify(statusName) {
+  if (!statusName) return 'backlog';
+  const s = statusName.toLowerCase();
+  if (NOW_STATUSES.some(x => s.includes(x)))  return 'now';
+  if (NEXT_STATUSES.some(x => s.includes(x))) return 'next';
+  return 'backlog';
+}
+
+// ─── RENDER ────────────────────────────────────────────────────────────────
+function renderRoadmap() {
+  const items = allData[currentTab];
+  const type  = currentTab === 'epics' ? 'epic' : 'release';
+
+  const now     = items.filter(i => classify(i.workflow_status?.name) === 'now');
+  const next    = items.filter(i => classify(i.workflow_status?.name) === 'next');
+  const backlog = items.filter(i => classify(i.workflow_status?.name) === 'backlog');
+
+  document.getElementById('content').innerHTML = `
+    <div class="roadmap-grid">
+      <div class="col-now">
+        <div class="column-header">
+          <div class="col-indicator"></div>
+          <span class="column-title">Now</span>
+          <span class="column-badge">${now.length}</span>
+        </div>
+        ${renderCards(now, type) || '<div class="empty-col">Sem itens em progresso</div>'}
+      </div>
+      <div class="col-next">
+        <div class="column-header">
+          <div class="col-indicator"></div>
+          <span class="column-title">Next</span>
+          <span class="column-badge">${next.length}</span>
+        </div>
+        ${renderCards(next, type) || '<div class="empty-col">Sem itens planeados</div>'}
+      </div>
+      <div class="col-backlog">
+        <div class="column-header">
+          <div class="col-indicator"></div>
+          <span class="column-title">Backlog</span>
+          <span class="column-badge">${backlog.length}</span>
+        </div>
+        ${renderCards(backlog, type) || '<div class="empty-col">Backlog vazio</div>'}
+      </div>
+    </div>
+  `;
+}
+
+function renderCards(items, type) {
+  if (!items.length) return '';
+  return items.map((item, i) => {
+    const status  = item.workflow_status?.name || '—';
+    const ref     = item.reference_num || '';
+    const rawDesc = item.description?.body || '';
+    const desc    = stripHtml(rawDesc).substring(0, 120) + (rawDesc.length > 120 ? '…' : '');
+    const start   = item.start_date || item.start_on || '';
+    const end     = item.end_date   || item.release_date || '';
+    const label   = type === 'epic' ? 'Épico' : 'Release';
+
+    return `
+      <div class="card type-${type}" style="animation-delay:${i * 40}ms">
+        <div class="card-type">
+          <span class="card-type-badge">${label}</span>
+          <span style="color:var(--muted);font-size:.68rem">${ref}</span>
+        </div>
+        <div class="card-name">${item.name}</div>
+        ${desc ? `<div class="card-desc">${desc}</div>` : ''}
+        <div class="card-meta">
+          <span class="meta-tag">⚡ ${status}</span>
+          ${start ? `<span class="meta-tag">▶ ${fmtDate(start)}</span>` : ''}
+          ${end   ? `<span class="meta-tag">⏹ ${fmtDate(end)}</span>`   : ''}
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function stripHtml(html) {
+  const d = document.createElement('div');
+  d.innerHTML = html;
+  return d.textContent || d.innerText || '';
+}
+
+function fmtDate(d) {
+  try { return new Date(d).toLocaleDateString('pt-PT', { day: '2-digit', month: 'short', year: 'numeric' }); }
+  catch { return d; }
+}
+
+function showLoading() {
+  document.getElementById('content').innerHTML =
+    '<div class="loading-state"><div class="spinner"></div><p>A carregar dados do Aha!…</p></div>';
+}
+function showError(msg) {
+  const el = document.getElementById('errorBanner');
+  el.textContent = msg;
+  el.classList.add('show');
+  document.getElementById('content').innerHTML = '';
+}
+function hideError() {
+  document.getElementById('errorBanner').classList.remove('show');
+}
+</script>
+</body>
+</html>
