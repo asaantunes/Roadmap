@@ -1,531 +1,712 @@
 <!DOCTYPE html>
 <html lang="pt">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Omnibees Roadmap</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
 <style>
-  :root {
-    --bg: #0a0d12;
-    --surface: #12161d;
-    --surface2: #1a1f29;
-    --border: #232836;
-    --accent: #4f8ef7;
-    --accent2: #f7a24f;
-    --text: #e8eaf0;
-    --muted: #6b7280;
-    --now: #4ff7a2;
-    --next: #4f8ef7;
-    --backlog: #f7a24f;
-  }
+:root {
+  --bg: #f4f3ef;
+  --white: #ffffff;
+  --dark: #1a1a1a;
+  --mid: #444;
+  --muted: #888;
+  --border: #e0ddd6;
+  --accent: #1a1a1a;
+  --now-bg: #1a1a1a;
+  --now-text: #ffffff;
+  --next-bg: #ffffff;
+  --next-text: #1a1a1a;
+  --future-bg: #f4f3ef;
+  --future-text: #1a1a1a;
+  --risk-red: #e63946;
+  --risk-orange: #f4a261;
+  --risk-yellow: #e9c46a;
+  --progress-bg: #e0ddd6;
+  --progress-fill: #1a1a1a;
+}
 
-  * { margin: 0; padding: 0; box-sizing: border-box; }
+* { margin: 0; padding: 0; box-sizing: border-box; }
 
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: 'DM Sans', sans-serif;
-    min-height: 100vh;
-    overflow-x: hidden;
-  }
+body {
+  background: var(--bg);
+  color: var(--dark);
+  font-family: 'Inter', sans-serif;
+  min-height: 100vh;
+}
 
-  body::before {
-    content: '';
-    position: fixed; inset: 0;
-    background-image:
-      linear-gradient(rgba(79,142,247,.04) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(79,142,247,.04) 1px, transparent 1px);
-    background-size: 48px 48px;
-    pointer-events: none;
-    z-index: 0;
-  }
+/* ── LOGIN ── */
+#loginScreen {
+  position: fixed; inset: 0;
+  background: var(--dark);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 100;
+  transition: opacity .5s, visibility .5s;
+}
+#loginScreen.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
 
-  .screen {
-    position: fixed; inset: 0;
-    display: flex; align-items: center; justify-content: center;
-    z-index: 10;
-    transition: opacity .4s, visibility .4s;
-  }
-  .screen.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+.login-box {
+  text-align: center;
+  width: 340px;
+}
+.login-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 2.4rem;
+  font-weight: 800;
+  color: #fff;
+  letter-spacing: -1px;
+  margin-bottom: 4px;
+}
+.login-title span { color: #f4a261; }
+.login-sub { color: #666; font-size: .85rem; margin-bottom: 40px; }
 
-  #loginScreen { background: var(--bg); }
+.login-input {
+  width: 100%;
+  background: #2a2a2a;
+  border: 1px solid #333;
+  border-radius: 8px;
+  padding: 14px 18px;
+  color: #fff;
+  font-family: 'Inter', sans-serif;
+  font-size: .95rem;
+  outline: none;
+  text-align: center;
+  letter-spacing: 4px;
+  margin-bottom: 12px;
+  transition: border-color .2s;
+}
+.login-input:focus { border-color: #f4a261; }
+.login-btn {
+  width: 100%;
+  padding: 14px;
+  background: #f4a261;
+  color: #1a1a1a;
+  border: none;
+  border-radius: 8px;
+  font-family: 'Syne', sans-serif;
+  font-size: .95rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: opacity .2s;
+}
+.login-btn:hover { opacity: .88; }
+.login-error {
+  color: #e63946;
+  font-size: .8rem;
+  margin-top: 10px;
+  display: none;
+}
+.login-error.show { display: block; }
 
-  .login-box {
-    width: 380px;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    padding: 48px 40px;
-    position: relative;
-    overflow: hidden;
-  }
-  .login-box::before {
-    content: '';
-    position: absolute;
-    top: -80px; left: -80px;
-    width: 220px; height: 220px;
-    background: radial-gradient(circle, rgba(79,142,247,.18) 0%, transparent 70%);
-    pointer-events: none;
-  }
+/* ── APP ── */
+#app { display: none; min-height: 100vh; }
 
-  .login-logo {
-    font-family: 'DM Serif Display', serif;
-    font-size: 1.6rem;
-    letter-spacing: -.5px;
-    margin-bottom: 6px;
-  }
-  .login-logo span { color: var(--accent); }
-  .login-sub { color: var(--muted); font-size: .85rem; margin-bottom: 36px; }
+/* ── HEADER ── */
+header {
+  background: var(--dark);
+  color: #fff;
+  padding: 20px 48px;
+  display: flex; align-items: center; justify-content: space-between;
+  position: sticky; top: 0; z-index: 10;
+}
+.logo {
+  font-family: 'Syne', sans-serif;
+  font-size: 1.4rem;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+}
+.logo span { color: #f4a261; }
+.header-meta { display: flex; align-items: center; gap: 20px; }
+.header-date { font-size: .78rem; color: #888; }
+.header-btn {
+  background: transparent;
+  border: 1px solid #333;
+  color: #888;
+  padding: 7px 14px;
+  border-radius: 6px;
+  font-size: .78rem;
+  cursor: pointer;
+  font-family: 'Inter', sans-serif;
+  transition: border-color .2s, color .2s;
+}
+.header-btn:hover { border-color: #f4a261; color: #f4a261; }
 
-  .field-label {
-    font-size: .75rem;
-    font-family: 'DM Mono', monospace;
-    color: var(--muted);
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    margin-bottom: 8px;
-    display: block;
-  }
+/* ── MAIN ── */
+main { padding: 48px; }
 
-  input[type="password"] {
-    width: 100%;
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 12px 16px;
-    color: var(--text);
-    font-family: 'DM Mono', monospace;
-    font-size: .9rem;
-    outline: none;
-    transition: border-color .2s;
-    margin-bottom: 20px;
-  }
-  input:focus { border-color: var(--accent); }
+/* ── SECTION TITLE ── */
+.section-label {
+  font-family: 'Syne', sans-serif;
+  font-size: .7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  color: var(--muted);
+  margin-bottom: 16px;
+  display: flex; align-items: center; gap: 12px;
+}
+.section-label::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
 
-  .btn {
-    width: 100%;
-    padding: 13px;
-    border: none;
-    border-radius: 8px;
-    font-family: 'DM Sans', sans-serif;
-    font-size: .9rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: opacity .2s, transform .1s;
-  }
-  .btn:active { transform: scale(.98); }
-  .btn-primary { background: var(--accent); color: #fff; }
-  .btn-primary:hover { opacity: .88; }
+/* ── META BLOCK ── */
+.meta-block { margin-bottom: 48px; }
 
-  .error-msg {
-    color: #f77474;
-    font-size: .8rem;
-    font-family: 'DM Mono', monospace;
-    margin-top: -12px;
-    margin-bottom: 16px;
-    display: none;
-  }
-  .error-msg.show { display: block; }
+.meta-header {
+  display: flex; align-items: flex-start; justify-content: space-between;
+  margin-bottom: 24px;
+  flex-wrap: wrap; gap: 12px;
+}
+.meta-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 1.6rem;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  line-height: 1.1;
+}
+.meta-dates {
+  font-size: .78rem;
+  color: var(--muted);
+  margin-top: 4px;
+}
+.meta-pill {
+  font-size: .72rem;
+  font-weight: 600;
+  padding: 5px 14px;
+  border-radius: 99px;
+  font-family: 'Syne', sans-serif;
+  letter-spacing: .5px;
+  white-space: nowrap;
+}
+.pill-now    { background: var(--dark); color: #fff; }
+.pill-next   { background: var(--border); color: var(--dark); }
+.pill-future { background: transparent; border: 1px solid var(--border); color: var(--muted); }
 
-  #app {
-    position: relative; z-index: 1;
-    min-height: 100vh;
-    display: flex; flex-direction: column;
-  }
+/* ── SQUADS GRID ── */
+.squads-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 16px;
+}
 
-  header {
-    padding: 24px 40px;
-    display: flex; align-items: center; justify-content: space-between;
-    border-bottom: 1px solid var(--border);
-    background: rgba(10,13,18,.8);
-    backdrop-filter: blur(8px);
-    position: sticky; top: 0; z-index: 5;
-  }
+/* ── SQUAD CARD ── */
+.squad-card {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+}
+.squad-header {
+  padding: 14px 18px;
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+}
+.squad-name {
+  font-family: 'Syne', sans-serif;
+  font-size: .82rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+.squad-count {
+  font-size: .72rem;
+  color: var(--muted);
+  background: var(--bg);
+  padding: 2px 8px;
+  border-radius: 99px;
+}
 
-  .header-left h1 {
-    font-family: 'DM Serif Display', serif;
-    font-size: 1.5rem;
-    letter-spacing: -.3px;
-  }
-  .header-left h1 span { color: var(--accent); }
-  .header-left p { color: var(--muted); font-size: .8rem; margin-top: 2px; }
-  .header-right { display: flex; align-items: center; gap: 16px; }
-  .last-updated { font-family: 'DM Mono', monospace; font-size: .72rem; color: var(--muted); }
+/* ── EPIC ROW ── */
+.epic-row {
+  padding: 12px 18px;
+  border-bottom: 1px solid #f5f4f0;
+  display: flex; flex-direction: column; gap: 8px;
+}
+.epic-row:last-child { border-bottom: none; }
 
-  .btn-sm { padding: 8px 16px; border-radius: 6px; font-size: .8rem; width: auto; }
-  .btn-ghost { background: transparent; border: 1px solid var(--border); color: var(--muted); }
-  .btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
+.epic-top {
+  display: flex; align-items: flex-start; justify-content: space-between; gap: 8px;
+}
+.epic-name {
+  font-size: .85rem;
+  font-weight: 500;
+  line-height: 1.35;
+  flex: 1;
+}
+.risk-badge {
+  display: flex; align-items: center; gap: 4px;
+  font-size: .68rem;
+  font-weight: 600;
+  padding: 3px 8px;
+  border-radius: 4px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.risk-unplanned { background: #fce8ea; color: var(--risk-red); }
+.risk-atrisk    { background: #fef3e2; color: #c76b00; }
+.risk-long      { background: #fefae0; color: #997000; }
 
-  .tabs {
-    display: flex;
-    padding: 0 40px;
-    border-bottom: 1px solid var(--border);
-    background: var(--surface);
-  }
-  .tab {
-    padding: 16px 24px;
-    cursor: pointer;
-    font-size: .85rem;
-    font-weight: 500;
-    color: var(--muted);
-    border-bottom: 2px solid transparent;
-    transition: color .2s, border-color .2s;
-    display: flex; align-items: center; gap: 8px;
-  }
-  .tab:hover { color: var(--text); }
-  .tab.active { color: var(--text); border-bottom-color: var(--accent); }
-  .tab-dot { width: 7px; height: 7px; border-radius: 50%; }
+.epic-bottom {
+  display: flex; align-items: center; gap: 10px;
+}
+.epic-status {
+  font-size: .7rem;
+  color: var(--muted);
+  background: var(--bg);
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+.progress-bar {
+  flex: 1;
+  height: 4px;
+  background: var(--progress-bg);
+  border-radius: 99px;
+  overflow: hidden;
+}
+.progress-fill {
+  height: 100%;
+  background: var(--dark);
+  border-radius: 99px;
+  transition: width .4s ease;
+}
+.progress-pct {
+  font-size: .68rem;
+  color: var(--muted);
+  min-width: 28px;
+  text-align: right;
+}
 
-  main { padding: 40px; flex: 1; }
+/* ── LOADING ── */
+.loading {
+  text-align: center;
+  padding: 80px;
+  color: var(--muted);
+}
+.spinner {
+  width: 28px; height: 28px;
+  border: 2px solid var(--border);
+  border-top-color: var(--dark);
+  border-radius: 50%;
+  animation: spin .7s linear infinite;
+  margin: 0 auto 14px;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
 
-  .roadmap-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 24px;
-  }
+/* ── ERROR ── */
+.error-box {
+  background: #fce8ea;
+  border: 1px solid #f5c0c4;
+  border-radius: 10px;
+  padding: 20px 24px;
+  color: var(--risk-red);
+  font-size: .85rem;
+  margin-bottom: 24px;
+  display: none;
+}
+.error-box.show { display: block; }
 
-  .column-header { display: flex; align-items: center; gap: 10px; margin-bottom: 20px; }
-  .column-title {
-    font-family: 'DM Mono', monospace;
-    font-size: .78rem;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    font-weight: 500;
-  }
-  .column-badge {
-    font-family: 'DM Mono', monospace;
-    font-size: .7rem;
-    padding: 2px 8px;
-    border-radius: 99px;
-    background: var(--surface2);
-    color: var(--muted);
-  }
-  .col-indicator { width: 8px; height: 8px; border-radius: 2px; flex-shrink: 0; }
+/* ── EMPTY ── */
+.empty-squad {
+  padding: 20px 18px;
+  font-size: .8rem;
+  color: var(--muted);
+  text-align: center;
+  font-style: italic;
+}
 
-  .card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 18px 20px;
-    margin-bottom: 12px;
-    transition: border-color .2s, transform .15s;
-    position: relative;
-    overflow: hidden;
-    animation: fadeUp .3s ease both;
-  }
-  .card:hover { border-color: #2d3447; transform: translateY(-1px); }
-  .card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; }
+/* ── FUTURE GRID ── */
+.future-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 12px;
+}
+.future-meta-card {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 16px 18px;
+}
+.future-meta-name {
+  font-family: 'Syne', sans-serif;
+  font-size: .85rem;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+.future-meta-dates {
+  font-size: .72rem;
+  color: var(--muted);
+  margin-bottom: 12px;
+}
+.future-epic-item {
+  font-size: .8rem;
+  padding: 5px 0;
+  border-bottom: 1px solid #f5f4f0;
+  display: flex; align-items: center; gap: 6px;
+  color: var(--mid);
+}
+.future-epic-item:last-child { border-bottom: none; }
 
-  .card-type {
-    font-family: 'DM Mono', monospace;
-    font-size: .68rem;
-    text-transform: uppercase;
-    letter-spacing: 1.5px;
-    margin-bottom: 8px;
-    display: flex; align-items: center; gap: 6px;
-  }
-  .card-type-badge { padding: 2px 7px; border-radius: 4px; font-size: .65rem; }
-  .card-name { font-size: .92rem; font-weight: 500; line-height: 1.45; margin-bottom: 10px; }
-  .card-desc { font-size: .82rem; color: var(--muted); line-height: 1.5; margin-bottom: 6px; }
-  .card-meta { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
-  .meta-tag {
-    font-family: 'DM Mono', monospace;
-    font-size: .68rem;
-    color: var(--muted);
-    background: var(--surface2);
-    padding: 3px 8px;
-    border-radius: 4px;
-  }
-
-  .col-now .card::before { background: var(--now); }
-  .col-now .col-indicator { background: var(--now); }
-  .col-now .column-title { color: var(--now); }
-
-  .col-next .card::before { background: var(--next); }
-  .col-next .col-indicator { background: var(--next); }
-  .col-next .column-title { color: var(--next); }
-
-  .col-backlog .card::before { background: var(--backlog); }
-  .col-backlog .col-indicator { background: var(--backlog); }
-  .col-backlog .column-title { color: var(--backlog); }
-
-  .type-epic .card-type-badge { background: rgba(79,142,247,.15); color: var(--accent); }
-  .type-release .card-type-badge { background: rgba(79,247,162,.1); color: var(--now); }
-
-  .loading-state { text-align: center; padding: 80px 20px; color: var(--muted); }
-  .spinner {
-    width: 32px; height: 32px;
-    border: 2px solid var(--border);
-    border-top-color: var(--accent);
-    border-radius: 50%;
-    animation: spin .8s linear infinite;
-    margin: 0 auto 16px;
-  }
-  @keyframes spin { to { transform: rotate(360deg); } }
-
-  .empty-col {
-    border: 1px dashed var(--border);
-    border-radius: 10px;
-    padding: 32px 20px;
-    text-align: center;
-    color: var(--muted);
-    font-size: .8rem;
-    font-family: 'DM Mono', monospace;
-  }
-
-  .error-banner {
-    background: rgba(247,116,116,.08);
-    border: 1px solid rgba(247,116,116,.2);
-    border-radius: 10px;
-    padding: 20px 24px;
-    color: #f77474;
-    font-size: .85rem;
-    margin-bottom: 24px;
-    display: none;
-  }
-  .error-banner.show { display: block; }
-
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(12px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-
-  @media (max-width: 900px) {
-    .roadmap-grid { grid-template-columns: 1fr; }
-    header { padding: 16px 20px; }
-    main { padding: 24px 20px; }
-    .tabs { padding: 0 20px; }
-  }
+/* ── RESPONSIVE ── */
+@media (max-width: 768px) {
+  main { padding: 24px 20px; }
+  header { padding: 16px 20px; }
+  .squads-grid { grid-template-columns: 1fr; }
+}
 </style>
 </head>
 <body>
 
 <!-- LOGIN -->
-<div class="screen" id="loginScreen">
+<div id="loginScreen">
   <div class="login-box">
-    <div class="login-logo">Omni<span>Roadmap</span></div>
-    <div class="login-sub">Portal interno de produto · Omnibees</div>
-    <label class="field-label">Password de acesso</label>
-    <input type="password" id="loginInput" placeholder="••••••••" />
-    <div class="error-msg" id="loginError">Password incorreta. Tenta novamente.</div>
-    <button class="btn btn-primary" onclick="doLogin()">Entrar</button>
+    <div class="login-title">Omni<span>Roadmap</span></div>
+    <div class="login-sub">Comité de Direção · Omnibees Product</div>
+    <input type="password" class="login-input" id="loginInput" placeholder="password" />
+    <button class="login-btn" onclick="doLogin()">Entrar</button>
+    <div class="login-error" id="loginError">Password incorreta</div>
   </div>
 </div>
 
 <!-- APP -->
-<div id="app" style="display:none">
+<div id="app">
   <header>
-    <div class="header-left">
-      <h1>Omni<span>Roadmap</span></h1>
-      <p>Omnibees Product · omnibees.aha.io</p>
-    </div>
-    <div class="header-right">
-      <span class="last-updated" id="lastUpdated"></span>
-      <button class="btn btn-ghost btn-sm" onclick="refreshData()">↻ Atualizar</button>
-      <button class="btn btn-ghost btn-sm" onclick="doLogout()">Sair</button>
+    <div class="logo">Omni<span>Roadmap</span></div>
+    <div class="header-meta">
+      <span class="header-date" id="headerDate"></span>
+      <button class="header-btn" onclick="loadData()">↻ Atualizar</button>
+      <button class="header-btn" onclick="doLogout()">Sair</button>
     </div>
   </header>
 
-  <div class="tabs">
-    <div class="tab active" onclick="setTab('epics')" id="tab-epics">
-      <span class="tab-dot" style="background:var(--accent)"></span> Épicos
-    </div>
-    <div class="tab" onclick="setTab('releases')" id="tab-releases">
-      <span class="tab-dot" style="background:var(--accent2)"></span> Releases
-    </div>
-  </div>
-
   <main>
-    <div class="error-banner" id="errorBanner"></div>
-    <div id="content">
-      <div class="loading-state"><div class="spinner"></div><p>A carregar dados do Aha!…</p></div>
-    </div>
+    <div class="error-box" id="errorBox"></div>
+    <div id="content"><div class="loading"><div class="spinner"></div><p>A carregar roadmap…</p></div></div>
   </main>
 </div>
 
 <script>
-// ─── CONFIG ────────────────────────────────────────────────────────────────
-const SITE_PASSWORD = 'omnibees2024';   // ← altera esta password
+// ─── CONFIG ────────────────────────────────────────────────────────
+const SITE_PASSWORD = 'omnibees2024';
 const WORKER_URL    = 'https://lucky-star-d742.ana-g-antunes.workers.dev';
-// ───────────────────────────────────────────────────────────────────────────
+// ───────────────────────────────────────────────────────────────────
 
-// Status do Aha! → coluna (ajusta conforme os teus workflows)
-const NOW_STATUSES     = ['in progress', 'in development', 'under review', 'em progresso', 'started'];
-const NEXT_STATUSES    = ['planned', 'ready to develop', 'ready', 'next', 'a seguir', 'scheduled'];
-
-let currentTab = 'epics';
-let allData    = { epics: [], releases: [] };
-
-// ─── AUTH ──────────────────────────────────────────────────────────────────
+// ─── AUTH ──────────────────────────────────────────────────────────
 function doLogin() {
-  const pw = document.getElementById('loginInput').value;
-  if (pw === SITE_PASSWORD) {
+  if (document.getElementById('loginInput').value === SITE_PASSWORD) {
     document.getElementById('loginScreen').classList.add('hidden');
-    document.getElementById('app').style.display = 'flex';
-    document.getElementById('app').style.flexDirection = 'column';
+    document.getElementById('app').style.display = 'block';
+    const now = new Date();
+    document.getElementById('headerDate').textContent =
+      now.toLocaleDateString('pt-PT', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
     loadData();
   } else {
     document.getElementById('loginError').classList.add('show');
   }
 }
-document.getElementById('loginInput').addEventListener('keydown', e => {
-  if (e.key === 'Enter') doLogin();
-});
+document.getElementById('loginInput').addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
 
 function doLogout() {
-  allData = { epics: [], releases: [] };
   document.getElementById('app').style.display = 'none';
   document.getElementById('loginInput').value = '';
   document.getElementById('loginScreen').classList.remove('hidden');
 }
 
-// ─── TABS ──────────────────────────────────────────────────────────────────
-function setTab(tab) {
-  currentTab = tab;
-  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-  document.getElementById('tab-' + tab).classList.add('active');
-  renderRoadmap();
-}
-
-// ─── API (via Cloudflare Worker) ───────────────────────────────────────────
+// ─── API ───────────────────────────────────────────────────────────
 async function ahaGet(path) {
-  const url = `${WORKER_URL}?path=${encodeURIComponent(path)}`;
-  const res = await fetch(url);
+  const res = await fetch(`${WORKER_URL}?path=${encodeURIComponent(path)}`);
   if (!res.ok) throw new Error(`HTTP ${res.status}`);
   return res.json();
 }
 
+// ─── LOAD DATA ─────────────────────────────────────────────────────
 async function loadData() {
   showLoading();
-  hideError();
   try {
-    const prods = await ahaGet('products');
-    const product = prods.products.find(p =>
-      p.name.toLowerCase().includes('omnibees')
-    ) || prods.products[0];
+    // Get products
+    const prodsData = await ahaGet('products');
+    const product = prodsData.products.find(p => p.name.toLowerCase().includes('omnibees')) || prodsData.products[0];
     const ref = product.reference_prefix;
 
-    const [epicsRes, releasesRes] = await Promise.all([
-      ahaGet(`products/${ref}/epics?per_page=200`),
-      ahaGet(`products/${ref}/releases?per_page=200`)
-    ]);
+    // Get releases
+    const relData = await ahaGet(`products/${ref}/releases?per_page=100`);
+    const releases = relData.releases || [];
 
-    allData.epics    = epicsRes.epics    || [];
-    allData.releases = releasesRes.releases || [];
+    // Classify releases by date
+    const today = new Date();
+    today.setHours(0,0,0,0);
 
-    const now = new Date();
-    document.getElementById('lastUpdated').textContent =
-      `Atualizado às ${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')}`;
+    const categorized = classifyReleases(releases, today);
 
-    renderRoadmap();
-  } catch (err) {
-    showError(`Erro ao carregar dados: ${err.message}. Verifica a configuração do Worker.`);
+    // Load epics for relevant releases (current + next 2)
+    const relevantReleases = [...categorized.current, ...categorized.next];
+    const epicsByRelease = {};
+
+    await Promise.all(relevantReleases.map(async rel => {
+      try {
+        const data = await ahaGet(`releases/${rel.id}/epics?per_page=100`);
+        epicsByRelease[rel.id] = data.epics || [];
+      } catch(e) {
+        epicsByRelease[rel.id] = [];
+      }
+    }));
+
+    // Load epics for future releases (just names, no deep fetch)
+    const futureEpicsByRelease = {};
+    await Promise.all(categorized.future.map(async rel => {
+      try {
+        const data = await ahaGet(`releases/${rel.id}/epics?per_page=100`);
+        futureEpicsByRelease[rel.id] = data.epics || [];
+      } catch(e) {
+        futureEpicsByRelease[rel.id] = [];
+      }
+    }));
+
+    renderAll(categorized, epicsByRelease, futureEpicsByRelease);
+  } catch(err) {
+    showError('Erro ao carregar dados: ' + err.message);
   }
 }
 
-function refreshData() { loadData(); }
+// ─── CLASSIFY RELEASES ─────────────────────────────────────────────
+function classifyReleases(releases, today) {
+  // Filter out releases without dates
+  const withDates = releases.filter(r => r.start_date || r.release_date || r.start_on);
 
-// ─── CLASSIFY ──────────────────────────────────────────────────────────────
-function classify(statusName) {
-  if (!statusName) return 'backlog';
-  const s = statusName.toLowerCase();
-  if (NOW_STATUSES.some(x => s.includes(x)))  return 'now';
-  if (NEXT_STATUSES.some(x => s.includes(x))) return 'next';
-  return 'backlog';
+  const parsed = withDates.map(r => ({
+    ...r,
+    _start: parseDate(r.start_date || r.start_on),
+    _end:   parseDate(r.release_date || r.end_date),
+  })).filter(r => r._start || r._end);
+
+  // Sort by start date
+  parsed.sort((a, b) => {
+    const aDate = a._start || a._end;
+    const bDate = b._start || b._end;
+    return aDate - bDate;
+  });
+
+  const current = [], next = [], future = [];
+
+  for (const r of parsed) {
+    const start = r._start || new Date(0);
+    const end   = r._end   || new Date(9999,0,1);
+
+    if (start <= today && end >= today) {
+      current.push(r);
+    } else if (start > today) {
+      if (next.length < 2) next.push(r);
+      else future.push(r);
+    }
+  }
+
+  // If nothing is "current", take the most recent past release
+  if (current.length === 0 && parsed.length > 0) {
+    const past = parsed.filter(r => (r._end || new Date(0)) < today);
+    if (past.length) current.push(past[past.length - 1]);
+  }
+
+  return { current, next, future };
 }
 
-// ─── RENDER ────────────────────────────────────────────────────────────────
-function renderRoadmap() {
-  const items = allData[currentTab];
-  const type  = currentTab === 'epics' ? 'epic' : 'release';
-
-  const now     = items.filter(i => classify(i.workflow_status?.name) === 'now');
-  const next    = items.filter(i => classify(i.workflow_status?.name) === 'next');
-  const backlog = items.filter(i => classify(i.workflow_status?.name) === 'backlog');
-
-  document.getElementById('content').innerHTML = `
-    <div class="roadmap-grid">
-      <div class="col-now">
-        <div class="column-header">
-          <div class="col-indicator"></div>
-          <span class="column-title">Now</span>
-          <span class="column-badge">${now.length}</span>
-        </div>
-        ${renderCards(now, type) || '<div class="empty-col">Sem itens em progresso</div>'}
-      </div>
-      <div class="col-next">
-        <div class="column-header">
-          <div class="col-indicator"></div>
-          <span class="column-title">Next</span>
-          <span class="column-badge">${next.length}</span>
-        </div>
-        ${renderCards(next, type) || '<div class="empty-col">Sem itens planeados</div>'}
-      </div>
-      <div class="col-backlog">
-        <div class="column-header">
-          <div class="col-indicator"></div>
-          <span class="column-title">Backlog</span>
-          <span class="column-badge">${backlog.length}</span>
-        </div>
-        ${renderCards(backlog, type) || '<div class="empty-col">Backlog vazio</div>'}
-      </div>
-    </div>
-  `;
+function parseDate(str) {
+  if (!str) return null;
+  const d = new Date(str);
+  return isNaN(d) ? null : d;
 }
 
-function renderCards(items, type) {
-  if (!items.length) return '';
-  return items.map((item, i) => {
-    const status  = item.workflow_status?.name || '—';
-    const ref     = item.reference_num || '';
-    const rawDesc = item.description?.body || '';
-    const desc    = stripHtml(rawDesc).substring(0, 120) + (rawDesc.length > 120 ? '…' : '');
-    const start   = item.start_date || item.start_on || '';
-    const end     = item.end_date   || item.release_date || '';
-    const label   = type === 'epic' ? 'Épico' : 'Release';
+// ─── GROUP BY SQUAD ────────────────────────────────────────────────
+function groupBySquad(epics) {
+  const squads = {};
+  for (const epic of epics) {
+    // Try to get squad from team name, product area, or parse from name
+    const squad = getSquad(epic);
+    if (!squads[squad]) squads[squad] = [];
+    squads[squad].push(epic);
+  }
+  return squads;
+}
 
-    return `
-      <div class="card type-${type}" style="animation-delay:${i * 40}ms">
-        <div class="card-type">
-          <span class="card-type-badge">${label}</span>
-          <span style="color:var(--muted);font-size:.68rem">${ref}</span>
+function getSquad(epic) {
+  // Try initiative/team tags
+  if (epic.teams && epic.teams.length) return epic.teams[0].name;
+  if (epic.initiative && epic.initiative.name) return epic.initiative.name;
+  // Try to parse "Meta X 2026 - SquadName" pattern from release name
+  if (epic.release && epic.release.name) {
+    const m = epic.release.name.match(/[-–]\s*(.+)$/);
+    if (m) return m[1].trim();
+  }
+  return 'Geral';
+}
+
+// ─── DELIVERY RISK ─────────────────────────────────────────────────
+function getRisk(epic) {
+  const flags = epic.score_facts || epic.delivery_risks || [];
+  // Check native delivery risk field
+  if (epic.due_date_risk) {
+    const r = epic.due_date_risk.toLowerCase();
+    if (r.includes('unplanned') || r.includes('não planeado') || r.includes('not planned')) return 'unplanned';
+    if (r.includes('risk') || r.includes('risco'))  return 'atrisk';
+    if (r.includes('long') || r.includes('longa'))  return 'long';
+  }
+  // Check flags array
+  if (Array.isArray(epic.flags) && epic.flags.length > 0) {
+    const f = (epic.flags[0].name || '').toLowerCase();
+    if (f.includes('não planeado') || f.includes('unplanned')) return 'unplanned';
+    if (f.includes('risco') || f.includes('risk'))             return 'atrisk';
+    if (f.includes('longa') || f.includes('long'))             return 'long';
+  }
+  return null;
+}
+
+function riskBadge(risk) {
+  if (!risk) return '';
+  const map = {
+    unplanned: ['⚠ Não planeado', 'risk-unplanned'],
+    atrisk:    ['⚡ Em risco',     'risk-atrisk'],
+    long:      ['⏳ Entrega longa','risk-long'],
+  };
+  const [label, cls] = map[risk];
+  return `<span class="risk-badge ${cls}">${label}</span>`;
+}
+
+// ─── RENDER ────────────────────────────────────────────────────────
+function renderAll(cat, epicsByRelease, futureEpicsByRelease) {
+  let html = '';
+
+  // ── CURRENT ──
+  if (cat.current.length) {
+    html += `<div class="section-label">Meta em curso</div>`;
+    for (const rel of cat.current) {
+      const epics = epicsByRelease[rel.id] || [];
+      html += renderMetaBlock(rel, epics, 'now');
+    }
+  }
+
+  // ── NEXT ──
+  if (cat.next.length) {
+    html += `<div class="section-label" style="margin-top:48px">Próximas metas</div>`;
+    for (const rel of cat.next) {
+      const epics = epicsByRelease[rel.id] || [];
+      html += renderMetaBlock(rel, epics, 'next');
+    }
+  }
+
+  // ── FUTURE ──
+  if (cat.future.length) {
+    html += `<div class="section-label" style="margin-top:48px">Metas futuras</div>`;
+    html += `<div class="future-grid">`;
+    for (const rel of cat.future) {
+      const epics = futureEpicsByRelease[rel.id] || [];
+      html += renderFutureCard(rel, epics);
+    }
+    html += `</div>`;
+  }
+
+  document.getElementById('content').innerHTML = html;
+}
+
+function renderMetaBlock(rel, epics, type) {
+  const pillClass = type === 'now' ? 'pill-now' : 'pill-next';
+  const pillLabel = type === 'now' ? '● Em curso' : '○ A seguir';
+  const dates = formatDateRange(rel._start, rel._end);
+
+  const squads = groupBySquad(epics);
+  const squadNames = Object.keys(squads).sort();
+
+  let squadsHtml = '';
+  if (squadNames.length === 0) {
+    squadsHtml = `<div style="color:var(--muted);font-size:.85rem;padding:16px 0">Sem épicos associados a esta meta.</div>`;
+  } else {
+    squadsHtml = `<div class="squads-grid">`;
+    for (const squad of squadNames) {
+      const squadEpics = squads[squad];
+      squadsHtml += `
+        <div class="squad-card">
+          <div class="squad-header">
+            <span class="squad-name">${squad}</span>
+            <span class="squad-count">${squadEpics.length} épico${squadEpics.length !== 1 ? 's' : ''}</span>
+          </div>
+          ${squadEpics.map(renderEpicRow).join('')}
+        </div>`;
+    }
+    squadsHtml += `</div>`;
+  }
+
+  return `
+    <div class="meta-block">
+      <div class="meta-header">
+        <div>
+          <div class="meta-title">${rel.name}</div>
+          <div class="meta-dates">${dates}</div>
         </div>
-        <div class="card-name">${item.name}</div>
-        ${desc ? `<div class="card-desc">${desc}</div>` : ''}
-        <div class="card-meta">
-          <span class="meta-tag">⚡ ${status}</span>
-          ${start ? `<span class="meta-tag">▶ ${fmtDate(start)}</span>` : ''}
-          ${end   ? `<span class="meta-tag">⏹ ${fmtDate(end)}</span>`   : ''}
-        </div>
+        <span class="meta-pill ${pillClass}">${pillLabel}</span>
       </div>
-    `;
+      ${squadsHtml}
+    </div>`;
+}
+
+function renderEpicRow(epic) {
+  const status   = epic.workflow_status?.name || '—';
+  const progress = epic.progress !== undefined ? Math.round(epic.progress) : null;
+  const risk     = getRisk(epic);
+
+  return `
+    <div class="epic-row">
+      <div class="epic-top">
+        <span class="epic-name">${epic.name}</span>
+        ${riskBadge(risk)}
+      </div>
+      <div class="epic-bottom">
+        <span class="epic-status">${status}</span>
+        ${progress !== null ? `
+          <div class="progress-bar"><div class="progress-fill" style="width:${progress}%"></div></div>
+          <span class="progress-pct">${progress}%</span>
+        ` : ''}
+      </div>
+    </div>`;
+}
+
+function renderFutureCard(rel, epics) {
+  const dates = formatDateRange(rel._start, rel._end);
+  const items = epics.slice(0, 8).map(e => {
+    const risk = getRisk(e);
+    const dot = risk === 'unplanned' ? '🔴' : risk === 'atrisk' ? '🟡' : risk === 'long' ? '🟠' : '·';
+    return `<div class="future-epic-item"><span>${dot}</span> ${e.name}</div>`;
   }).join('');
+  const more = epics.length > 8 ? `<div class="future-epic-item" style="color:var(--muted)">+ ${epics.length - 8} mais</div>` : '';
+
+  return `
+    <div class="future-meta-card">
+      <div class="future-meta-name">${rel.name}</div>
+      <div class="future-meta-dates">${dates}</div>
+      ${items || '<div style="color:var(--muted);font-size:.78rem">Sem épicos definidos</div>'}
+      ${more}
+    </div>`;
 }
 
-function stripHtml(html) {
-  const d = document.createElement('div');
-  d.innerHTML = html;
-  return d.textContent || d.innerText || '';
-}
-
-function fmtDate(d) {
-  try { return new Date(d).toLocaleDateString('pt-PT', { day: '2-digit', month: 'short', year: 'numeric' }); }
-  catch { return d; }
+// ─── HELPERS ───────────────────────────────────────────────────────
+function formatDateRange(start, end) {
+  const fmt = d => d ? d.toLocaleDateString('pt-PT', { day: 'numeric', month: 'short', year: 'numeric' }) : '?';
+  if (start && end) return `${fmt(start)} → ${fmt(end)}`;
+  if (start) return `A partir de ${fmt(start)}`;
+  if (end)   return `Até ${fmt(end)}`;
+  return '';
 }
 
 function showLoading() {
   document.getElementById('content').innerHTML =
-    '<div class="loading-state"><div class="spinner"></div><p>A carregar dados do Aha!…</p></div>';
+    '<div class="loading"><div class="spinner"></div><p>A carregar roadmap…</p></div>';
+  document.getElementById('errorBox').classList.remove('show');
 }
+
 function showError(msg) {
-  const el = document.getElementById('errorBanner');
-  el.textContent = msg;
-  el.classList.add('show');
+  document.getElementById('errorBox').textContent = msg;
+  document.getElementById('errorBox').classList.add('show');
   document.getElementById('content').innerHTML = '';
-}
-function hideError() {
-  document.getElementById('errorBanner').classList.remove('show');
 }
 </script>
 </body>
