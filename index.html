@@ -473,8 +473,11 @@ async function loadData() {
 
 // ─── CLASSIFY RELEASES ─────────────────────────────────────────────
 function classifyReleases(releases, today) {
-  // Filter out releases without dates
-  const withDates = releases.filter(r => r.start_date || r.release_date || r.start_on);
+  // Filter only releases matching "Meta N 2026 - Team" pattern
+  const withDates = releases.filter(r =>
+    /^Meta\s+\d+\s+2026\s*[-–]/i.test(r.name) &&
+    (r.start_date || r.release_date || r.start_on)
+  );
 
   const parsed = withDates.map(r => ({
     ...r,
