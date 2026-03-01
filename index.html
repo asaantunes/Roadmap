@@ -119,6 +119,7 @@ header {
 .logo span { color: #f4a261; }
 .header-meta { display: flex; align-items: center; gap: 20px; }
 .header-date { font-size: .78rem; color: #888; }
+.header-refresh-info { font-size: .72rem; color: #555; white-space: nowrap; }
 .header-btn {
   background: transparent;
   border: 1px solid #333;
@@ -377,6 +378,7 @@ main { padding: 48px; }
     <div class="logo">Omni<span>Roadmap</span></div>
     <div class="header-meta">
       <span class="header-date" id="headerDate"></span>
+      <span class="header-refresh-info" id="headerRefreshInfo"></span>
       <button class="header-btn" onclick="loadData()">↻ Atualizar</button>
       <button class="header-btn" onclick="doLogout()">Sair</button>
     </div>
@@ -390,9 +392,37 @@ main { padding: 48px; }
 
 <script>
 // ─── CONFIG ────────────────────────────────────────────────────────
-const SITE_PASSWORD = 'omnibees2024';
-const WORKER_URL    = 'https://lucky-star-d742.ana-g-antunes.workers.dev';
+const SITE_PASSWORD   = 'omnibees2024';
+const WORKER_URL      = 'https://lucky-star-d742.ana-g-antunes.workers.dev';
+const AUTO_REFRESH_MS = 24 * 60 * 60 * 1000; // 24 horas
 // ───────────────────────────────────────────────────────────────────
+
+// ─── AUTO-REFRESH ──────────────────────────────────────────────────
+let _autoRefreshTimer = null;
+
+function updateRefreshInfo() {
+  const el = document.getElementById('headerRefreshInfo');
+  if (!el) return;
+  const now = new Date();
+  const next = new Date(now.getTime() + AUTO_REFRESH_MS);
+  el.textContent = `↻ próximo refresh às ${next.toLocaleTimeString('pt-PT', { hour: '2-digit', minute: '2-digit' })}`;
+}
+
+function startAutoRefresh() {
+  stopAutoRefresh();
+  updateRefreshInfo();
+  _autoRefreshTimer = setInterval(() => {
+    loadData();
+    updateRefreshInfo();
+  }, AUTO_REFRESH_MS);
+}
+
+function stopAutoRefresh() {
+  if (_autoRefreshTimer) {
+    clearInterval(_autoRefreshTimer);
+    _autoRefreshTimer = null;
+  }
+}
 
 // ─── AUTH ──────────────────────────────────────────────────────────
 function doLogin() {
@@ -403,6 +433,7 @@ function doLogin() {
     document.getElementById('headerDate').textContent =
       now.toLocaleDateString('pt-PT', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
     loadData();
+    startAutoRefresh();
   } else {
     document.getElementById('loginError').classList.add('show');
   }
@@ -410,6 +441,7 @@ function doLogin() {
 document.getElementById('loginInput').addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
 
 function doLogout() {
+  stopAutoRefresh();
   document.getElementById('app').style.display = 'none';
   document.getElementById('loginInput').value = '';
   document.getElementById('loginScreen').classList.remove('hidden');
