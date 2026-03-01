@@ -5,9 +5,9 @@
 - **Iniciar servidor**: usar `preview_start "Roadmap"` (MCP Claude Preview)
 - **API proxy**: Cloudflare Worker em `https://lucky-star-d742.ana-g-antunes.workers.dev`
 - **Fonte de dados**: Aha! REST API via proxy (autenticação Bearer no Worker)
-- **Git**: worktree em `.claude/worktrees/nostalgic-napier`, push force para `main`
+- **Git**: worktree em `.claude/worktrees/hopeful-shaw`, push force para `main`
   ```
-  git push origin claude/nostalgic-napier:main --force
+  git push origin claude/hopeful-shaw:main --force
   ```
 - **Password do site**: `omnibees2024`
 
@@ -84,6 +84,7 @@ default desconhecido → group 9
 - Épicos com nome a terminar em `-` estão ocultos na vista resumida (são "épicos de suporte")
 
 ## Commits Recentes (main)
+- `a8298a6` — Auto-refresh diário dos dados (24h)
 - `8c9c3b7` — Colunas matrix 320px → 420px
 - `590fe8a` — Clicar squad nos highlights navega até célula com flash
 - `e2a01e2` — Highlights TV: top 3 por squad com indicador +N
