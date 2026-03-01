@@ -154,71 +154,152 @@ main { padding: 48px; }
   background: var(--border);
 }
 
-/* ── META BLOCK ── */
-.meta-block { margin-bottom: 48px; }
-
-.meta-header {
-  display: flex; align-items: flex-start; justify-content: space-between;
-  margin-bottom: 24px;
-  flex-wrap: wrap; gap: 12px;
-}
-.meta-title {
-  font-family: 'Syne', sans-serif;
-  font-size: 1.6rem;
-  font-weight: 800;
-  letter-spacing: -0.5px;
-  line-height: 1.1;
-}
-.meta-dates {
-  font-size: .78rem;
-  color: var(--muted);
-  margin-top: 4px;
-}
+/* ── PILLS ── */
 .meta-pill {
-  font-size: .72rem;
+  font-size: .68rem;
   font-weight: 600;
-  padding: 5px 14px;
+  padding: 4px 10px;
   border-radius: 99px;
   font-family: 'Syne', sans-serif;
   letter-spacing: .5px;
   white-space: nowrap;
+  display: inline-block;
+  margin-top: 8px;
 }
-.pill-now    { background: var(--dark); color: #fff; }
-.pill-next   { background: var(--border); color: var(--dark); }
-.pill-future { background: transparent; border: 1px solid var(--border); color: var(--muted); }
+.pill-current { background: var(--dark); color: #fff; }
+.pill-next    { background: var(--border); color: var(--dark); }
+.pill-future  { background: transparent; border: 1px solid var(--border); color: var(--muted); }
+.pill-past    { background: #e8f5e9; color: #2e7d32; border: 1px solid #c8e6c9; }
 
-/* ── SQUADS GRID ── */
-.squads-grid {
+/* ── MATRIX ── */
+.matrix-wrap {
+  overflow-x: auto;
+  margin-bottom: 48px;
+  padding-bottom: 8px;
+}
+.matrix-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 16px;
+  gap: 8px;
+  min-width: max-content;
 }
-
-/* ── SQUAD CARD ── */
-.squad-card {
+/* Header row */
+.matrix-squad-header {
+  background: transparent;
+}
+.matrix-col-header {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px 20px;
+  text-align: center;
+}
+.matrix-col-header.current {
+  background: var(--dark);
+  color: #fff;
+  border-color: var(--dark);
+}
+.matrix-col-header.current .meta-col-dates,
+.matrix-col-header.current .meta-col-period { color: #aaa; }
+.matrix-col-header.past { opacity: 0.75; }
+.meta-col-num {
+  font-family: 'Syne', sans-serif;
+  font-size: 1.3rem;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+}
+.meta-col-period {
+  font-size: .78rem;
+  font-weight: 600;
+  color: var(--muted);
+  margin-top: 2px;
+}
+.meta-col-dates {
+  font-size: .7rem;
+  color: var(--muted);
+  margin-top: 2px;
+}
+/* Squad label column */
+.matrix-squad-label {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-left-width: 4px;
+  border-radius: 12px;
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 180px;
+}
+.squad-color-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.squad-name-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+.squad-name {
+  font-family: 'Syne', sans-serif;
+  font-size: .78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  line-height: 1.3;
+}
+.squad-name-main {
+  font-family: 'Syne', sans-serif;
+  font-size: .78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  line-height: 1.2;
+}
+.squad-name-sub {
+  font-family: 'Syne', sans-serif;
+  font-size: .65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .5px;
+  color: var(--dark);
+  line-height: 1.2;
+}
+/* Data cells */
+.matrix-cell {
   background: var(--white);
   border: 1px solid var(--border);
   border-radius: 12px;
   overflow: hidden;
+  min-height: 60px;
+  transition: box-shadow .3s;
 }
-.squad-header {
-  padding: 14px 18px;
-  border-bottom: 1px solid var(--border);
-  display: flex; align-items: center; justify-content: space-between;
+.matrix-cell.cell-past { opacity: 0.7; background: var(--bg); }
+.matrix-cell.cell-future { background: #fafaf8; }
+@keyframes cell-flash {
+  0%   { box-shadow: inset 0 0 0 3px #f4a261, 0 0 0 4px rgba(244,162,97,.25); }
+  70%  { box-shadow: inset 0 0 0 3px #f4a261, 0 0 0 4px rgba(244,162,97,.10); }
+  100% { box-shadow: inset 0 0 0 0px transparent, 0 0 0 0px transparent; }
 }
-.squad-name {
-  font-family: 'Syne', sans-serif;
-  font-size: .82rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 1px;
+.matrix-cell.cell-highlight {
+  animation: cell-flash 1.6s ease-out forwards;
+}
+.matrix-cell-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 60px;
+  color: var(--border);
+  font-size: 1.2rem;
 }
 .squad-count {
-  font-size: .72rem;
+  font-size: .7rem;
   color: var(--muted);
   background: var(--bg);
   padding: 2px 8px;
   border-radius: 99px;
+  margin-left: auto;
+  white-space: nowrap;
 }
 
 /* ── EPIC ROW ── */
@@ -226,8 +307,56 @@ main { padding: 48px; }
   padding: 12px 18px;
   border-bottom: 1px solid #f5f4f0;
   display: flex; flex-direction: column; gap: 8px;
+  border-left: 3px solid transparent;
 }
 .epic-row:last-child { border-bottom: none; }
+
+/* ── STATUS COLOR GROUPS ── */
+/* Group 0 — Live: verde vivo, topo da lista */
+.st-live {
+  border-left-color: #16a34a;
+  background: #f0fdf4;
+}
+.st-live .epic-status  { background: #dcfce7; color: #15803d; }
+.st-live .progress-fill { background: #16a34a; }
+.st-live .epic-name    { font-weight: 600; }
+
+/* Group 1 — Released: verde médio */
+.st-released {
+  border-left-color: #22c55e;
+  background: #f7fef9;
+}
+.st-released .epic-status  { background: #dcfce7; color: #16a34a; }
+.st-released .progress-fill { background: #22c55e; }
+
+/* Group 2 — Pronto para Release: verde suave */
+.st-ready-rel {
+  border-left-color: #86efac;
+}
+.st-ready-rel .epic-status  { background: #f0fdf4; color: #15803d; }
+.st-ready-rel .progress-fill { background: #4ade80; }
+
+/* Group 3 — Em desenvolvimento: laranja construção */
+.st-in-dev {
+  border-left-color: #f97316;
+}
+.st-in-dev .epic-status  { background: #fff7ed; color: #c2410c; }
+.st-in-dev .progress-fill { background: #f97316; }
+
+/* Group 4 — Pronto para desenvolvimento: azul projecto */
+.st-ready-dev {
+  border-left-color: #60a5fa;
+}
+.st-ready-dev .epic-status  { background: #eff6ff; color: #1d4ed8; }
+.st-ready-dev .progress-fill { background: #60a5fa; }
+
+/* Group 5 — Análise/Estudo: cinzento, fundo ao fim */
+.st-analysis {
+  border-left-color: #d1d5db;
+  opacity: 0.72;
+}
+.st-analysis .epic-status  { background: #f3f4f6; color: #6b7280; }
+.st-analysis .progress-fill { background: #9ca3af; }
 
 .epic-top {
   display: flex; align-items: flex-start; justify-content: space-between; gap: 8px;
@@ -237,6 +366,9 @@ main { padding: 48px; }
   font-weight: 500;
   line-height: 1.35;
   flex: 1;
+  word-break: break-word;
+  overflow-wrap: break-word;
+  min-width: 0;
 }
 .risk-badge {
   display: flex; align-items: center; gap: 4px;
@@ -256,10 +388,10 @@ main { padding: 48px; }
 }
 .epic-status {
   font-size: .7rem;
-  color: var(--muted);
-  background: var(--bg);
+  font-weight: 500;
   padding: 2px 8px;
   border-radius: 4px;
+  white-space: nowrap;
 }
 .progress-bar {
   flex: 1;
@@ -319,43 +451,397 @@ main { padding: 48px; }
   font-style: italic;
 }
 
-/* ── FUTURE GRID ── */
-.future-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-  gap: 12px;
+/* ── LOGO ── */
+.logo { display: flex; align-items: center; gap: 10px; }
+.logo-img { height: 22px; filter: brightness(0) invert(1); }
+.logo-roadmap {
+  font-family: 'Syne', sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #f4a261;
+  letter-spacing: 1px;
+  text-transform: uppercase;
 }
-.future-meta-card {
+
+/* ── TIMELINE ── */
+.timeline-wrap {
   background: var(--white);
   border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 16px 18px;
+  border-radius: 12px;
+  padding: 24px 28px 20px;
+  margin-bottom: 48px;
 }
-.future-meta-name {
+.timeline-title {
   font-family: 'Syne', sans-serif;
-  font-size: .85rem;
+  font-size: .65rem;
   font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  color: var(--muted);
+  margin-bottom: 16px;
+}
+.timeline-months-row {
+  position: relative;
+  height: 18px;
   margin-bottom: 4px;
 }
-.future-meta-dates {
-  font-size: .72rem;
+.timeline-month-label {
+  position: absolute;
+  font-size: .62rem;
   color: var(--muted);
-  margin-bottom: 12px;
+  transform: translateX(-50%);
 }
-.future-epic-item {
-  font-size: .8rem;
-  padding: 5px 0;
-  border-bottom: 1px solid #f5f4f0;
-  display: flex; align-items: center; gap: 6px;
+.timeline-today-label {
+  position: absolute;
+  top: 0;
+  font-size: .62rem;
+  color: #f4a261;
+  font-weight: 700;
+  transform: translateX(-50%);
+  white-space: nowrap;
+}
+.timeline-rows {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.timeline-row {
+  position: relative;
+  height: 38px;
+}
+.timeline-row-bg {
+  position: absolute;
+  inset: 0;
+  display: flex;
+}
+.timeline-month-sep {
+  position: absolute;
+  top: 0; bottom: 0;
+  width: 1px;
+  background: var(--border);
+}
+.timeline-bar {
+  position: absolute;
+  top: 0; bottom: 0;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  padding: 0 12px;
+  font-family: 'Syne', sans-serif;
+  font-size: .75rem;
+  font-weight: 700;
+  white-space: nowrap;
+  overflow: hidden;
+  cursor: pointer;
+  transition: opacity .15s;
+}
+.timeline-bar:hover { opacity: .82; }
+.timeline-bar.past    { background: #e0ddd6; color: #666; }
+.timeline-bar.current { background: var(--dark); color: #fff; }
+.timeline-bar.future  { background: var(--border); color: var(--dark); border: 1.5px dashed #ccc; }
+.timeline-today-line {
+  position: absolute;
+  top: -4px; bottom: -4px;
+  width: 2px;
+  background: #f4a261;
+  border-radius: 2px;
+  z-index: 5;
+}
+
+/* ── CELL FOOTER (resumo + ver detalhes) ── */
+.cell-footer {
+  padding: 8px 14px;
+  display: flex; align-items: center; justify-content: space-between;
+  border-top: 1px solid #f5f4f0;
+  background: #fafaf8;
+  border-radius: 0 0 12px 12px;
+}
+.hidden-count {
+  font-size: .68rem;
+  color: var(--muted);
+  font-style: italic;
+}
+.btn-details {
+  font-size: .68rem;
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  letter-spacing: .5px;
+  color: var(--muted);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 3px 8px;
+  border-radius: 4px;
+  transition: color .15s, background .15s;
+}
+.btn-details:hover { color: var(--dark); background: var(--border); }
+
+/* ── FEATURES TOGGLE ── */
+.epic-row { cursor: default; }
+.epic-toggle-btn {
+  background: none; border: none; cursor: pointer;
+  padding: 2px 4px; margin-left: 4px;
+  color: var(--muted); font-size: .7rem;
+  border-radius: 3px;
+  line-height: 1;
+  flex-shrink: 0;
+  transition: color .15s, background .15s;
+}
+.epic-toggle-btn:hover { color: var(--dark); background: var(--border); }
+.epic-chevron { display: inline-block; transition: transform .2s; }
+.epic-chevron.open { transform: rotate(90deg); }
+
+/* ── FEATURES LIST ── */
+.epic-features {
+  display: none;
+  padding: 6px 18px 10px 32px;
+  background: #f8f8f6;
+  border-top: 1px dashed #ede;
+}
+.epic-features.expanded { display: block; }
+.feature-item {
+  display: flex; align-items: flex-start; gap: 7px;
+  padding: 3px 0;
+  font-size: .73rem;
   color: var(--mid);
+  line-height: 1.3;
 }
-.future-epic-item:last-child { border-bottom: none; }
+.feature-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  margin-top: 4px;
+}
+.feature-dot.st-live      { background: #16a34a; }
+.feature-dot.st-released  { background: #22c55e; }
+.feature-dot.st-ready-rel { background: #86efac; }
+.feature-dot.st-in-dev    { background: #f97316; }
+.feature-dot.st-ready-dev { background: #60a5fa; }
+.feature-dot.st-analysis  { background: #d1d5db; }
+.features-loading { padding: 6px; font-size: .7rem; color: var(--muted); font-style: italic; }
+
+/* ── MODAL ── */
+.modal-overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,.45);
+  z-index: 200;
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0; visibility: hidden;
+  transition: opacity .2s, visibility .2s;
+}
+.modal-overlay.open { opacity: 1; visibility: visible; }
+.modal-box {
+  background: var(--white);
+  border-radius: 16px;
+  width: 92%; max-width: 700px;
+  max-height: 85vh;
+  display: flex; flex-direction: column;
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0,0,0,.2);
+}
+.modal-header {
+  padding: 18px 24px;
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+  flex-shrink: 0;
+}
+.modal-title {
+  font-family: 'Syne', sans-serif;
+  font-size: .95rem;
+  font-weight: 700;
+  letter-spacing: -.3px;
+}
+.modal-close {
+  background: none; border: none; cursor: pointer;
+  font-size: 1.1rem; color: var(--muted); padding: 4px 8px;
+  border-radius: 6px;
+  transition: color .15s, background .15s;
+}
+.modal-close:hover { color: var(--dark); background: var(--border); }
+.modal-body {
+  overflow-y: auto;
+  flex: 1;
+}
+.modal-section-label {
+  font-family: 'Syne', sans-serif;
+  font-size: .6rem; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 2px;
+  color: var(--muted);
+  padding: 12px 18px 6px;
+  border-bottom: 1px solid #f5f4f0;
+}
+
+/* ── HIGHLIGHTS (painel de destaques para TV) ── */
+.highlights-wrap {
+  background: var(--dark);
+  border-radius: 16px;
+  padding: 20px 24px 22px;
+  margin-bottom: 40px;
+}
+.highlights-top {
+  display: flex; align-items: center; gap: 12px;
+  margin-bottom: 14px;
+}
+.highlights-title {
+  font-family: 'Syne', sans-serif;
+  font-size: .58rem; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 4px;
+  color: #555;
+}
+.highlights-note {
+  font-size: .65rem; color: #444; font-style: italic;
+  margin-left: auto;
+}
+.highlights-scroll {
+  display: flex; gap: 10px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  padding-bottom: 6px;
+  scrollbar-width: thin; scrollbar-color: #333 transparent;
+}
+.highlights-scroll::-webkit-scrollbar { height: 3px; }
+.highlights-scroll::-webkit-scrollbar-thumb { background: #333; border-radius: 2px; }
+
+.hl-meta {
+  flex-shrink: 0;
+  width: clamp(260px, 28vw, 390px);
+  scroll-snap-align: start;
+  background: rgba(255,255,255,.05);
+  border: 1px solid rgba(255,255,255,.08);
+  border-radius: 10px;
+  overflow: hidden;
+  display: flex; flex-direction: column;
+  max-height: min(82vh, 640px);
+}
+.hl-meta.past { opacity: .6; }
+.hl-meta-head {
+  padding: 11px 15px;
+  display: flex; align-items: center; gap: 8px;
+  border-bottom: 1px solid rgba(255,255,255,.07);
+  flex-shrink: 0;
+}
+.hl-meta-num {
+  font-family: 'Syne', sans-serif;
+  font-size: .95rem; font-weight: 800; color: #fff; letter-spacing: -.5px;
+}
+.hl-meta-head.current .hl-meta-num { color: #f4a261; }
+.hl-meta-period { font-size: .68rem; color: #555; }
+.hl-meta-head .meta-pill { margin-left: auto; font-size: .56rem; padding: 2px 7px; }
+.hl-squads { padding: 8px 0 4px; overflow-y: auto; flex: 1; }
+.hl-squad-block {
+  padding-bottom: 6px; margin-bottom: 4px;
+  border-bottom: 1px solid rgba(255,255,255,.05);
+}
+.hl-squad-block:last-child { border-bottom: none; padding-bottom: 2px; margin-bottom: 0; }
+.hl-squad-label {
+  font-family: 'Syne', sans-serif;
+  font-size: .52rem; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 1.5px;
+  padding: 4px 14px 3px;
+  display: flex; align-items: center; gap: 5px;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: background .15s;
+  user-select: none;
+}
+.hl-squad-label:hover { background: rgba(255,255,255,.09); }
+.hl-squad-label:active { background: rgba(255,255,255,.14); }
+.hl-squad-arrow {
+  margin-left: auto;
+  font-size: .6rem;
+  opacity: 0;
+  transition: opacity .15s;
+  color: #666;
+}
+.hl-squad-label:hover .hl-squad-arrow { opacity: 1; }
+.hl-squad-dot { width: 5px; height: 5px; border-radius: 50%; flex-shrink: 0; }
+.hl-epic {
+  display: flex; align-items: flex-start; gap: 7px;
+  padding: 3px 14px;
+}
+.hl-icon { flex-shrink: 0; font-size: .72rem; line-height: 1.5; }
+.hl-name {
+  font-size: .78rem; color: #ccc; line-height: 1.35;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.hl-more {
+  font-size: .68rem; color: #555; font-style: italic;
+  padding: 2px 14px 4px 35px;
+}
+
+/* ── MOBILE MATRIX ── */
+.mobile-matrix { display: none; }
 
 /* ── RESPONSIVE ── */
 @media (max-width: 768px) {
-  main { padding: 24px 20px; }
-  header { padding: 16px 20px; }
-  .squads-grid { grid-template-columns: 1fr; }
+  /* Header compacto */
+  header { padding: 10px 16px; gap: 8px; }
+  .header-date { display: none; }
+  .logo-img { height: 18px; }
+  .logo-roadmap { font-size: .82rem; }
+  .header-btn { padding: 6px 11px; font-size: .73rem; }
+
+  /* Main */
+  main { padding: 12px 14px; }
+
+  /* Esconder elementos desktop */
+  .timeline-wrap { display: none; }
+  .matrix-wrap { display: none; }
+
+  /* Mostrar layout mobile */
+  .mobile-matrix { display: block; margin-bottom: 24px; }
+
+  /* Secção de meta */
+  .mob-meta-section { margin-bottom: 24px; border-radius: 12px; overflow: hidden; box-shadow: 0 1px 4px rgba(0,0,0,.06); }
+  .mob-meta-header {
+    background: var(--dark); color: #fff;
+    padding: 14px 16px;
+    display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+  }
+  .mob-meta-header.past    { background: #555; }
+  .mob-meta-header.future  { background: #6b7280; }
+  .mob-meta-num  { font-family: 'Syne', sans-serif; font-size: 1.05rem; font-weight: 800; letter-spacing: -.4px; }
+  .mob-meta-period { font-size: .73rem; color: #aaa; }
+  .mob-meta-header .meta-pill { margin-left: auto; font-size: .6rem; padding: 3px 8px; }
+  .mob-meta-dates { font-size: .65rem; color: #888; width: 100%; margin-top: -4px; }
+
+  /* Squad dentro da meta */
+  .mob-squad-section { border-top: 2px solid var(--bg); }
+  .mob-squad-label {
+    display: flex; align-items: center; gap: 8px;
+    padding: 9px 14px;
+    border-left: 3px solid;
+    font-family: 'Syne', sans-serif;
+    font-size: .68rem; font-weight: 700;
+    text-transform: uppercase; letter-spacing: .8px;
+    color: var(--dark);
+  }
+  .mob-epics { border-left: 3px solid; }
+
+  /* Épico compacto */
+  .epic-row { padding: 10px 14px; }
+  .epic-name { font-size: .82rem; }
+  .epic-status { font-size: .63rem; padding: 2px 6px; }
+  .progress-bar { display: none; }
+  .progress-pct { font-size: .63rem; }
+  .risk-badge { font-size: .62rem; padding: 2px 6px; }
+  .epic-toggle-btn { font-size: .65rem; }
+
+  /* Features */
+  .epic-features { padding: 4px 12px 8px 24px; }
+  .feature-item { font-size: .7rem; }
+
+  /* Footer do card */
+  .cell-footer { padding: 6px 12px; }
+  .hidden-count { font-size: .63rem; }
+  .btn-details { font-size: .63rem; }
+
+  /* Modal */
+  .modal-box { width: 97%; max-height: 92vh; border-radius: 12px; }
+  .modal-header { padding: 12px 16px; }
+  .modal-title { font-size: .85rem; }
 }
 </style>
 </head>
@@ -364,7 +850,8 @@ main { padding: 48px; }
 <!-- LOGIN -->
 <div id="loginScreen">
   <div class="login-box">
-    <div class="login-title">Omni<span>Roadmap</span></div>
+    <img src="https://omnibees.com/wp-content/themes/omnibees/assets/img/main-logo.svg" alt="Omnibees" style="height:36px;filter:brightness(0) invert(1);margin-bottom:16px;" />
+    <div class="login-title" style="font-size:1.4rem;margin-bottom:2px;">Product <span>Roadmap</span></div>
     <div class="login-sub">Comité de Direção · Omnibees Product</div>
     <input type="password" class="login-input" id="loginInput" placeholder="password" />
     <button class="login-btn" onclick="doLogin()">Entrar</button>
@@ -372,10 +859,24 @@ main { padding: 48px; }
   </div>
 </div>
 
+<!-- DETAILS MODAL -->
+<div id="detailsModal" class="modal-overlay" onclick="if(event.target===this)closeModal()">
+  <div class="modal-box">
+    <div class="modal-header">
+      <span class="modal-title" id="modalTitle"></span>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body" id="modalContent"></div>
+  </div>
+</div>
+
 <!-- APP -->
 <div id="app">
   <header>
-    <div class="logo">Omni<span>Roadmap</span></div>
+    <div class="logo">
+      <img src="https://omnibees.com/wp-content/themes/omnibees/assets/img/main-logo.svg" alt="Omnibees" class="logo-img" />
+      <span class="logo-roadmap">Roadmap</span>
+    </div>
     <div class="header-meta">
       <span class="header-date" id="headerDate"></span>
       <span class="header-refresh-info" id="headerRefreshInfo"></span>
@@ -394,6 +895,7 @@ main { padding: 48px; }
 // ─── CONFIG ────────────────────────────────────────────────────────
 const SITE_PASSWORD   = 'omnibees2024';
 const WORKER_URL      = 'https://lucky-star-d742.ana-g-antunes.workers.dev';
+const PIVOT_ID        = '7611561269213679416';
 const AUTO_REFRESH_MS = 24 * 60 * 60 * 1000; // 24 horas
 // ───────────────────────────────────────────────────────────────────
 
@@ -403,8 +905,7 @@ let _autoRefreshTimer = null;
 function updateRefreshInfo() {
   const el = document.getElementById('headerRefreshInfo');
   if (!el) return;
-  const now = new Date();
-  const next = new Date(now.getTime() + AUTO_REFRESH_MS);
+  const next = new Date(Date.now() + AUTO_REFRESH_MS);
   el.textContent = `↻ próximo refresh às ${next.toLocaleTimeString('pt-PT', { hour: '2-digit', minute: '2-digit' })}`;
 }
 
@@ -418,10 +919,7 @@ function startAutoRefresh() {
 }
 
 function stopAutoRefresh() {
-  if (_autoRefreshTimer) {
-    clearInterval(_autoRefreshTimer);
-    _autoRefreshTimer = null;
-  }
+  if (_autoRefreshTimer) { clearInterval(_autoRefreshTimer); _autoRefreshTimer = null; }
 }
 
 // ─── AUTH ──────────────────────────────────────────────────────────
@@ -454,97 +952,88 @@ async function ahaGet(path) {
   return res.json();
 }
 
-// ─── LOAD DATA ─────────────────────────────────────────────────────
+// ─── LOAD DATA (pivot único → tudo de uma vez) ─────────────────────
 async function loadData() {
   showLoading();
   try {
-    // Get products
-    const prodsData = await ahaGet('products');
-    const product = prodsData.products.find(p => p.name.toLowerCase().includes('omnibees')) || prodsData.products[0];
-    const ref = product.reference_prefix;
+    // 1. Uma única chamada — pivot devolve releases + épicos + estado + progresso + risco
+    const pivotData = await ahaGet(`bookmarks/custom_pivots/${PIVOT_ID}`);
+    const rows    = pivotData.rows  || {};
+    const cells   = pivotData.cells || {};
+    const topRows = pivotData.top_level_rows || [];
 
-    // Get releases
-    const relData = await ahaGet(`products/${ref}/releases?per_page=100`);
-    const releases = relData.releases || [];
+    // field_definitions: 64=release name, 65=start_date, 66=end_date
+    //                    67=priority (Prio Produto), 68=epic name, 69=progress, 70=risk, 71=status
+    // Estrutura de rows: nameRow(fd64) → child startRow(fd65) → child endRow(fd66)
+    // cells["0"][releaseIdx][epicIdx] = array de field-values (fd 67,68,69,70)
+    const allEpicsGrid = cells['0'] || [];
 
-    // Classify releases by date
-    const today = new Date();
-    today.setHours(0,0,0,0);
+    const metas = topRows.map((rowRef, idx) => {
+      const nameRow    = rows[rowRef] || {};
+      const startRef   = nameRow.child_refs?.[0];
+      const startRow   = startRef ? (rows[startRef] || {}) : {};
+      const endRef     = startRow.child_refs?.[0];
+      const endRow     = endRef   ? (rows[endRef]   || {}) : {};
 
-    const categorized = classifyReleases(releases, today);
+      const releaseRefMatch = (nameRow.html_value || '').match(/\/releases\/([\w-]+)/);
 
-    // Load epics for relevant releases (current + next 2)
-    const relevantReleases = [...categorized.current, ...categorized.next];
-    const epicsByRelease = {};
+      // Épicos: cells["0"][idx] → array de épicos; deduplicar por ID
+      const epicGroups = allEpicsGrid[idx] || [];
+      const seenIds = new Set();
+      const epics = epicGroups.map(fieldVals => {
+        const byFd = {};
+        for (const fv of fieldVals) byFd[fv.field_definition_ref] = fv;
 
-    await Promise.all(relevantReleases.map(async rel => {
-      try {
-        const data = await ahaGet(`releases/${rel.id}/epics?per_page=100`);
-        epicsByRelease[rel.id] = data.epics || [];
-      } catch(e) {
-        epicsByRelease[rel.id] = [];
-      }
-    }));
+        // field_definitions: 67=priority, 68=epic name, 69=progress, 70=risk, 71=status
+        const nameField  = byFd[68];
+        const epicId     = nameField?.id || null;
+        if (!epicId || seenIds.has(epicId)) return null;
+        seenIds.add(epicId);
 
-    // Load epics for future releases (just names, no deep fetch)
-    const futureEpicsByRelease = {};
-    await Promise.all(categorized.future.map(async rel => {
-      try {
-        const data = await ahaGet(`releases/${rel.id}/epics?per_page=100`);
-        futureEpicsByRelease[rel.id] = data.epics || [];
-      } catch(e) {
-        futureEpicsByRelease[rel.id] = [];
-      }
-    }));
+        const epicName   = nameField?.plain_value || '';
+        const epicRef    = (nameField?.html_value || '').match(/\/epics\/([\w-]+)/)?.[1] || null;
+        const prioRaw    = byFd[67]?.plain_value;
+        const progress   = byFd[69]?.plain_value ?? null;
+        const riskVal    = byFd[70]?.plain_value || null;
+        const statusName = byFd[71]?.plain_value || null;
 
-    renderAll(categorized, epicsByRelease, futureEpicsByRelease);
+        return {
+          name: epicName,
+          _epicRef: epicRef,
+          _releaseRef: releaseRefMatch?.[1] || null,
+          _priority: (prioRaw != null && prioRaw !== '') ? Number(prioRaw) : null,
+          progress: progress != null ? Math.round(Number(progress)) : null,
+          workflow_status: statusName ? { name: statusName } : null,
+          _alert: riskVal,
+        };
+      }).filter(e => e && e.name);
+
+      return {
+        name: nameRow.plain_value || '',
+        id: releaseRefMatch?.[1] || String(rowRef),
+        _releaseRef: releaseRefMatch?.[1],
+        epics,
+        _start: parseDate(startRow.plain_value),
+        _end:   parseDate(endRow.plain_value),
+      };
+    }).filter(m => m._releaseRef);
+
+    // 2. Agrupar por meta e classificar
+    const allGroups = groupMetasByNumber(metas);
+    const today = new Date(); today.setHours(0,0,0,0);
+    const past = [], current = [], future = [];
+    for (const group of allGroups) {
+      const s = group._start || new Date(0);
+      const e = group._end   || new Date(9999,0);
+      if (e < today)       past.push(group);
+      else if (s <= today) current.push(group);
+      else                 future.push(group);
+    }
+
+    renderAll({ past, current, future });
   } catch(err) {
     showError('Erro ao carregar dados: ' + err.message);
   }
-}
-
-// ─── CLASSIFY RELEASES ─────────────────────────────────────────────
-function classifyReleases(releases, today) {
-  // Filter only releases matching "Meta N 2026 - Team" pattern
-  const withDates = releases.filter(r =>
-    /^Meta\s+\d+\s+2026\s*[-–]/i.test(r.name) &&
-    (r.start_date || r.release_date || r.start_on)
-  );
-
-  const parsed = withDates.map(r => ({
-    ...r,
-    _start: parseDate(r.start_date || r.start_on),
-    _end:   parseDate(r.release_date || r.end_date),
-  })).filter(r => r._start || r._end);
-
-  // Sort by start date
-  parsed.sort((a, b) => {
-    const aDate = a._start || a._end;
-    const bDate = b._start || b._end;
-    return aDate - bDate;
-  });
-
-  const current = [], next = [], future = [];
-
-  for (const r of parsed) {
-    const start = r._start || new Date(0);
-    const end   = r._end   || new Date(9999,0,1);
-
-    if (start <= today && end >= today) {
-      current.push(r);
-    } else if (start > today) {
-      if (next.length < 2) next.push(r);
-      else future.push(r);
-    }
-  }
-
-  // If nothing is "current", take the most recent past release
-  if (current.length === 0 && parsed.length > 0) {
-    const past = parsed.filter(r => (r._end || new Date(0)) < today);
-    if (past.length) current.push(past[past.length - 1]);
-  }
-
-  return { current, next, future };
 }
 
 function parseDate(str) {
@@ -553,46 +1042,48 @@ function parseDate(str) {
   return isNaN(d) ? null : d;
 }
 
-// ─── GROUP BY SQUAD ────────────────────────────────────────────────
-function groupBySquad(epics) {
-  const squads = {};
-  for (const epic of epics) {
-    // Try to get squad from team name, product area, or parse from name
-    const squad = getSquad(epic);
-    if (!squads[squad]) squads[squad] = [];
-    squads[squad].push(epic);
-  }
-  return squads;
-}
 
-function getSquad(epic) {
-  // Try initiative/team tags
-  if (epic.teams && epic.teams.length) return epic.teams[0].name;
-  if (epic.initiative && epic.initiative.name) return epic.initiative.name;
-  // Try to parse "Meta X 2026 - SquadName" pattern from release name
-  if (epic.release && epic.release.name) {
-    const m = epic.release.name.match(/[-–]\s*(.+)$/);
-    if (m) return m[1].trim();
+// ─── STATUS CLASSIFICATION ─────────────────────────────────────────
+// Ordem do workflow Aha! do menos avançado (backlog) ao mais avançado (live).
+// group: menor = mais avançado = aparece primeiro na ordenação.
+const STATUS_CONFIG = [
+  { keys: ['live'],                                          group: 0, cls: 'st-live',      icon: '🟢' },
+  { keys: ['released', 'lançado', 'lançada'],                group: 1, cls: 'st-released',  icon: '✅' },
+  { keys: ['pronto para release', 'ready for release'],      group: 2, cls: 'st-ready-rel', icon: '🚀' },
+  { keys: ['em desenvolvimento', 'in development'],          group: 3, cls: 'st-in-dev',    icon: '🔨' },
+  { keys: ['pronto para desenvolvimento', 'ready for development'],
+                                                             group: 4, cls: 'st-ready-dev', icon: '📐' },
+  { keys: ['em especificação final'],                        group: 5, cls: 'st-analysis',  icon: '📋' },
+  { keys: ['em aprovação de escopo'],                        group: 6, cls: 'st-analysis',  icon: '📋' },
+  { keys: ['em escopo geral'],                               group: 7, cls: 'st-analysis',  icon: '📋' },
+  { keys: ['backlog de features', 'backlog'],                group: 8, cls: 'st-analysis',  icon: '📋' },
+  { keys: ['cancelada', 'cancelled', 'cancelado'],           group: 9, cls: 'st-analysis',  icon: '📋' },
+];
+
+function getStatusInfo(statusName) {
+  const key = (statusName || '').toLowerCase().trim();
+  for (const cfg of STATUS_CONFIG) {
+    if (cfg.keys.some(k => key === k || key.includes(k))) return cfg;
   }
-  return 'Geral';
+  // Default: desconhecido → fim da lista
+  return { group: 9, cls: 'st-analysis', icon: '◦' };
 }
 
 // ─── DELIVERY RISK ─────────────────────────────────────────────────
 function getRisk(epic) {
-  const flags = epic.score_facts || epic.delivery_risks || [];
-  // Check native delivery risk field
+  // Check alert from pivot (primary source)
+  if (epic._alert) {
+    const a = epic._alert.toLowerCase();
+    if (a.includes('não planeado') || a.includes('nao planeado')) return 'unplanned';
+    if (a.includes('risco'))                                       return 'atrisk';
+    if (a.includes('longa') || a.includes('long'))                 return 'long';
+  }
+  // Fallback: native delivery risk field
   if (epic.due_date_risk) {
     const r = epic.due_date_risk.toLowerCase();
-    if (r.includes('unplanned') || r.includes('não planeado') || r.includes('not planned')) return 'unplanned';
-    if (r.includes('risk') || r.includes('risco'))  return 'atrisk';
-    if (r.includes('long') || r.includes('longa'))  return 'long';
-  }
-  // Check flags array
-  if (Array.isArray(epic.flags) && epic.flags.length > 0) {
-    const f = (epic.flags[0].name || '').toLowerCase();
-    if (f.includes('não planeado') || f.includes('unplanned')) return 'unplanned';
-    if (f.includes('risco') || f.includes('risk'))             return 'atrisk';
-    if (f.includes('longa') || f.includes('long'))             return 'long';
+    if (r.includes('unplanned') || r.includes('não planeado')) return 'unplanned';
+    if (r.includes('risk') || r.includes('risco'))             return 'atrisk';
+    if (r.includes('long') || r.includes('longa'))             return 'long';
   }
   return null;
 }
@@ -608,95 +1099,447 @@ function riskBadge(risk) {
   return `<span class="risk-badge ${cls}">${label}</span>`;
 }
 
-// ─── RENDER ────────────────────────────────────────────────────────
-function renderAll(cat, epicsByRelease, futureEpicsByRelease) {
-  let html = '';
+// ─── GROUP METAS BY NUMBER ─────────────────────────────────────────
+const META_PERIODS = ['Jan/Fev', 'Mar/Abr', 'Mai/Jun', 'Jul/Ago', 'Set/Out', 'Nov/Dez'];
 
-  // ── CURRENT ──
-  if (cat.current.length) {
-    html += `<div class="section-label">Meta em curso</div>`;
-    for (const rel of cat.current) {
-      const epics = epicsByRelease[rel.id] || [];
-      html += renderMetaBlock(rel, epics, 'now');
+function groupMetasByNumber(metas) {
+  const groups = {};
+  for (const m of metas) {
+    const match = m.name.match(/Meta\s+(\d+)\s+(\d{4})/i);
+    if (!match) continue;
+    const metaNum = parseInt(match[1]);
+    const year    = parseInt(match[2]);
+    const key     = `${year}-${String(metaNum).padStart(2,'0')}`;
+    if (!groups[key]) {
+      groups[key] = {
+        metaNum, year, key,
+        period: META_PERIODS[metaNum - 1] || '',
+        squads: [], _start: null, _end: null
+      };
     }
+    const squadName = m.name.replace(/^Meta\s+\d+\s+\d{4}\s*[-–]\s*/i, '').trim() || m.name;
+    groups[key].squads.push({ name: squadName, epics: m.epics });
+    if (m._start && (!groups[key]._start || m._start < groups[key]._start)) groups[key]._start = m._start;
+    if (m._end   && (!groups[key]._end   || m._end   > groups[key]._end))   groups[key]._end   = m._end;
   }
-
-  // ── NEXT ──
-  if (cat.next.length) {
-    html += `<div class="section-label" style="margin-top:48px">Próximas metas</div>`;
-    for (const rel of cat.next) {
-      const epics = epicsByRelease[rel.id] || [];
-      html += renderMetaBlock(rel, epics, 'next');
-    }
-  }
-
-  // ── FUTURE ──
-  if (cat.future.length) {
-    html += `<div class="section-label" style="margin-top:48px">Metas futuras</div>`;
-    html += `<div class="future-grid">`;
-    for (const rel of cat.future) {
-      const epics = futureEpicsByRelease[rel.id] || [];
-      html += renderFutureCard(rel, epics);
-    }
-    html += `</div>`;
-  }
-
-  document.getElementById('content').innerHTML = html;
+  return Object.values(groups).sort((a, b) =>
+    a.year !== b.year ? a.year - b.year : a.metaNum - b.metaNum
+  );
 }
 
-function renderMetaBlock(rel, epics, type) {
-  const pillClass = type === 'now' ? 'pill-now' : 'pill-next';
-  const pillLabel = type === 'now' ? '● Em curso' : '○ A seguir';
-  const dates = formatDateRange(rel._start, rel._end);
+// ─── TIMELINE ──────────────────────────────────────────────────────
+function renderTimeline({ past, current, future }) {
+  const allGroups = [
+    ...past.map(g => ({...g, type:'past'})),
+    ...current.map(g => ({...g, type:'current'})),
+    ...future.map(g => ({...g, type:'future'}))
+  ].sort((a,b) => a.year !== b.year ? a.year - b.year : a.metaNum - b.metaNum);
 
-  const squads = groupBySquad(epics);
-  const squadNames = Object.keys(squads).sort();
+  if (!allGroups.length) return '';
 
-  let squadsHtml = '';
-  if (squadNames.length === 0) {
-    squadsHtml = `<div style="color:var(--muted);font-size:.85rem;padding:16px 0">Sem épicos associados a esta meta.</div>`;
-  } else {
-    squadsHtml = `<div class="squads-grid">`;
-    for (const squad of squadNames) {
-      const squadEpics = squads[squad];
-      squadsHtml += `
-        <div class="squad-card">
-          <div class="squad-header">
-            <span class="squad-name">${squad}</span>
-            <span class="squad-count">${squadEpics.length} épico${squadEpics.length !== 1 ? 's' : ''}</span>
-          </div>
-          ${squadEpics.map(renderEpicRow).join('')}
-        </div>`;
-    }
-    squadsHtml += `</div>`;
-  }
+  // Find the year range from the data
+  const year = allGroups[0].year || 2026;
+  const yearStart = new Date(year, 0, 1);
+  const yearEnd   = new Date(year, 11, 31);
+  const totalMs   = yearEnd - yearStart;
+  const pct = d => d ? Math.max(0, Math.min(100, ((d - yearStart) / totalMs) * 100)) : null;
+
+  const today    = new Date();
+  const todayPct = pct(today);
+  const months   = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+
+  // Month separator lines (reused in each row)
+  const sepLines = months.map((_, i) => {
+    const p = (i / 12 * 100).toFixed(2);
+    return `<div class="timeline-month-sep" style="left:${p}%"></div>`;
+  }).join('');
+
+  // Month labels row
+  const monthLabels = months.map((m, i) => {
+    const p = ((i + 0.5) / 12 * 100).toFixed(2);
+    return `<div class="timeline-month-label" style="left:${p}%">${m}</div>`;
+  }).join('');
+
+  // Today marker in month labels row
+  const todayMarker = todayPct !== null
+    ? `<div class="timeline-today-label" style="left:${todayPct.toFixed(2)}%">Hoje</div>`
+    : '';
+
+  // One bar per meta group
+  const rows = allGroups.map(group => {
+    const sp = pct(group._start);
+    const ep = pct(group._end);
+    if (sp === null || ep === null) return '';
+    const w = Math.max(ep - sp, 2).toFixed(2);
+    const period = group.period ? ` · ${group.period}` : '';
+    const todayLine = todayPct !== null
+      ? `<div class="timeline-today-line" style="left:${todayPct.toFixed(2)}%"></div>`
+      : '';
+    return `
+      <div class="timeline-row" onclick="document.getElementById('meta-${group.year}-${group.metaNum}')?.scrollIntoView({behavior:'smooth',block:'start'})">
+        ${sepLines}
+        <div class="timeline-bar ${group.type}" style="left:${sp.toFixed(2)}%;width:${w}%">
+          Meta ${group.metaNum}${period}
+        </div>
+        ${todayLine}
+      </div>`;
+  }).join('');
 
   return `
-    <div class="meta-block">
-      <div class="meta-header">
-        <div>
-          <div class="meta-title">${rel.name}</div>
-          <div class="meta-dates">${dates}</div>
-        </div>
-        <span class="meta-pill ${pillClass}">${pillLabel}</span>
+    <div class="timeline-wrap">
+      <div class="timeline-title">Cronograma ${year}</div>
+      <div style="position:relative">
+        <div class="timeline-months-row">${monthLabels}${todayMarker}</div>
+        <div class="timeline-rows">${rows}</div>
       </div>
-      ${squadsHtml}
     </div>`;
 }
 
-function renderEpicRow(epic) {
-  const status   = epic.workflow_status?.name || '—';
-  const progress = epic.progress !== undefined ? Math.round(epic.progress) : null;
-  const risk     = getRisk(epic);
+// ─── SQUAD CONFIG ──────────────────────────────────────────────────
+const SQUAD_ORDER = [
+  'Beehive', 'BeeHive UI', 'Bee2Bee/BeeChannel',
+  'BeeConnect/Partners API', 'Visão 360', 'BeePrice', 'BeeDirect'
+];
+
+// cor (borda + dot), bg suave, linhas do label
+const SQUAD_STYLE = {
+  'Beehive':                 { color: '#F59E0B', bg: '#fffbeb', lines: ['Beehive'] },
+  'BeeHive UI':              { color: '#FCD34D', bg: '#fefce8', lines: ['BeeHive UI'] },
+  'Bee2Bee/BeeChannel':      { color: '#3B82F6', bg: '#eff6ff', lines: ['Bee2Bee', 'BeeChannel'] },
+  'BeeConnect/Partners API': { color: '#22C55E', bg: '#f0fdf4', lines: ['BeeConnect', 'Partners API'] },
+  'Visão 360':               { color: '#06B6D4', bg: '#ecfeff', lines: ['Visão 360'] },
+  'BeePrice':                { color: '#F472B6', bg: '#fdf4ff', lines: ['BeePrice'] },
+  'BeeDirect':               { color: '#A78BFA', bg: '#faf5ff', lines: ['BeeDirect'] },
+};
+
+// Partial-match aliases: if data has only one part of a combined squad name, map it
+const SQUAD_ALIASES = {
+  'bee2bee':        'Bee2Bee/BeeChannel',
+  'beechannel':     'Bee2Bee/BeeChannel',
+  'beeconnect':     'BeeConnect/Partners API',
+  'partnersapi':    'BeeConnect/Partners API',
+};
+
+function normalizeSquad(name) {
+  const n = name.toLowerCase().replace(/[\s\/\-_]/g, '');
+  // Exact match first
+  const exact = SQUAD_ORDER.find(s => s.toLowerCase().replace(/[\s\/\-_]/g, '') === n);
+  if (exact) return exact;
+  // Alias match
+  const alias = SQUAD_ALIASES[n];
+  if (alias) return alias;
+  // Partial match: if the normalized name is fully contained in a squad order entry's normalized name
+  const partial = SQUAD_ORDER.find(s => s.toLowerCase().replace(/[\s\/\-_]/g, '').includes(n));
+  if (partial) return partial;
+  return null; // Return null for unknown squads so we can filter them out
+}
+
+function isKnownSquad(name) {
+  return normalizeSquad(name) !== null;
+}
+
+// ─── RENDER ────────────────────────────────────────────────────────
+function renderAll({ past, current, future }) {
+  const allGroups = [
+    ...past.map(g => ({...g, type:'past'})),
+    ...current.map(g => ({...g, type:'current'})),
+    ...future.map(g => ({...g, type:'future'}))
+  ].sort((a,b) => a.year !== b.year ? a.year - b.year : a.metaNum - b.metaNum);
+
+  // Collect all unique squad names (normalized), in preferred order
+  // Only include squads that are in SQUAD_ORDER (unknown/extra squads are hidden)
+  const squadSet = new Set();
+  allGroups.forEach(g => g.squads.forEach(s => {
+    const norm = normalizeSquad(s.name);
+    if (norm) squadSet.add(norm);
+  }));
+  const squads = SQUAD_ORDER.filter(s => squadSet.has(s));
+
+  // Build lookup: metaKey → normalizedSquad → {epics, type}
+  // If multiple raw squads normalize to same name, merge their epics
+  const lookup = {};
+  allGroups.forEach(g => {
+    const key = `${g.year}-${g.metaNum}`;
+    if (!lookup[key]) lookup[key] = {};
+    g.squads.forEach(s => {
+      const norm = normalizeSquad(s.name);
+      if (!norm) return; // skip unknown squads
+      if (!lookup[key][norm]) {
+        lookup[key][norm] = { epics: [], type: g.type };
+      }
+      lookup[key][norm].epics.push(...s.epics);
+    });
+  });
+
+  const html = renderHighlights(allGroups, squads, lookup)
+    + renderTimeline({ past, current, future })
+    + renderMatrix(allGroups, squads, lookup)
+    + renderMobileMatrix(allGroups, squads, lookup);
+  document.getElementById('content').innerHTML = html;
+}
+
+function renderMatrix(metas, squads, lookup) {
+  const numMetas = metas.length;
+  // grid: [squad-label] + [meta cols]
+  const cols = `180px repeat(${numMetas}, 420px)`;
+
+  const pillMap = {
+    past:    ['pill-past',    '✓ Concluída'],
+    current: ['pill-current', '● Em curso'],
+    future:  ['pill-next',    '○ A seguir'],
+  };
+
+  // Header row
+  const headerCells = metas.map(g => {
+    const [pillClass, pillLabel] = pillMap[g.type];
+    const dates = formatDateRange(g._start, g._end);
+    return `
+      <div class="matrix-col-header ${g.type}" id="meta-${g.year}-${g.metaNum}">
+        <div class="meta-col-num">Meta ${g.metaNum}</div>
+        <div class="meta-col-period">${g.period} ${g.year}</div>
+        <div class="meta-col-dates">${dates}</div>
+        <span class="meta-pill ${pillClass}">${pillLabel}</span>
+      </div>`;
+  }).join('');
+
+  // Armazenar dados das células para o modal
+  if (!window.__cellStore) window.__cellStore = {};
+
+  // Data rows
+  const dataRows = squads.map(squad => {
+    const cells = metas.map(g => {
+      const key = `${g.year}-${g.metaNum}`;
+      const entry = lookup[key]?.[squad];
+      const epics = entry?.epics || [];
+      const type  = entry?.type || g.type;
+      // Sort: 1º prioridade (asc, sem prioridade no fim), 2º status group
+      const sorted = [...epics].sort((a, b) => {
+        const pa = a._priority != null ? a._priority : Infinity;
+        const pb = b._priority != null ? b._priority : Infinity;
+        if (pa !== pb) return pa - pb;
+        return getStatusInfo(a.workflow_status?.name).group - getStatusInfo(b.workflow_status?.name).group;
+      });
+
+      if (!sorted.length) return `<div class="matrix-cell cell-${type}"><div class="matrix-cell-empty">—</div></div>`;
+
+      // Guardar todos os épicos no store para o modal
+      const cellKey = `${g.year}_${g.metaNum}_${squad.replace(/[^\w]/g,'_')}`;
+      window.__cellStore[cellKey] = { label: `Meta ${g.metaNum} · ${g.period} · ${squad}`, epics: sorted };
+
+      // Vista resumida: ocultar épicos cujo nome termina em '-'
+      const visible = sorted.filter(e => !e.name.trim().endsWith('-'));
+      const hidden  = sorted.length - visible.length;
+
+      const epicHtml = visible.map(e => renderEpicRow(e, type)).join('');
+      const footer = `
+        <div class="cell-footer">
+          <span class="hidden-count">${hidden > 0 ? `+${hidden} épico${hidden>1?'s':''} no detalhe` : ''}</span>
+          <button class="btn-details" onclick="openDetails('${cellKey}')">Ver detalhes →</button>
+        </div>`;
+
+      return `<div class="matrix-cell cell-${type}" id="cell-${cellKey}">${epicHtml}${footer}</div>`;
+    }).join('');
+
+    const sc = SQUAD_STYLE[squad] || { color: '#888', bg: '#fff', lines: [squad] };
+    const nameHtml = sc.lines.length > 1
+      ? `<span class="squad-name-main">${sc.lines[0]}</span><span class="squad-name-sub">${sc.lines[1]}</span>`
+      : `<span class="squad-name">${sc.lines[0]}</span>`;
+
+    return `
+      <div class="matrix-squad-label" style="border-left-color:${sc.color}; background:${sc.bg};">
+        <div class="squad-color-dot" style="background:${sc.color}"></div>
+        <div class="squad-name-wrap">${nameHtml}</div>
+      </div>
+      ${cells}`;
+  }).join('');
 
   return `
-    <div class="epic-row">
+    <div class="matrix-wrap">
+      <div class="matrix-grid" style="grid-template-columns:${cols}">
+        <div class="matrix-squad-header"></div>
+        ${headerCells}
+        ${dataRows}
+      </div>
+    </div>`;
+}
+
+// ─── HIGHLIGHTS ─────────────────────────────────────────────────────
+// Critério de selecção para destaques.
+// Por agora: épicos com prioridade definida no Aha! aparecem nos destaques.
+// Quando tiveres um campo dedicado, basta alterar esta função.
+function isHighlighted(epic) {
+  return epic._priority != null;
+}
+
+// Máximo de épicos mostrados por squad no painel de destaques.
+// Aumenta este valor se quiseres ver mais épicos por squad.
+const HIGHLIGHTS_MAX_PER_SQUAD = 3;
+
+function renderHighlights(metas, squads, lookup) {
+  const pillMap = {
+    past:    ['pill-past',    '✓ Concluída'],
+    current: ['pill-current', '● Em curso'],
+    future:  ['pill-next',    '○ A seguir'],
+  };
+
+  const cards = metas.map(g => {
+    const [pillClass, pillLabel] = pillMap[g.type];
+    let anyEpic = false;
+
+    const squadBlocks = squads.map(squad => {
+      const key   = `${g.year}-${g.metaNum}`;
+      const entry = lookup[key]?.[squad];
+      if (!entry?.epics?.length) return '';
+
+      const allHlEpics = entry.epics
+        .filter(e => isHighlighted(e) && !e.name.trim().endsWith('-'))
+        .sort((a, b) => {
+          const pa = a._priority != null ? a._priority : Infinity;
+          const pb = b._priority != null ? b._priority : Infinity;
+          if (pa !== pb) return pa - pb;
+          return getStatusInfo(a.workflow_status?.name).group - getStatusInfo(b.workflow_status?.name).group;
+        });
+
+      if (!allHlEpics.length) return '';
+      anyEpic = true;
+
+      const hlEpics  = allHlEpics.slice(0, HIGHLIGHTS_MAX_PER_SQUAD);
+      const remaining = allHlEpics.length - hlEpics.length;
+
+      const sc = SQUAD_STYLE[squad] || { color: '#aaa', lines: [squad] };
+      const epicsHtml = hlEpics.map(e => {
+        const si = getStatusInfo(e.workflow_status?.name);
+        return `<div class="hl-epic">
+          <span class="hl-icon" title="${e.workflow_status?.name || ''}">${si.icon}</span>
+          <span class="hl-name">${e.name}</span>
+        </div>`;
+      }).join('')
+      + (remaining > 0 ? `<div class="hl-more">+${remaining} épico${remaining > 1 ? 's' : ''}</div>` : '');
+
+      const hlCellKey = `${g.year}_${g.metaNum}_${squad.replace(/[^\w]/g,'_')}`;
+      return `
+        <div class="hl-squad-block">
+          <div class="hl-squad-label" onclick="scrollToMatrix('${hlCellKey}')" title="Ir para ${sc.lines.join(' / ')} · Meta ${g.metaNum}">
+            <span class="hl-squad-dot" style="background:${sc.color}"></span>
+            <span style="color:${sc.color}">${sc.lines.join(' / ')}</span>
+            <span class="hl-squad-arrow">↓</span>
+          </div>
+          ${epicsHtml}
+        </div>`;
+    }).join('');
+
+    if (!anyEpic) return '';
+
+    return `
+      <div class="hl-meta ${g.type}">
+        <div class="hl-meta-head ${g.type}">
+          <span class="hl-meta-num">Meta ${g.metaNum}</span>
+          <span class="hl-meta-period">${g.period} ${g.year}</span>
+          <span class="meta-pill ${pillClass}">${pillLabel}</span>
+        </div>
+        <div class="hl-squads">${squadBlocks}</div>
+      </div>`;
+  }).join('');
+
+  if (!cards.trim()) return '';
+
+  return `
+    <div class="highlights-wrap">
+      <div class="highlights-top">
+        <span class="highlights-title">Destaques · ${metas[0]?.year || ''}</span>
+        <span class="highlights-note">Top ${HIGHLIGHTS_MAX_PER_SQUAD} épicos por squad · ordenados por prioridade</span>
+      </div>
+      <div class="highlights-scroll">${cards}</div>
+    </div>`;
+}
+
+// ─── MOBILE MATRIX (layout vertical: metas → squads → épicos) ──────
+function renderMobileMatrix(metas, squads, lookup) {
+  const pillMap = {
+    past:    ['pill-past',    '✓ Concluída'],
+    current: ['pill-current', '● Em curso'],
+    future:  ['pill-next',    '○ A seguir'],
+  };
+
+  const sections = metas.map(g => {
+    const [pillClass, pillLabel] = pillMap[g.type];
+    const dates = formatDateRange(g._start, g._end);
+
+    const squadSections = squads.map(squad => {
+      const key  = `${g.year}-${g.metaNum}`;
+      const entry = lookup[key]?.[squad];
+      if (!entry?.epics?.length) return '';
+
+      const type   = entry.type || g.type;
+      const sorted = [...entry.epics].sort((a, b) => {
+        const pa = a._priority != null ? a._priority : Infinity;
+        const pb = b._priority != null ? b._priority : Infinity;
+        if (pa !== pb) return pa - pb;
+        return getStatusInfo(a.workflow_status?.name).group - getStatusInfo(b.workflow_status?.name).group;
+      });
+
+      const cellKey = `${g.year}_${g.metaNum}_${squad.replace(/[^\w]/g,'_')}`;
+      window.__cellStore[cellKey] = { label: `Meta ${g.metaNum} · ${g.period} · ${squad}`, epics: sorted };
+
+      const visible = sorted.filter(e => !e.name.trim().endsWith('-'));
+      const hidden  = sorted.length - visible.length;
+      const sc = SQUAD_STYLE[squad] || { color: '#888', bg: '#fff', lines: [squad] };
+      const squadLabel = sc.lines.join(' / ');
+
+      const epicHtml = visible.map(e => renderEpicRow(e, type)).join('');
+      const footer = `
+        <div class="cell-footer">
+          <span class="hidden-count">${hidden > 0 ? `+${hidden} épico${hidden>1?'s':''} no detalhe` : ''}</span>
+          <button class="btn-details" onclick="openDetails('${cellKey}')">Ver detalhes →</button>
+        </div>`;
+
+      return `
+        <div class="mob-squad-section">
+          <div class="mob-squad-label" style="border-left-color:${sc.color}; background:${sc.bg}">
+            <div class="squad-color-dot" style="background:${sc.color}"></div>
+            ${squadLabel}
+          </div>
+          <div class="mob-epics" style="border-left-color:${sc.color}; background:${sc.bg}">
+            ${epicHtml}${footer}
+          </div>
+        </div>`;
+    }).join('');
+
+    if (!squadSections.trim()) return '';
+
+    return `
+      <div class="mob-meta-section">
+        <div class="mob-meta-header ${g.type}">
+          <span class="mob-meta-num">Meta ${g.metaNum}</span>
+          <span class="mob-meta-period">${g.period} ${g.year}</span>
+          <span class="meta-pill ${pillClass}">${pillLabel}</span>
+          ${dates ? `<span class="mob-meta-dates">${dates}</span>` : ''}
+        </div>
+        ${squadSections}
+      </div>`;
+  }).join('');
+
+  return `<div class="mobile-matrix">${sections}</div>`;
+}
+
+function renderEpicRow(epic, type) {
+  const status   = epic.workflow_status?.name || '—';
+  const progress = epic.progress != null ? Math.round(epic.progress) : null;
+  const risk     = getRisk(epic);
+  const stInfo   = getStatusInfo(status);
+  const toggleBtn = epic._epicRef
+    ? `<button class="epic-toggle-btn" title="Ver features" onclick="toggleFeatures(this,'${epic._epicRef}','${epic._releaseRef||''}')"><span class="epic-chevron">▶</span></button>`
+    : '';
+
+  return `
+    <div class="epic-row ${stInfo.cls}">
       <div class="epic-top">
         <span class="epic-name">${epic.name}</span>
         ${riskBadge(risk)}
+        ${toggleBtn}
       </div>
       <div class="epic-bottom">
-        <span class="epic-status">${status}</span>
+        <span class="epic-status">${stInfo.icon} ${status}</span>
         ${progress !== null ? `
           <div class="progress-bar"><div class="progress-fill" style="width:${progress}%"></div></div>
           <span class="progress-pct">${progress}%</span>
@@ -705,22 +1548,96 @@ function renderEpicRow(epic) {
     </div>`;
 }
 
-function renderFutureCard(rel, epics) {
-  const dates = formatDateRange(rel._start, rel._end);
-  const items = epics.slice(0, 8).map(e => {
-    const risk = getRisk(e);
-    const dot = risk === 'unplanned' ? '🔴' : risk === 'atrisk' ? '🟡' : risk === 'long' ? '🟠' : '·';
-    return `<div class="future-epic-item"><span>${dot}</span> ${e.name}</div>`;
-  }).join('');
-  const more = epics.length > 8 ? `<div class="future-epic-item" style="color:var(--muted)">+ ${epics.length - 8} mais</div>` : '';
+// ─── SCROLL TO MATRIX CELL ─────────────────────────────────────────
+function scrollToMatrix(cellKey) {
+  const cell = document.getElementById('cell-' + cellKey);
+  if (!cell) return;
 
-  return `
-    <div class="future-meta-card">
-      <div class="future-meta-name">${rel.name}</div>
-      <div class="future-meta-dates">${dates}</div>
-      ${items || '<div style="color:var(--muted);font-size:.78rem">Sem épicos definidos</div>'}
-      ${more}
-    </div>`;
+  // scrollIntoView handles vertical (window) + horizontal (matrix-wrap) simultaneously
+  cell.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' });
+
+  // Flash highlight after scroll settles
+  setTimeout(() => {
+    cell.classList.remove('cell-highlight'); // reset if re-triggered
+    void cell.offsetWidth;                   // force reflow to restart CSS animation
+    cell.classList.add('cell-highlight');
+    setTimeout(() => cell.classList.remove('cell-highlight'), 1700);
+  }, 700);
+}
+
+// ─── MODAL ─────────────────────────────────────────────────────────
+function openDetails(cellKey) {
+  const data = window.__cellStore?.[cellKey];
+  if (!data) return;
+  document.getElementById('modalTitle').textContent = data.label;
+  // Mostrar TODOS os épicos (incluindo os que terminam em '-')
+  const grouped = {
+    visible: data.epics.filter(e => !e.name.trim().endsWith('-')),
+    hidden:  data.epics.filter(e => e.name.trim().endsWith('-')),
+  };
+  let html = grouped.visible.map(e => renderEpicRow(e, 'modal')).join('');
+  if (grouped.hidden.length) {
+    html += `<div class="modal-section-label">Épicos de suporte</div>`;
+    html += grouped.hidden.map(e => renderEpicRow(e, 'modal')).join('');
+  }
+  document.getElementById('modalContent').innerHTML = html;
+  document.getElementById('detailsModal').classList.add('open');
+}
+
+function closeModal() {
+  document.getElementById('detailsModal').classList.remove('open');
+}
+
+// Fechar modal com Escape
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+// ─── FEATURES (expandível por épico) ───────────────────────────────
+const _featCache = {};
+
+async function toggleFeatures(btn, epicRef, releaseRef) {
+  const row = btn.closest('.epic-row');
+  if (!row) return;
+  const chevron = btn.querySelector('.epic-chevron');
+
+  // Procurar ou criar o container de features
+  let featsEl = row.nextElementSibling;
+  if (!featsEl || !featsEl.classList.contains('epic-features')) {
+    featsEl = document.createElement('div');
+    featsEl.className = 'epic-features';
+    row.after(featsEl);
+  }
+
+  const isOpen = featsEl.classList.contains('expanded');
+  chevron?.classList.toggle('open', !isOpen);
+  if (isOpen) { featsEl.classList.remove('expanded'); return; }
+  featsEl.classList.add('expanded');
+
+  if (featsEl.dataset.loaded) return; // já carregadas
+
+  featsEl.innerHTML = '<div class="features-loading">A carregar features…</div>';
+  try {
+    // Cache por épico+release para não repetir chamadas
+    const cacheKey = `${epicRef}__${releaseRef || 'all'}`;
+    if (!_featCache[cacheKey]) {
+      const d = await ahaGet(`epics/${epicRef}/features?fields=name,workflow_status,progress,release&per_page=200`);
+      const all = d.features || [];
+      // Filtrar apenas as features que pertencem à release desta meta
+      _featCache[cacheKey] = releaseRef
+        ? all.filter(f => (f.release?.reference_num || '') === releaseRef)
+        : all;
+    }
+    const features = _featCache[cacheKey];
+    featsEl.dataset.loaded = '1';
+    featsEl.innerHTML = features.length
+      ? features.map(f => {
+          const si = getStatusInfo(f.workflow_status?.name);
+          const p  = f.progress != null ? ` <span style="color:var(--muted);font-size:.68rem">${Math.round(f.progress)}%</span>` : '';
+          return `<div class="feature-item"><span class="feature-dot ${si.cls}" title="${f.workflow_status?.name || '—'}"></span><span class="feature-name">${f.name}${p}</span></div>`;
+        }).join('')
+      : '<div class="feature-item" style="color:var(--muted);font-style:italic">Sem features nesta meta</div>';
+  } catch(err) {
+    featsEl.innerHTML = '<div class="feature-item" style="color:var(--risk-red)">Erro ao carregar</div>';
+  }
 }
 
 // ─── HELPERS ───────────────────────────────────────────────────────
