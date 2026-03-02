@@ -12,16 +12,18 @@
 - **Password do site**: `omnibees2024`
 
 ## Aha! — Pivot e Campos
-- **Pivot ID**: `7611561269213679416`
+- **Pivot ID**: `7611553947568604062`
 - **Field definitions** (byFd[N] em loadData):
-  - `64` = release name
-  - `65` = start_date
-  - `66` = end_date
-  - `67` = Prio Produto (numérico, menor = mais prioritário)
-  - `68` = epic name (html_value contém link para extrair `_epicRef`)
-  - `69` = progress (%)
-  - `70` = risk / alert
-  - `71` = status (workflow_status name)
+  - `89` = release name
+  - `90` = start_date
+  - `91` = end_date
+  - `92` = parking_lot ("Yes" / "No") — fd 92 é filho de fd 91 (4.º nível na hierarquia de rows)
+  - `93` = Prio Produto (numérico, menor = mais prioritário)
+  - `94` = epic name (html_value contém link para extrair `_epicRef`)
+  - `95` = progress (%)
+  - `96` = risk / alert
+  - `97` = status (workflow_status name)
+- **Hierarquia rows**: `nameRow(fd89) → startRow(fd90) → endRow(fd91) → plRow(fd92)`
 
 ## Estrutura de Dados — Épico
 ```js

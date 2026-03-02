@@ -811,6 +811,72 @@ main { padding: 48px; }
   padding: 2px 14px 4px 36px;
 }
 
+/* ── PARKING LOT CARD ("Metas futuras") ── */
+.hl-parking-card {
+  border: 1.5px dashed #d1c7ba !important;
+  background: #fdfcf9 !important;
+}
+.hl-parking-head {
+  background: #f5f2ec !important;
+  border-bottom-color: #e8e2d8 !important;
+  gap: 10px;
+}
+.hl-parking-count {
+  font-size: .62rem;
+  color: #999;
+  font-style: italic;
+}
+.hl-parking-body {
+  overflow: hidden;
+  max-height: 600px;
+  transition: max-height .35s ease, opacity .25s ease, padding .25s ease;
+  opacity: 1;
+  padding: 6px 0 4px;
+}
+.hl-parking-card.pl-collapsed .hl-parking-body {
+  max-height: 0;
+  opacity: 0;
+  padding: 0;
+}
+.pl-epic:hover { background: #f5f1eb; }
+
+/* Toggle switch slider */
+.hl-toggle-switch {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+.hl-toggle-switch input {
+  position: absolute;
+  opacity: 0;
+  width: 0; height: 0;
+}
+.hl-toggle-track {
+  position: relative;
+  display: inline-block;
+  width: 32px; height: 18px;
+  background: #d1c7ba;
+  border-radius: 99px;
+  transition: background .2s;
+}
+.hl-toggle-switch input:checked + .hl-toggle-track {
+  background: #f4a261;
+}
+.hl-toggle-thumb {
+  position: absolute;
+  top: 2px; left: 2px;
+  width: 14px; height: 14px;
+  background: #fff;
+  border-radius: 50%;
+  transition: transform .2s;
+  box-shadow: 0 1px 3px rgba(0,0,0,.2);
+}
+.hl-toggle-switch input:checked + .hl-toggle-track .hl-toggle-thumb {
+  transform: translateX(14px);
+}
+
 /* ── MOBILE MATRIX ── */
 .mobile-matrix { display: none; }
 
@@ -935,7 +1001,7 @@ main { padding: 48px; }
 // ─── CONFIG ────────────────────────────────────────────────────────
 const SITE_PASSWORD   = 'omnibees2024';
 const WORKER_URL      = 'https://lucky-star-d742.ana-g-antunes.workers.dev';
-const PIVOT_ID        = '7611561269213679416';
+const PIVOT_ID        = '7611553947568604062';
 const AUTO_REFRESH_MS = 24 * 60 * 60 * 1000; // 24 horas
 // ───────────────────────────────────────────────────────────────────
 
@@ -1002,19 +1068,22 @@ async function loadData() {
     const cells   = pivotData.cells || {};
     const topRows = pivotData.top_level_rows || [];
 
-    // field_definitions: 64=release name, 65=start_date, 66=end_date
-    //                    67=priority (Prio Produto), 68=epic name, 69=progress, 70=risk, 71=status
-    // Estrutura de rows: nameRow(fd64) → child startRow(fd65) → child endRow(fd66)
-    // cells["0"][releaseIdx][epicIdx] = array de field-values (fd 67,68,69,70)
+    // field_definitions: 89=release name, 90=start_date, 91=end_date, 92=parking_lot
+    //                    93=priority (Prio Produto), 94=epic name, 95=progress, 96=risk, 97=status
+    // Hierarquia rows: nameRow(fd89) → startRow(fd90) → endRow(fd91) → plRow(fd92)
+    // cells["0"][releaseIdx][epicIdx] = array de field-values (fd 93-97)
     const allEpicsGrid = cells['0'] || [];
 
-    const metas = topRows.map((rowRef, idx) => {
-      const nameRow    = rows[rowRef] || {};
-      const startRef   = nameRow.child_refs?.[0];
-      const startRow   = startRef ? (rows[startRef] || {}) : {};
-      const endRef     = startRow.child_refs?.[0];
-      const endRow     = endRef   ? (rows[endRef]   || {}) : {};
+    const allMetas = topRows.map((rowRef, idx) => {
+      const nameRow  = rows[rowRef] || {};
+      const startRef = nameRow.child_refs?.[0];
+      const startRow = startRef ? (rows[startRef] || {}) : {};
+      const endRef   = startRow.child_refs?.[0];
+      const endRow   = endRef   ? (rows[endRef]   || {}) : {};
+      const plRef    = endRow.child_refs?.[0];
+      const plRow    = plRef    ? (rows[plRef]    || {}) : {};
 
+      const isParking = (plRow.plain_value || '').toLowerCase() === 'yes';
       const releaseRefMatch = (nameRow.html_value || '').match(/\/releases\/([\w-]+)/);
 
       // Épicos: cells["0"][idx] → array de épicos; deduplicar por ID
@@ -1024,18 +1093,18 @@ async function loadData() {
         const byFd = {};
         for (const fv of fieldVals) byFd[fv.field_definition_ref] = fv;
 
-        // field_definitions: 67=priority, 68=epic name, 69=progress, 70=risk, 71=status
-        const nameField  = byFd[68];
+        // field_definitions: 93=priority, 94=epic name, 95=progress, 96=risk, 97=status
+        const nameField  = byFd[94];
         const epicId     = nameField?.id || null;
         if (!epicId || seenIds.has(epicId)) return null;
         seenIds.add(epicId);
 
         const epicName   = nameField?.plain_value || '';
         const epicRef    = (nameField?.html_value || '').match(/\/epics\/([\w-]+)/)?.[1] || null;
-        const prioRaw    = byFd[67]?.plain_value;
-        const progress   = byFd[69]?.plain_value ?? null;
-        const riskVal    = byFd[70]?.plain_value || null;
-        const statusName = byFd[71]?.plain_value || null;
+        const prioRaw    = byFd[93]?.plain_value;
+        const progress   = byFd[95]?.plain_value ?? null;
+        const riskVal    = byFd[96]?.plain_value || null;
+        const statusName = byFd[97]?.plain_value || null;
 
         return {
           name: epicName,
@@ -1052,11 +1121,20 @@ async function loadData() {
         name: nameRow.plain_value || '',
         id: releaseRefMatch?.[1] || String(rowRef),
         _releaseRef: releaseRefMatch?.[1],
+        isParking,
         epics,
         _start: parseDate(startRow.plain_value),
         _end:   parseDate(endRow.plain_value),
       };
-    }).filter(m => m._releaseRef);
+    });
+
+    // 2a. Separar parking lot das metas normais (pivot inclui "Meta Futura" como parking_lot=Yes)
+    const parkingLotEpics = allMetas
+      .filter(m => m.isParking)
+      .flatMap(m => m.epics.filter(e => !e.name.trim().endsWith('-')))
+      .sort((a, b) => (a._priority ?? Infinity) - (b._priority ?? Infinity));
+
+    const metas = allMetas.filter(m => !m.isParking && m._releaseRef);
 
     // 2. Agrupar por meta e classificar
     const allGroups = groupMetasByNumber(metas);
@@ -1070,7 +1148,7 @@ async function loadData() {
       else                 future.push(group);
     }
 
-    renderAll({ past, current, future });
+    renderAll({ past, current, future, parkingLotEpics });
   } catch(err) {
     showError('Erro ao carregar dados: ' + err.message);
   }
@@ -1276,7 +1354,7 @@ function isKnownSquad(name) {
 }
 
 // ─── RENDER ────────────────────────────────────────────────────────
-function renderAll({ past, current, future }) {
+function renderAll({ past, current, future, parkingLotEpics = [] }) {
   const allGroups = [
     ...past.map(g => ({...g, type:'past'})),
     ...current.map(g => ({...g, type:'current'})),
@@ -1309,7 +1387,7 @@ function renderAll({ past, current, future }) {
   });
 
   const html = renderTimeline({ past, current, future })
-    + renderHighlights(allGroups, squads, lookup)
+    + renderHighlights(allGroups, squads, lookup, parkingLotEpics)
     + `<div class="detail-section-divider"><span class="detail-section-title">Detalhe das Metas</span></div>`
     + renderMatrix(allGroups, squads, lookup)
     + renderMobileMatrix(allGroups, squads, lookup);
@@ -1413,7 +1491,7 @@ function isHighlighted(epic) {
 // Aumenta este valor se quiseres ver mais épicos por squad.
 const HIGHLIGHTS_MAX_PER_SQUAD = 3;
 
-function renderHighlights(metas, squads, lookup) {
+function renderHighlights(metas, squads, lookup, parkingLotEpics = []) {
   const pillMap = {
     past:    ['pill-past',    '✓ Concluída'],
     current: ['pill-current', '● Em curso'],
@@ -1479,7 +1557,32 @@ function renderHighlights(metas, squads, lookup) {
       </div>`;
   }).join('');
 
-  if (!cards.trim()) return '';
+  // ── Card "Metas futuras" (parking lot) ──────────────────────────
+  let parkingCard = '';
+  if (parkingLotEpics.length > 0) {
+    const epicsHtml = parkingLotEpics.map(e => {
+      const si = getStatusInfo(e.workflow_status?.name);
+      return `<div class="hl-epic pl-epic">
+        <span class="hl-icon" title="${e.workflow_status?.name || ''}">${si.icon}</span>
+        <span class="hl-name">${e.name}</span>
+      </div>`;
+    }).join('');
+
+    parkingCard = `
+      <div class="hl-meta hl-parking-card">
+        <div class="hl-meta-head hl-parking-head">
+          <span class="hl-meta-num">Metas futuras</span>
+          <span class="hl-parking-count">${parkingLotEpics.length} épico${parkingLotEpics.length !== 1 ? 's' : ''}</span>
+          <label class="hl-toggle-switch" title="Mostrar / ocultar">
+            <input type="checkbox" checked onchange="this.closest('.hl-parking-card').classList.toggle('pl-collapsed', !this.checked)">
+            <span class="hl-toggle-track"><span class="hl-toggle-thumb"></span></span>
+          </label>
+        </div>
+        <div class="hl-parking-body">${epicsHtml}</div>
+      </div>`;
+  }
+
+  if (!cards.trim() && !parkingCard) return '';
 
   return `
     <div class="highlights-wrap">
@@ -1487,7 +1590,7 @@ function renderHighlights(metas, squads, lookup) {
         <span class="highlights-title">Destaques · ${metas[0]?.year || ''}</span>
         <span class="highlights-note">Top ${HIGHLIGHTS_MAX_PER_SQUAD} épicos por squad · ordenados por prioridade</span>
       </div>
-      <div class="highlights-scroll">${cards}</div>
+      <div class="highlights-scroll">${cards}${parkingCard}</div>
     </div>`;
 }
 
