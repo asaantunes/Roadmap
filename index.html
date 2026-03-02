@@ -804,7 +804,7 @@ main { padding: 48px; }
 .hl-squad-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
 
 .hl-epic {
-  display: flex; align-items: flex-start; gap: 7px;
+  display: flex; align-items: flex-start; gap: 7px; flex-wrap: wrap;
   padding: 3px 14px 3px 14px;
   border-radius: 4px;
   margin: 0 6px;
@@ -815,8 +815,9 @@ main { padding: 48px; }
 .hl-name {
   font-size: .76rem; color: #301b46; line-height: 1.4;
   display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
-  overflow: hidden;
+  overflow: hidden; flex: 1; min-width: 0;
 }
+.hl-epic .risk-badge { font-size: .62rem; padding: 2px 7px; margin-left: 18px; margin-bottom: 2px; }
 .hl-more {
   font-size: .65rem; color: #aaa; font-style: italic;
   padding: 2px 14px 4px 36px;
@@ -1572,9 +1573,11 @@ function renderHighlights(metas, squads, lookup, parkingLotEpics = []) {
       const sc = SQUAD_STYLE[squad] || { color: '#aaa', lines: [squad] };
       const epicsHtml = hlEpics.map(e => {
         const si = getStatusInfo(e.workflow_status?.name);
+        const risk = getRisk(e);
         return `<div class="hl-epic">
           <span class="hl-icon" title="${e.workflow_status?.name || ''}">${si.icon}</span>
           <span class="hl-name">${e.name}</span>
+          ${risk ? riskBadge(risk) : ''}
         </div>`;
       }).join('')
       + (remaining > 0 ? `<div class="hl-more">+${remaining} épico${remaining > 1 ? 's' : ''}</div>` : '');
@@ -1611,9 +1614,11 @@ function renderHighlights(metas, squads, lookup, parkingLotEpics = []) {
     const count = parkingLotEpics.length;
     const epicsHtml = parkingLotEpics.map(e => {
       const si = getStatusInfo(e.workflow_status?.name);
+      const risk = getRisk(e);
       return `<div class="hl-epic">
         <span class="hl-icon" title="${e.workflow_status?.name || ''}">${si.icon}</span>
         <span class="hl-name">${e.name}</span>
+        ${risk ? riskBadge(risk) : ''}
       </div>`;
     }).join('');
 
