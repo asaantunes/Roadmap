@@ -688,6 +688,8 @@ main { padding: 48px; }
   border-radius: 0 0 16px 16px;
   padding: 0 0 16px;
   margin-bottom: 0;
+  position: relative;
+  overflow: hidden;
 }
 .highlights-top {
   display: flex; align-items: center; gap: 12px;
@@ -702,7 +704,6 @@ main { padding: 48px; }
 }
 .highlights-note {
   font-size: .62rem; color: #3a3a3a; font-style: italic;
-  margin-left: auto;
 }
 .highlights-scroll {
   display: flex; gap: 12px;
@@ -811,71 +812,104 @@ main { padding: 48px; }
   padding: 2px 14px 4px 36px;
 }
 
-/* ── PARKING LOT CARD ("Metas futuras") ── */
-.hl-parking-card {
-  border: 1.5px dashed #d1c7ba !important;
-  background: #fdfcf9 !important;
-}
-.hl-parking-head {
-  background: #f5f2ec !important;
-  border-bottom-color: #e8e2d8 !important;
-  gap: 10px;
-}
-.hl-parking-count {
-  font-size: .62rem;
-  color: #999;
-  font-style: italic;
-}
-.hl-parking-body {
-  overflow: hidden;
-  max-height: 600px;
-  transition: max-height .35s ease, opacity .25s ease, padding .25s ease;
-  opacity: 1;
-  padding: 6px 0 4px;
-}
-.hl-parking-card.pl-collapsed .hl-parking-body {
-  max-height: 0;
-  opacity: 0;
-  padding: 0;
-}
-.pl-epic:hover { background: #f5f1eb; }
-
-/* Toggle switch slider */
-.hl-toggle-switch {
+/* ── METAS FUTURAS — botão trigger no header ── */
+.hl-parking-btn {
   margin-left: auto;
-  display: flex;
-  align-items: center;
+  display: flex; align-items: center; gap: 6px;
+  padding: 4px 10px 4px 10px;
+  background: rgba(255,255,255,.07);
+  border: 1px solid rgba(255,255,255,.13);
+  border-radius: 20px;
+  color: #999;
+  font-family: 'Inter', sans-serif;
+  font-size: .68rem;
   cursor: pointer;
   flex-shrink: 0;
+  transition: background .2s, border-color .2s, color .2s;
+  letter-spacing: .02em;
 }
-.hl-toggle-switch input {
+.hl-parking-btn:hover {
+  background: rgba(255,255,255,.12);
+  border-color: rgba(255,255,255,.22);
+  color: #ccc;
+}
+.hl-parking-btn.pl-active {
+  background: rgba(244,162,97,.14);
+  border-color: rgba(244,162,97,.4);
+  color: #f4a261;
+}
+.hl-parking-btn-count {
+  background: rgba(255,255,255,.1);
+  border-radius: 10px;
+  padding: 1px 6px;
+  font-size: .63rem;
+  font-weight: 600;
+  line-height: 1.4;
+}
+.hl-parking-btn.pl-active .hl-parking-btn-count {
+  background: rgba(244,162,97,.22);
+}
+.hl-parking-btn-arrow {
+  font-size: .6rem;
+  transition: transform .3s;
+}
+.hl-parking-btn.pl-active .hl-parking-btn-arrow {
+  transform: rotate(180deg);
+}
+
+/* ── METAS FUTURAS — side panel deslizante ── */
+.hl-parking-panel {
   position: absolute;
-  opacity: 0;
-  width: 0; height: 0;
+  top: 0; right: 0; bottom: 0;
+  width: 300px;
+  background: #1e1e1e;
+  border-left: 1px solid rgba(255,255,255,.09);
+  transform: translateX(100%);
+  transition: transform .35s cubic-bezier(.4,0,.2,1);
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
 }
-.hl-toggle-track {
-  position: relative;
-  display: inline-block;
-  width: 32px; height: 18px;
-  background: #d1c7ba;
-  border-radius: 99px;
-  transition: background .2s;
+.hl-parking-panel.pl-open {
+  transform: translateX(0);
 }
-.hl-toggle-switch input:checked + .hl-toggle-track {
-  background: #f4a261;
+.hl-parking-panel-head {
+  display: flex; align-items: center; gap: 8px;
+  padding: 11px 14px 10px;
+  border-bottom: 1px solid rgba(255,255,255,.07);
+  flex-shrink: 0;
 }
-.hl-toggle-thumb {
-  position: absolute;
-  top: 2px; left: 2px;
-  width: 14px; height: 14px;
-  background: #fff;
-  border-radius: 50%;
-  transition: transform .2s;
-  box-shadow: 0 1px 3px rgba(0,0,0,.2);
+.hl-parking-panel-title {
+  font-family: 'Syne', sans-serif;
+  font-size: .72rem; font-weight: 700;
+  text-transform: uppercase; letter-spacing: .08em;
+  color: #f4a261;
 }
-.hl-toggle-switch input:checked + .hl-toggle-track .hl-toggle-thumb {
-  transform: translateX(14px);
+.hl-parking-panel-count {
+  font-size: .62rem; color: #555; font-style: italic;
 }
+.hl-parking-panel-close {
+  margin-left: auto;
+  background: none; border: none;
+  color: #555; cursor: pointer;
+  font-size: 1rem; line-height: 1;
+  padding: 3px 5px; border-radius: 4px;
+  transition: color .15s, background .15s;
+}
+.hl-parking-panel-close:hover { color: #ccc; background: rgba(255,255,255,.07); }
+.hl-parking-panel-body {
+  flex: 1; overflow-y: auto;
+  padding: 8px 6px 12px;
+  scrollbar-width: thin; scrollbar-color: #333 transparent;
+}
+.hl-parking-panel-body .hl-epic {
+  padding: 5px 10px;
+  margin: 0 2px;
+  border-radius: 5px;
+}
+.hl-parking-panel-body .hl-epic:hover { background: rgba(255,255,255,.05); }
+.hl-parking-panel-body .hl-name { color: #c8c8c8; }
 
 /* ── MOBILE MATRIX ── */
 .mobile-matrix { display: none; }
@@ -1557,40 +1591,48 @@ function renderHighlights(metas, squads, lookup, parkingLotEpics = []) {
       </div>`;
   }).join('');
 
-  // ── Card "Metas futuras" (parking lot) ──────────────────────────
-  let parkingCard = '';
+  // ── Side panel "Metas futuras" (parking lot) ────────────────────
+  let parkingBtn = '';
+  let parkingPanel = '';
   if (parkingLotEpics.length > 0) {
+    const count = parkingLotEpics.length;
     const epicsHtml = parkingLotEpics.map(e => {
       const si = getStatusInfo(e.workflow_status?.name);
-      return `<div class="hl-epic pl-epic">
+      return `<div class="hl-epic">
         <span class="hl-icon" title="${e.workflow_status?.name || ''}">${si.icon}</span>
         <span class="hl-name">${e.name}</span>
       </div>`;
     }).join('');
 
-    parkingCard = `
-      <div class="hl-meta hl-parking-card">
-        <div class="hl-meta-head hl-parking-head">
-          <span class="hl-meta-num">Metas futuras</span>
-          <span class="hl-parking-count">${parkingLotEpics.length} épico${parkingLotEpics.length !== 1 ? 's' : ''}</span>
-          <label class="hl-toggle-switch" title="Mostrar / ocultar">
-            <input type="checkbox" checked onchange="this.closest('.hl-parking-card').classList.toggle('pl-collapsed', !this.checked)">
-            <span class="hl-toggle-track"><span class="hl-toggle-thumb"></span></span>
-          </label>
+    parkingBtn = `
+      <button class="hl-parking-btn" id="hlParkingBtn" onclick="toggleParkingPanel()" title="Mostrar / ocultar Metas futuras">
+        Metas futuras
+        <span class="hl-parking-btn-count">${count}</span>
+        <span class="hl-parking-btn-arrow">›</span>
+      </button>`;
+
+    parkingPanel = `
+      <div class="hl-parking-panel" id="hlParkingPanel">
+        <div class="hl-parking-panel-head">
+          <span class="hl-parking-panel-title">Metas futuras</span>
+          <span class="hl-parking-panel-count">${count} épico${count !== 1 ? 's' : ''}</span>
+          <button class="hl-parking-panel-close" onclick="toggleParkingPanel()" title="Fechar">✕</button>
         </div>
-        <div class="hl-parking-body">${epicsHtml}</div>
+        <div class="hl-parking-panel-body">${epicsHtml}</div>
       </div>`;
   }
 
-  if (!cards.trim() && !parkingCard) return '';
+  if (!cards.trim() && !parkingPanel) return '';
 
   return `
     <div class="highlights-wrap">
       <div class="highlights-top">
         <span class="highlights-title">Destaques · ${metas[0]?.year || ''}</span>
         <span class="highlights-note">Top ${HIGHLIGHTS_MAX_PER_SQUAD} épicos por squad · ordenados por prioridade</span>
+        ${parkingBtn}
       </div>
-      <div class="highlights-scroll">${cards}${parkingCard}</div>
+      <div class="highlights-scroll">${cards}</div>
+      ${parkingPanel}
     </div>`;
 }
 
@@ -1687,6 +1729,15 @@ function renderEpicRow(epic, type) {
         ` : ''}
       </div>
     </div>`;
+}
+
+// ─── TOGGLE PARKING LOT PANEL ──────────────────────────────────────
+function toggleParkingPanel() {
+  const panel = document.getElementById('hlParkingPanel');
+  const btn   = document.getElementById('hlParkingBtn');
+  if (!panel) return;
+  const isOpen = panel.classList.toggle('pl-open');
+  if (btn) btn.classList.toggle('pl-active', isOpen);
 }
 
 // ─── SCROLL TO MATRIX CELL ─────────────────────────────────────────
