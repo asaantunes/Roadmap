@@ -560,33 +560,42 @@ main { padding: 48px; }
   z-index: 5;
 }
 
-/* ── CELL FOOTER (resumo + ver detalhes) ── */
-.cell-footer {
-  padding: 8px 14px;
-  display: flex; align-items: center; justify-content: space-between;
-  border-top: 1px solid #ede8f4;
-  background: #f8f5fd;
-  border-radius: 0 0 12px 12px;
+/* ── EXPANDÍVEL "ver mais detalhes" (épicos internos) ── */
+.internal-expand-wrap {
+  border-top: 1px solid var(--border);
 }
-.hidden-count {
-  font-size: .68rem;
-  color: var(--muted);
-  font-style: italic;
-}
-.btn-details {
-  font-size: .68rem;
-  font-family: 'Montserrat', sans-serif;
-  font-weight: 700;
-  letter-spacing: .5px;
-  color: var(--muted);
+.btn-internal-toggle {
+  width: 100%;
+  padding: 7px 14px;
+  display: flex; align-items: center; gap: 6px;
   background: none;
   border: none;
   cursor: pointer;
-  padding: 3px 8px;
-  border-radius: 4px;
+  font-size: .68rem;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 600;
+  color: var(--muted);
+  text-align: left;
   transition: color .15s, background .15s;
 }
-.btn-details:hover { color: var(--dark); background: var(--border); }
+.btn-internal-toggle:hover { color: var(--mid); background: var(--bg); }
+.btn-internal-toggle.open  { color: var(--mid); }
+.toggle-chevron {
+  font-size: .75rem;
+  display: inline-block;
+  transition: transform .2s;
+  flex-shrink: 0;
+}
+.btn-internal-toggle.open .toggle-chevron { transform: rotate(90deg); }
+.toggle-text { flex: 1; }
+.internal-epics-panel {
+  display: none;
+  background: var(--bg);
+  border-top: 1px solid var(--border);
+  padding: 4px 0 6px;
+}
+.internal-epics-panel.expanded { display: block; }
+.internal-epics-panel .epic-row { opacity: .85; }
 
 /* ── FEATURES TOGGLE ── */
 .epic-row { cursor: default; }
@@ -974,10 +983,8 @@ main { padding: 48px; }
   .epic-features { padding: 4px 12px 8px 24px; }
   .feature-item { font-size: .7rem; }
 
-  /* Footer do card */
-  .cell-footer { padding: 6px 12px; }
-  .hidden-count { font-size: .63rem; }
-  .btn-details { font-size: .63rem; }
+  /* Expandível internos (mobile) */
+  .btn-internal-toggle { font-size: .63rem; padding: 6px 12px; }
 
   /* Modal */
   .modal-box { width: 97%; max-height: 92vh; border-radius: 12px; }
@@ -1103,10 +1110,11 @@ async function loadData() {
     const cells   = pivotData.cells || {};
     const topRows = pivotData.top_level_rows || [];
 
-    // field_definitions: 89=release name, 90=start_date, 91=end_date, 92=parking_lot
-    //                    93=priority (Prio Produto), 94=epic name, 95=progress, 96=risk, 97=status
-    // Hierarquia rows: nameRow(fd89) → startRow(fd90) → endRow(fd91) → plRow(fd92)
-    // cells["0"][releaseIdx][epicIdx] = array de field-values (fd 93-97)
+    // field_definitions: 97=release name, 98=start_date, 99=end_date, 100=parking_lot
+    //                    101=priority (Prio Produto), 102=epic name, 103=progress, 104=risk, 105=status
+    //                    106=epic visibility ("Highlight" | "Internal" | "")
+    // Hierarquia rows: nameRow(fd97) → startRow(fd98) → endRow(fd99) → plRow(fd100)
+    // cells["0"][releaseIdx][epicIdx] = array de field-values (fd 101-106)
     const allEpicsGrid = cells['0'] || [];
 
     const allMetas = topRows.map((rowRef, idx) => {
@@ -1128,18 +1136,19 @@ async function loadData() {
         const byFd = {};
         for (const fv of fieldVals) byFd[fv.field_definition_ref] = fv;
 
-        // field_definitions: 93=priority, 94=epic name, 95=progress, 96=risk, 97=status
-        const nameField  = byFd[94];
+        // field_definitions: 101=priority, 102=epic name, 103=progress, 104=risk, 105=status, 106=visibility
+        const nameField  = byFd[102];
         const epicId     = nameField?.id || null;
         if (!epicId || seenIds.has(epicId)) return null;
         seenIds.add(epicId);
 
         const epicName   = nameField?.plain_value || '';
         const epicRef    = (nameField?.html_value || '').match(/\/epics\/([\w-]+)/)?.[1] || null;
-        const prioRaw    = byFd[93]?.plain_value;
-        const progress   = byFd[95]?.plain_value ?? null;
-        const riskVal    = byFd[96]?.plain_value || null;
-        const statusName = byFd[97]?.plain_value || null;
+        const prioRaw    = byFd[101]?.plain_value;
+        const progress   = byFd[103]?.plain_value ?? null;
+        const riskVal    = byFd[104]?.plain_value || null;
+        const statusName = byFd[105]?.plain_value || null;
+        const visRaw     = byFd[106]?.plain_value || '';
 
         return {
           name: epicName,
@@ -1149,6 +1158,7 @@ async function loadData() {
           progress: progress != null ? Math.round(Number(progress)) : null,
           workflow_status: statusName ? { name: statusName } : null,
           _alert: riskVal,
+          _visibility: visRaw.toLowerCase(), // 'highlight' | 'internal' | ''
         };
       }).filter(e => e && e.name);
 
@@ -1166,7 +1176,7 @@ async function loadData() {
     // 2a. Separar parking lot das metas normais (pivot inclui "Meta Futura" como parking_lot=Yes)
     const parkingLotEpics = allMetas
       .filter(m => m.isParking)
-      .flatMap(m => m.epics.filter(e => !e.name.trim().endsWith('-')))
+      .flatMap(m => m.epics.filter(e => e._visibility !== 'internal'))
       .sort((a, b) => (a._priority ?? Infinity) - (b._priority ?? Infinity));
 
     const metas = allMetas.filter(m => !m.isParking && m._releaseRef);
@@ -1473,22 +1483,26 @@ function renderMatrix(metas, squads, lookup) {
 
       if (!sorted.length) return `<div class="matrix-cell cell-${type}"><div class="matrix-cell-empty">—</div></div>`;
 
-      // Guardar todos os épicos no store para o modal
       const cellKey = `${g.year}_${g.metaNum}_${squad.replace(/[^\w]/g,'_')}`;
       window.__cellStore[cellKey] = { label: `Meta ${g.metaNum} · ${g.period} · ${squad}`, epics: sorted };
 
-      // Vista resumida: ocultar épicos cujo nome termina em '-'
-      const visible = sorted.filter(e => !e.name.trim().endsWith('-'));
-      const hidden  = sorted.length - visible.length;
+      // Vista resumida: ocultar épicos com visibility='internal'
+      const visible  = sorted.filter(e => e._visibility !== 'internal');
+      const internal = sorted.filter(e => e._visibility === 'internal');
 
       const epicHtml = visible.map(e => renderEpicRow(e, type)).join('');
-      const footer = `
-        <div class="cell-footer">
-          <span class="hidden-count">${hidden > 0 ? `+${hidden} épico${hidden>1?'s':''} no detalhe` : ''}</span>
-          <button class="btn-details" onclick="openDetails('${cellKey}')">Ver detalhes →</button>
-        </div>`;
+      const internalSection = internal.length > 0 ? `
+        <div class="internal-expand-wrap">
+          <button class="btn-internal-toggle" onclick="toggleInternalEpics(this)" data-count="${internal.length}">
+            <span class="toggle-chevron">›</span>
+            <span class="toggle-text">Ver mais detalhes (${internal.length})</span>
+          </button>
+          <div class="internal-epics-panel">
+            ${internal.map(e => renderEpicRow(e, type)).join('')}
+          </div>
+        </div>` : '';
 
-      return `<div class="matrix-cell cell-${type}" id="cell-${cellKey}">${epicHtml}${footer}</div>`;
+      return `<div class="matrix-cell cell-${type}" id="cell-${cellKey}">${epicHtml}${internalSection}</div>`;
     }).join('');
 
     const sc = SQUAD_STYLE[squad] || { color: '#888', bg: '#fff', lines: [squad] };
@@ -1515,11 +1529,9 @@ function renderMatrix(metas, squads, lookup) {
 }
 
 // ─── HIGHLIGHTS ─────────────────────────────────────────────────────
-// Critério de selecção para destaques.
-// Por agora: épicos com prioridade definida no Aha! aparecem nos destaques.
-// Quando tiveres um campo dedicado, basta alterar esta função.
+// Critério de selecção para destaques: campo "Epic Visibility" = "Highlight" no Aha!
 function isHighlighted(epic) {
-  return epic._priority != null;
+  return epic._visibility === 'highlight';
 }
 
 // Máximo de épicos mostrados por squad no painel de destaques.
@@ -1543,7 +1555,7 @@ function renderHighlights(metas, squads, lookup, parkingLotEpics = []) {
       if (!entry?.epics?.length) return '';
 
       const allHlEpics = entry.epics
-        .filter(e => isHighlighted(e) && !e.name.trim().endsWith('-'))
+        .filter(e => isHighlighted(e))
         .sort((a, b) => {
           const pa = a._priority != null ? a._priority : Infinity;
           const pb = b._priority != null ? b._priority : Infinity;
@@ -1665,17 +1677,22 @@ function renderMobileMatrix(metas, squads, lookup) {
       const cellKey = `${g.year}_${g.metaNum}_${squad.replace(/[^\w]/g,'_')}`;
       window.__cellStore[cellKey] = { label: `Meta ${g.metaNum} · ${g.period} · ${squad}`, epics: sorted };
 
-      const visible = sorted.filter(e => !e.name.trim().endsWith('-'));
-      const hidden  = sorted.length - visible.length;
+      const visible  = sorted.filter(e => e._visibility !== 'internal');
+      const internal = sorted.filter(e => e._visibility === 'internal');
       const sc = SQUAD_STYLE[squad] || { color: '#888', bg: '#fff', lines: [squad] };
       const squadLabel = sc.lines.join(' / ');
 
       const epicHtml = visible.map(e => renderEpicRow(e, type)).join('');
-      const footer = `
-        <div class="cell-footer">
-          <span class="hidden-count">${hidden > 0 ? `+${hidden} épico${hidden>1?'s':''} no detalhe` : ''}</span>
-          <button class="btn-details" onclick="openDetails('${cellKey}')">Ver detalhes →</button>
-        </div>`;
+      const internalSection = internal.length > 0 ? `
+        <div class="internal-expand-wrap">
+          <button class="btn-internal-toggle" onclick="toggleInternalEpics(this)" data-count="${internal.length}">
+            <span class="toggle-chevron">›</span>
+            <span class="toggle-text">Ver mais detalhes (${internal.length})</span>
+          </button>
+          <div class="internal-epics-panel">
+            ${internal.map(e => renderEpicRow(e, type)).join('')}
+          </div>
+        </div>` : '';
 
       return `
         <div class="mob-squad-section">
@@ -1684,7 +1701,7 @@ function renderMobileMatrix(metas, squads, lookup) {
             ${squadLabel}
           </div>
           <div class="mob-epics" style="border-left-color:${sc.color}; background:${sc.bg}">
-            ${epicHtml}${footer}
+            ${epicHtml}${internalSection}
           </div>
         </div>`;
     }).join('');
@@ -1732,6 +1749,17 @@ function renderEpicRow(epic, type) {
     </div>`;
 }
 
+// ─── TOGGLE ÉPICOS INTERNOS (expandível dentro de cada célula) ─────
+function toggleInternalEpics(btn) {
+  const wrap  = btn.closest('.internal-expand-wrap');
+  const panel = wrap.querySelector('.internal-epics-panel');
+  const isOpen = panel.classList.toggle('expanded');
+  btn.classList.toggle('open', isOpen);
+  const count = btn.dataset.count;
+  btn.querySelector('.toggle-text').textContent =
+    isOpen ? 'Ocultar detalhes internos' : `Ver mais detalhes (${count})`;
+}
+
 // ─── TOGGLE PARKING LOT PANEL ──────────────────────────────────────
 function toggleParkingPanel() {
   const panel = document.getElementById('hlParkingPanel');
@@ -1763,15 +1791,14 @@ function openDetails(cellKey) {
   const data = window.__cellStore?.[cellKey];
   if (!data) return;
   document.getElementById('modalTitle').textContent = data.label;
-  // Mostrar TODOS os épicos (incluindo os que terminam em '-')
   const grouped = {
-    visible: data.epics.filter(e => !e.name.trim().endsWith('-')),
-    hidden:  data.epics.filter(e => e.name.trim().endsWith('-')),
+    visible:  data.epics.filter(e => e._visibility !== 'internal'),
+    internal: data.epics.filter(e => e._visibility === 'internal'),
   };
   let html = grouped.visible.map(e => renderEpicRow(e, 'modal')).join('');
-  if (grouped.hidden.length) {
-    html += `<div class="modal-section-label">Épicos de suporte</div>`;
-    html += grouped.hidden.map(e => renderEpicRow(e, 'modal')).join('');
+  if (grouped.internal.length) {
+    html += `<div class="modal-section-label">Épicos internos</div>`;
+    html += grouped.internal.map(e => renderEpicRow(e, 'modal')).join('');
   }
   document.getElementById('modalContent').innerHTML = html;
   document.getElementById('detailsModal').classList.add('open');
