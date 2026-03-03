@@ -740,6 +740,28 @@ main { padding: 48px; }
 }
 .hl-meta.past { opacity: .75; }
 
+/* Footer CTA (ex: review de entregas) */
+.hl-meta-footer {
+  flex-shrink: 0;
+  padding: 10px 12px;
+  border-top: 1px solid #d1fae5;
+  background: #f0fdf4;
+}
+.hl-review-btn {
+  display: flex; align-items: center; justify-content: center; gap: 5px;
+  width: 100%;
+  padding: 8px 12px;
+  background: #166534;
+  color: #fff;
+  border-radius: 7px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: .7rem; font-weight: 700;
+  text-decoration: none;
+  letter-spacing: .3px;
+  transition: background .15s, opacity .15s;
+}
+.hl-review-btn:hover { background: #14532d; }
+
 /* Cabeçalho do card */
 .hl-meta-head {
   padding: 10px 14px 9px;
@@ -1596,6 +1618,16 @@ function renderHighlights(metas, squads, lookup, parkingLotEpics = []) {
 
     if (!anyEpic) return '';
 
+    const reviewCta = (g.metaNum === 1 && g.type === 'past')
+      ? `<div class="hl-meta-footer">
+           <a class="hl-review-btn"
+              href="https://aha-conector.vercel.app/public/snapshots/98605584-d0c8-429e-921c-dcb8aabb7337"
+              target="_blank" rel="noopener noreferrer">
+             Ver review de entregas ↗
+           </a>
+         </div>`
+      : '';
+
     return `
       <div class="hl-meta ${g.type}">
         <div class="hl-meta-head ${g.type}">
@@ -1604,6 +1636,7 @@ function renderHighlights(metas, squads, lookup, parkingLotEpics = []) {
           <span class="meta-pill ${pillClass}">${pillLabel}</span>
         </div>
         <div class="hl-squads">${squadBlocks}</div>
+        ${reviewCta}
       </div>`;
   }).join('');
 
