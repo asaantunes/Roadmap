@@ -716,10 +716,10 @@ main { padding: 48px; }
   font-size: .62rem; color: #3a3a3a; font-style: italic;
 }
 .highlights-scroll {
-  display: flex; gap: 12px;
+  display: flex; gap: 16px;
   overflow-x: auto;
   scroll-snap-type: x mandatory;
-  padding: 16px 24px 12px;
+  padding: 16px 24px 16px;
   scrollbar-width: thin; scrollbar-color: #42275e transparent;
 }
 .highlights-scroll::-webkit-scrollbar { height: 3px; }
@@ -728,14 +728,14 @@ main { padding: 48px; }
 /* Card de cada Meta */
 .hl-meta {
   flex-shrink: 0;
-  width: clamp(240px, 26vw, 360px);
+  width: clamp(300px, 30vw, 460px);
   scroll-snap-align: start;
   background: #fff;
   border: 1px solid #e5e3de;
   border-radius: 10px;
   overflow: hidden;
   display: flex; flex-direction: column;
-  max-height: min(78vh, 580px);
+  max-height: min(92vh, 900px);
   box-shadow: 0 1px 4px rgba(0,0,0,.08);
 }
 .hl-meta.past { opacity: .75; }
