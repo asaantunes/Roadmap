@@ -12,19 +12,19 @@
 - **Password do site**: `omnibees2024`
 
 ## Aha! — Pivot e Campos
-- **Pivot ID**: `7611553947568604062`
+- **Pivot ID**: `7612677886557207494`
 - **Field definitions** (byFd[N] em loadData):
-  - `97` = release name (rows — parsed via hierarchy, não byFd)
-  - `98` = start_date
-  - `99` = end_date
-  - `100` = parking_lot ("Yes" / "No") — fd 100 é filho de fd 99 (4.º nível)
-  - `101` = Prio Produto (numérico, menor = mais prioritário)
-  - `102` = epic name (html_value contém link para extrair `_epicRef`)
-  - `103` = progress (%)
-  - `104` = risk / alert
-  - `105` = status (workflow_status name)
-  - `106` = Epic Visibility ("Highlight" | "Internal" | "") — campo novo
-- **Hierarquia rows**: `nameRow(fd97) → startRow(fd98) → endRow(fd99) → plRow(fd100)`
+  - `57` = release name (rows — parsed via hierarchy, não byFd)
+  - `58` = start_date
+  - `59` = end_date
+  - `60` = parking_lot ("Yes" / "No") — fd 60 é filho de fd 59 (4.º nível)
+  - `61` = Prio Produto (numérico, menor = mais prioritário)
+  - `62` = epic name (html_value contém link para extrair `_epicRef`)
+  - `63` = progress (%)
+  - `64` = risk / alert
+  - `65` = status (workflow_status name)
+  - `66` = Epic Visibility ("Highlight" | "Internal" | "")
+- **Hierarquia rows**: `nameRow(fd57) → startRow(fd58) → endRow(fd59) → plRow(fd60)`
 
 ## Estrutura de Dados — Épico
 ```js
@@ -87,8 +87,7 @@ default desconhecido → group 9
 - Épicos com nome a terminar em `-` estão ocultos na vista resumida (são "épicos de suporte")
 
 ## Commits Recentes (main)
-- `a8298a6` — Auto-refresh diário dos dados (24h)
-- `8c9c3b7` — Colunas matrix 320px → 420px
-- `590fe8a` — Clicar squad nos highlights navega até célula com flash
-- `e2a01e2` — Highlights TV: top 3 por squad com indicador +N
-- `aab6111` — Ordenação por estado respeita workflow Aha! (backlog → live)
+- `98ab007` — CTA 'Ver review de entregas' no card da Meta 1
+- `16265fc` — Altura dos cards: calc(100vh - 160px)
+- `4bad61f` — Badges de risco nos destaques
+- `ec74e4a` — Epic Visibility field (fd 66) + internal epics expansível

@@ -1066,7 +1066,7 @@ main { padding: 48px; }
 // ─── CONFIG ────────────────────────────────────────────────────────
 const SITE_PASSWORD   = 'omnibees2024';
 const WORKER_URL      = 'https://lucky-star-d742.ana-g-antunes.workers.dev';
-const PIVOT_ID        = '7611553947568604062';
+const PIVOT_ID        = '7612677886557207494';
 const AUTO_REFRESH_MS = 24 * 60 * 60 * 1000; // 24 horas
 // ───────────────────────────────────────────────────────────────────
 
@@ -1133,11 +1133,11 @@ async function loadData() {
     const cells   = pivotData.cells || {};
     const topRows = pivotData.top_level_rows || [];
 
-    // field_definitions: 97=release name, 98=start_date, 99=end_date, 100=parking_lot
-    //                    101=priority (Prio Produto), 102=epic name, 103=progress, 104=risk, 105=status
-    //                    106=epic visibility ("Highlight" | "Internal" | "")
-    // Hierarquia rows: nameRow(fd97) → startRow(fd98) → endRow(fd99) → plRow(fd100)
-    // cells["0"][releaseIdx][epicIdx] = array de field-values (fd 101-106)
+    // field_definitions: 57=release name, 58=start_date, 59=end_date, 60=parking_lot
+    //                    61=priority (Prio Produto), 62=epic name, 63=progress, 64=risk, 65=status
+    //                    66=epic visibility ("Highlight" | "Internal" | "")
+    // Hierarquia rows: nameRow(fd57) → startRow(fd58) → endRow(fd59) → plRow(fd60)
+    // cells["0"][releaseIdx][epicIdx] = array de field-values (fd 61-66)
     const allEpicsGrid = cells['0'] || [];
 
     const allMetas = topRows.map((rowRef, idx) => {
@@ -1159,19 +1159,19 @@ async function loadData() {
         const byFd = {};
         for (const fv of fieldVals) byFd[fv.field_definition_ref] = fv;
 
-        // field_definitions: 101=priority, 102=epic name, 103=progress, 104=risk, 105=status, 106=visibility
-        const nameField  = byFd[102];
+        // field_definitions: 61=priority, 62=epic name, 63=progress, 64=risk, 65=status, 66=visibility
+        const nameField  = byFd[62];
         const epicId     = nameField?.id || null;
         if (!epicId || seenIds.has(epicId)) return null;
         seenIds.add(epicId);
 
         const epicName   = nameField?.plain_value || '';
         const epicRef    = (nameField?.html_value || '').match(/\/epics\/([\w-]+)/)?.[1] || null;
-        const prioRaw    = byFd[101]?.plain_value;
-        const progress   = byFd[103]?.plain_value ?? null;
-        const riskVal    = byFd[104]?.plain_value || null;
-        const statusName = byFd[105]?.plain_value || null;
-        const visRaw     = byFd[106]?.plain_value || '';
+        const prioRaw    = byFd[61]?.plain_value;
+        const progress   = byFd[63]?.plain_value ?? null;
+        const riskVal    = byFd[64]?.plain_value || null;
+        const statusName = byFd[65]?.plain_value || null;
+        const visRaw     = byFd[66]?.plain_value || '';
 
         return {
           name: epicName,
