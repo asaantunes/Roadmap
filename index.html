@@ -1693,7 +1693,7 @@ function renderHighlights(metas, squads, lookup, parkingLotEpics = []) {
     const visibleHtml  = plVisible.map(renderPlEpic).join('');
     const internalSection = plInternal.length > 0 ? `
       <div class="pl-internal-wrap">
-        <button class="pl-internal-toggle" onclick="toggleInternalEpics(this)" data-count="${plInternal.length}">
+        <button class="pl-internal-toggle" onclick="toggleInternalEpics(this)" data-count="${plInternal.length}" data-label="Ver detalhes internos (${plInternal.length})">
           <span class="toggle-chevron">›</span>
           <span class="toggle-text">Ver detalhes internos (${plInternal.length})</span>
         </button>
@@ -1834,15 +1834,17 @@ function renderEpicRow(epic, type) {
     </div>`;
 }
 
-// ─── TOGGLE ÉPICOS INTERNOS (expandível dentro de cada célula) ─────
+// ─── TOGGLE ÉPICOS INTERNOS (expandível dentro de cada célula ou painel) ─────
 function toggleInternalEpics(btn) {
-  const wrap  = btn.closest('.internal-expand-wrap');
+  const wrap  = btn.closest('.internal-expand-wrap, .pl-internal-wrap');
+  if (!wrap) return;
   const panel = wrap.querySelector('.internal-epics-panel');
   const isOpen = panel.classList.toggle('expanded');
   btn.classList.toggle('open', isOpen);
-  const count = btn.dataset.count;
+  const count     = btn.dataset.count;
+  const closedTxt = btn.dataset.label || `Ver mais detalhes (${count})`;
   btn.querySelector('.toggle-text').textContent =
-    isOpen ? 'Ocultar detalhes internos' : `Ver mais detalhes (${count})`;
+    isOpen ? 'Ocultar detalhes internos' : closedTxt;
 }
 
 // ─── TOGGLE PARKING LOT PANEL ──────────────────────────────────────
