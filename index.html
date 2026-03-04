@@ -134,6 +134,56 @@ header {
 }
 .header-btn:hover { border-color: #fec437; color: #fec437; }
 
+/* ── PIVOT SETTINGS POPOVER ── */
+.pivot-settings-wrap { position: relative; }
+.pivot-popover {
+  display: none;
+  position: absolute; top: calc(100% + 10px); right: 0;
+  width: 320px;
+  background: #1e1630;
+  border: 1px solid #4e3268;
+  border-radius: 10px;
+  padding: 14px 16px;
+  box-shadow: 0 8px 32px rgba(0,0,0,.45);
+  z-index: 200;
+}
+.pivot-popover.open { display: block; }
+.pivot-popover-title {
+  font-family: 'Montserrat', sans-serif;
+  font-size: .62rem; font-weight: 700;
+  text-transform: uppercase; letter-spacing: .08em;
+  color: #fec437; margin-bottom: 10px;
+}
+.pivot-popover label {
+  display: block;
+  font-size: .68rem; color: #9a86b5; margin-bottom: 5px;
+}
+.pivot-popover input {
+  width: 100%; box-sizing: border-box;
+  background: #120d1e; border: 1px solid #4e3268;
+  border-radius: 6px; padding: 7px 10px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: .72rem; color: #e0d8f0;
+  outline: none; transition: border-color .2s;
+}
+.pivot-popover input:focus { border-color: #fec437; }
+.pivot-popover-btns {
+  display: flex; gap: 8px; margin-top: 10px;
+}
+.pivot-popover-btns button {
+  flex: 1; padding: 7px 10px;
+  border-radius: 6px; border: none; cursor: pointer;
+  font-family: 'Montserrat', sans-serif;
+  font-size: .7rem; font-weight: 700;
+  transition: opacity .15s;
+}
+.pivot-popover-btns button:hover { opacity: .85; }
+.btn-pivot-save    { background: #fec437; color: #301b46; }
+.btn-pivot-reset   { background: transparent; border: 1px solid #4e3268 !important; color: #9a86b5; }
+.pivot-popover-hint {
+  font-size: .6rem; color: #554870; margin-top: 8px; line-height: 1.4;
+}
+
 /* ── MAIN ── */
 main { padding: 48px; }
 
@@ -1083,6 +1133,19 @@ main { padding: 48px; }
       <span class="header-date" id="headerDate"></span>
       <span class="header-refresh-info" id="headerRefreshInfo"></span>
       <button class="header-btn" onclick="loadData()">↻ Atualizar</button>
+      <div class="pivot-settings-wrap">
+        <button class="header-btn" onclick="togglePivotSettings()" title="Configurar Pivot ID">⚙</button>
+        <div class="pivot-popover" id="pivotPopover">
+          <div class="pivot-popover-title">Configuração da Fonte de Dados</div>
+          <label for="pivotIdInput">Pivot ID (Aha!)</label>
+          <input id="pivotIdInput" type="text" placeholder="ID numérico do pivot" />
+          <div class="pivot-popover-btns">
+            <button class="btn-pivot-save" onclick="savePivotId()">Guardar e recarregar</button>
+            <button class="btn-pivot-reset" onclick="resetPivotId()">Restaurar padrão</button>
+          </div>
+          <div class="pivot-popover-hint" id="pivotPopoverHint"></div>
+        </div>
+      </div>
       <button class="header-btn" onclick="doLogout()">Sair</button>
     </div>
   </header>
@@ -1095,10 +1158,13 @@ main { padding: 48px; }
 
 <script>
 // ─── CONFIG ────────────────────────────────────────────────────────
-const SITE_PASSWORD   = 'omnibees2024';
-const WORKER_URL      = 'https://lucky-star-d742.ana-g-antunes.workers.dev';
-const PIVOT_ID        = '7612677886557207494';
-const AUTO_REFRESH_MS = 24 * 60 * 60 * 1000; // 24 horas
+const SITE_PASSWORD     = 'omnibees2024';
+const WORKER_URL        = 'https://lucky-star-d742.ana-g-antunes.workers.dev';
+const PIVOT_ID_DEFAULT  = '7612677886557207494'; // fallback hardcoded
+const AUTO_REFRESH_MS   = 24 * 60 * 60 * 1000;  // 24 horas
+function getPivotId() {
+  return localStorage.getItem('roadmap_pivot_id') || PIVOT_ID_DEFAULT;
+}
 // ───────────────────────────────────────────────────────────────────
 
 // ─── AUTO-REFRESH ──────────────────────────────────────────────────
@@ -1159,7 +1225,7 @@ async function loadData() {
   showLoading();
   try {
     // 1. Uma única chamada — pivot devolve releases + épicos + estado + progresso + risco
-    const pivotData = await ahaGet(`bookmarks/custom_pivots/${PIVOT_ID}`);
+    const pivotData = await ahaGet(`bookmarks/custom_pivots/${getPivotId()}`);
     const rows    = pivotData.rows  || {};
     const cells   = pivotData.cells || {};
     const topRows = pivotData.top_level_rows || [];
@@ -1846,6 +1912,36 @@ function toggleInternalEpics(btn) {
   btn.querySelector('.toggle-text').textContent =
     isOpen ? 'Ocultar detalhes internos' : closedTxt;
 }
+
+// ─── PIVOT SETTINGS POPOVER ────────────────────────────────────────
+function togglePivotSettings() {
+  const pop = document.getElementById('pivotPopover');
+  const isOpen = pop.classList.toggle('open');
+  if (isOpen) {
+    const inp = document.getElementById('pivotIdInput');
+    inp.value = getPivotId();
+    document.getElementById('pivotPopoverHint').textContent =
+      getPivotId() === PIVOT_ID_DEFAULT ? 'A usar o ID padrão.' : 'ID personalizado ativo.';
+    inp.focus(); inp.select();
+  }
+}
+function savePivotId() {
+  const val = document.getElementById('pivotIdInput').value.trim();
+  if (!val) return;
+  localStorage.setItem('roadmap_pivot_id', val);
+  document.getElementById('pivotPopover').classList.remove('open');
+  loadData();
+}
+function resetPivotId() {
+  localStorage.removeItem('roadmap_pivot_id');
+  document.getElementById('pivotIdInput').value = PIVOT_ID_DEFAULT;
+  document.getElementById('pivotPopoverHint').textContent = 'ID restaurado para o padrão.';
+}
+// Fechar popover ao clicar fora
+document.addEventListener('click', e => {
+  const wrap = e.target.closest('.pivot-settings-wrap');
+  if (!wrap) document.getElementById('pivotPopover')?.classList.remove('open');
+});
 
 // ─── TOGGLE PARKING LOT PANEL ──────────────────────────────────────
 function toggleParkingPanel() {
