@@ -7,7 +7,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet"/>
 <style>
 :root {
-  --bg: #f3f1f7;
+  --bg: #fcfcfc;
   --white: #ffffff;
   --dark: #301b46;
   --mid: #564293;
@@ -33,7 +33,7 @@
 body {
   background: var(--bg);
   color: var(--dark);
-  font-family: 'Montserrat', sans-serif;
+  font-family: 'Open Sans', sans-serif;
   min-height: 100vh;
 }
 
@@ -220,34 +220,42 @@ body {
 
 /* ── HEADER ── */
 header {
-  background: var(--dark);
-  color: #fff;
-  padding: 20px 48px;
+  background: #ffffff;
+  color: #273240;
+  padding: 0 20px;
+  height: 57px;
   display: flex; align-items: center; justify-content: space-between;
   position: sticky; top: 0; z-index: 10;
+  border-bottom: 1px solid #e6e6e6;
+  font-family: 'Open Sans', sans-serif;
 }
 .logo {
-  font-family: 'Montserrat', sans-serif;
+  font-family: 'Open Sans', sans-serif;
   font-size: 1.4rem;
   font-weight: 800;
   letter-spacing: -0.5px;
 }
 .logo span { color: #fec437; }
-.header-meta { display: flex; align-items: center; gap: 20px; }
-.header-date { font-size: .78rem; color: #9a86b5; }
-.header-refresh-info { font-size: .72rem; color: #6e5a88; white-space: nowrap; }
+.header-meta { display: flex; align-items: center; gap: 15px; }
+.header-date { font-size: 11px; color: #9c9c9c; font-family: 'Open Sans', sans-serif; }
+.header-refresh-info { font-size: 11px; color: #9c9c9c; white-space: nowrap; font-family: 'Open Sans', sans-serif; }
 .header-btn {
-  background: transparent;
-  border: 1px solid #4e3268;
-  color: #9a86b5;
+  background: #fff;
+  border: 1px solid #c5c5c5;
+  color: #273240;
   padding: 7px 14px;
-  border-radius: 6px;
-  font-size: .78rem;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 600;
   cursor: pointer;
-  font-family: 'Montserrat', sans-serif;
-  transition: border-color .2s, color .2s;
+  font-family: 'Open Sans', sans-serif;
+  transition: border-color .2s, background .2s;
+  display: flex; align-items: center; gap: 5px;
+  height: 32px;
 }
-.header-btn:hover { border-color: #fec437; color: #fec437; }
+.header-btn:hover { border-color: #c5c5c5; background: #e6e6e6; }
+.header-btn-icon { width: 32px; padding: 8px; justify-content: center; }
+.header-btn-icon svg { flex-shrink: 0; }
 
 /* ── PIVOT SETTINGS POPOVER ── */
 .pivot-settings-wrap { position: relative; }
@@ -255,48 +263,50 @@ header {
   display: none;
   position: absolute; top: calc(100% + 10px); right: 0;
   width: 320px;
-  background: #1e1630;
-  border: 1px solid #4e3268;
-  border-radius: 10px;
+  background: #ffffff;
+  border: 1px solid #e6e6e6;
+  border-radius: 4px;
   padding: 14px 16px;
-  box-shadow: 0 8px 32px rgba(0,0,0,.45);
+  box-shadow: 0 8px 32px rgba(0,0,0,.1);
   z-index: 200;
 }
 .pivot-popover.open { display: block; }
 .pivot-popover-title {
-  font-family: 'Montserrat', sans-serif;
-  font-size: .62rem; font-weight: 700;
+  font-family: 'Open Sans', sans-serif;
+  font-size: 11px; font-weight: 700;
   text-transform: uppercase; letter-spacing: .08em;
-  color: #fec437; margin-bottom: 10px;
+  color: #273240; margin-bottom: 10px;
 }
 .pivot-popover label {
   display: block;
-  font-size: .68rem; color: #9a86b5; margin-bottom: 5px;
+  font-family: 'Open Sans', sans-serif;
+  font-size: 11px; color: #9c9c9c; margin-bottom: 5px;
 }
 .pivot-popover input {
   width: 100%; box-sizing: border-box;
-  background: #120d1e; border: 1px solid #4e3268;
-  border-radius: 6px; padding: 7px 10px;
-  font-family: 'Montserrat', sans-serif;
-  font-size: .72rem; color: #e0d8f0;
+  background: #fff; border: 1px solid #c5c5c5;
+  border-radius: 4px; padding: 7px 10px;
+  font-family: 'Open Sans', sans-serif;
+  font-size: 12px; color: #273240;
   outline: none; transition: border-color .2s;
 }
-.pivot-popover input:focus { border-color: #fec437; }
+.pivot-popover input:focus { border-color: #4e4076; }
 .pivot-popover-btns {
   display: flex; gap: 8px; margin-top: 10px;
 }
 .pivot-popover-btns button {
   flex: 1; padding: 7px 10px;
-  border-radius: 6px; border: none; cursor: pointer;
-  font-family: 'Montserrat', sans-serif;
-  font-size: .7rem; font-weight: 700;
+  border-radius: 4px; border: none; cursor: pointer;
+  font-family: 'Open Sans', sans-serif;
+  font-size: 11px; font-weight: 600;
   transition: opacity .15s;
 }
 .pivot-popover-btns button:hover { opacity: .85; }
-.btn-pivot-save    { background: #fec437; color: #301b46; }
-.btn-pivot-reset   { background: transparent; border: 1px solid #4e3268 !important; color: #9a86b5; }
+.btn-pivot-save    { background: #fec437; color: #fff; }
+.btn-pivot-reset   { background: transparent; border: 1px solid #c5c5c5 !important; color: #273240; }
 .pivot-popover-hint {
-  font-size: .6rem; color: #554870; margin-top: 8px; line-height: 1.4;
+  font-size: 10px; color: #9c9c9c; margin-top: 8px; line-height: 1.4;
+  font-family: 'Open Sans', sans-serif;
 }
 
 /* ── MAIN ── */
@@ -304,7 +314,7 @@ main { padding: 48px; }
 
 /* ── SECTION TITLE ── */
 .section-label {
-  font-family: 'Montserrat', sans-serif;
+  font-family: 'Open Sans', sans-serif;
   font-size: .7rem;
   font-weight: 700;
   text-transform: uppercase;
@@ -326,7 +336,7 @@ main { padding: 48px; }
   font-weight: 600;
   padding: 4px 10px;
   border-radius: 99px;
-  font-family: 'Montserrat', sans-serif;
+  font-family: 'Open Sans', sans-serif;
   letter-spacing: .5px;
   white-space: nowrap;
   display: inline-block;
@@ -345,7 +355,7 @@ main { padding: 48px; }
   border-top: 2px solid var(--border);
 }
 .detail-section-title {
-  font-family: 'Montserrat', sans-serif;
+  font-family: 'Open Sans', sans-serif;
   font-size: .7rem; font-weight: 700;
   text-transform: uppercase; letter-spacing: 3px;
   color: var(--muted);
@@ -392,7 +402,7 @@ main { padding: 48px; }
 .matrix-col-header.current .meta-col-period { color: #aaa; }
 .matrix-col-header.past { opacity: 0.75; }
 .meta-col-num {
-  font-family: 'Montserrat', sans-serif;
+  font-family: 'Open Sans', sans-serif;
   font-size: 1.3rem;
   font-weight: 800;
   letter-spacing: -0.5px;
@@ -432,7 +442,7 @@ main { padding: 48px; }
   gap: 1px;
 }
 .squad-name {
-  font-family: 'Montserrat', sans-serif;
+  font-family: 'Open Sans', sans-serif;
   font-size: .78rem;
   font-weight: 700;
   text-transform: uppercase;
@@ -440,7 +450,7 @@ main { padding: 48px; }
   line-height: 1.3;
 }
 .squad-name-main {
-  font-family: 'Montserrat', sans-serif;
+  font-family: 'Open Sans', sans-serif;
   font-size: .78rem;
   font-weight: 700;
   text-transform: uppercase;
@@ -448,7 +458,7 @@ main { padding: 48px; }
   line-height: 1.2;
 }
 .squad-name-sub {
-  font-family: 'Montserrat', sans-serif;
+  font-family: 'Open Sans', sans-serif;
   font-size: .65rem;
   font-weight: 700;
   text-transform: uppercase;
@@ -644,19 +654,22 @@ main { padding: 48px; }
 
 /* ── LOGO ── */
 .logo { display: flex; align-items: center; gap: 10px; }
-.logo-img { height: 22px; filter: brightness(0) invert(1); }
+.logo-img { height: 36px; width: auto; object-fit: contain; }
 .logo-roadmap {
-  font-family: 'Montserrat', sans-serif;
-  font-size: 1rem;
-  font-weight: 700;
-  color: #fec437;
-  letter-spacing: 1px;
-  text-transform: uppercase;
+  font-family: 'Open Sans', sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+  color: #273240;
+  border-left: 1px solid #e6e6e6;
+  padding-left: 10px;
+  line-height: 1;
 }
 
 /* ── TIMELINE STRIP (header fino acima dos highlights) ── */
 .timeline-strip {
-  background: var(--dark);
+  background: #fff;
+  border: 1px solid #e6e6e6;
+  border-bottom: none;
   border-radius: 16px 16px 0 0;
   padding: 12px 24px 10px;
 }
@@ -668,14 +681,14 @@ main { padding: 48px; }
 .timeline-month-label {
   position: absolute;
   font-size: .55rem;
-  color: #6e5a88;
+  color: #9c9c9c;
   transform: translateX(-50%);
 }
 .timeline-today-label {
   position: absolute;
   top: 0;
   font-size: .55rem;
-  color: #fec437;
+  color: #4e4076;
   font-weight: 700;
   transform: translateX(-50%);
   white-space: nowrap;
@@ -695,7 +708,7 @@ main { padding: 48px; }
   position: absolute;
   top: 0; bottom: 0;
   width: 1px;
-  background: rgba(255,255,255,.07);
+  background: #e6e6e6;
 }
 .timeline-bar {
   position: absolute;
@@ -704,7 +717,7 @@ main { padding: 48px; }
   display: flex;
   align-items: center;
   padding: 0 10px;
-  font-family: 'Montserrat', sans-serif;
+  font-family: 'Open Sans', sans-serif;
   font-size: .65rem;
   font-weight: 700;
   white-space: nowrap;
@@ -713,14 +726,14 @@ main { padding: 48px; }
   transition: opacity .15s;
 }
 .timeline-bar:hover { opacity: .78; }
-.timeline-bar.past    { background: #42275e; color: #7a6290; }
-.timeline-bar.current { background: #fec437; color: #301b46; }
-.timeline-bar.future  { background: rgba(255,255,255,.07); color: #7a6290; border: 1px dashed rgba(255,255,255,.15); }
+.timeline-bar.past    { background: #e6e6e6; color: #9c9c9c; }
+.timeline-bar.current { background: #fec437; color: #273240; }
+.timeline-bar.future  { background: #f5f5f5; color: #9c9c9c; border: 1px dashed #c5c5c5; }
 .timeline-today-line {
   position: absolute;
   top: -2px; bottom: -2px;
   width: 2px;
-  background: #fec437;
+  background: #4e4076;
   border-radius: 2px;
   z-index: 5;
 }
@@ -737,7 +750,7 @@ main { padding: 48px; }
   border: none;
   cursor: pointer;
   font-size: .68rem;
-  font-family: 'Montserrat', sans-serif;
+  font-family: 'Open Sans', sans-serif;
   font-weight: 600;
   color: var(--muted);
   text-align: left;
@@ -832,7 +845,7 @@ main { padding: 48px; }
   flex-shrink: 0;
 }
 .modal-title {
-  font-family: 'Montserrat', sans-serif;
+  font-family: 'Open Sans', sans-serif;
   font-size: .95rem;
   font-weight: 700;
   letter-spacing: -.3px;
@@ -849,7 +862,7 @@ main { padding: 48px; }
   flex: 1;
 }
 .modal-section-label {
-  font-family: 'Montserrat', sans-serif;
+  font-family: 'Open Sans', sans-serif;
   font-size: .6rem; font-weight: 700;
   text-transform: uppercase; letter-spacing: 2px;
   color: var(--muted);
@@ -859,7 +872,9 @@ main { padding: 48px; }
 
 /* ── HIGHLIGHTS (estilo Aha! claro) ── */
 .highlights-wrap {
-  background: var(--dark);
+  background: #fff;
+  border: 1px solid #e6e6e6;
+  border-top: none;
   border-radius: 0 0 16px 16px;
   padding: 0 0 16px;
   margin-bottom: 0;
@@ -869,26 +884,26 @@ main { padding: 48px; }
 .highlights-top {
   display: flex; align-items: center; gap: 12px;
   padding: 10px 24px 12px;
-  border-bottom: 1px solid rgba(255,255,255,.06);
+  border-bottom: 1px solid #e6e6e6;
 }
 .highlights-title {
-  font-family: 'Montserrat', sans-serif;
+  font-family: 'Open Sans', sans-serif;
   font-size: .55rem; font-weight: 700;
   text-transform: uppercase; letter-spacing: 4px;
-  color: #444;
+  color: #9c9c9c;
 }
 .highlights-note {
-  font-size: .62rem; color: #3a3a3a; font-style: italic;
+  font-size: .62rem; color: #9c9c9c; font-style: italic;
 }
 .highlights-scroll {
   display: flex; gap: 16px;
   overflow-x: auto;
   scroll-snap-type: x mandatory;
   padding: 16px 24px 16px;
-  scrollbar-width: thin; scrollbar-color: #42275e transparent;
+  scrollbar-width: thin; scrollbar-color: #c5c5c5 transparent;
 }
 .highlights-scroll::-webkit-scrollbar { height: 3px; }
-.highlights-scroll::-webkit-scrollbar-thumb { background: #42275e; border-radius: 2px; }
+.highlights-scroll::-webkit-scrollbar-thumb { background: #c5c5c5; border-radius: 2px; }
 
 /* Card de cada Meta */
 .hl-meta {
@@ -919,7 +934,7 @@ main { padding: 48px; }
   background: #166534;
   color: #fff;
   border-radius: 7px;
-  font-family: 'Montserrat', sans-serif;
+  font-family: 'Open Sans', sans-serif;
   font-size: .7rem; font-weight: 700;
   text-decoration: none;
   letter-spacing: .3px;
@@ -936,24 +951,24 @@ main { padding: 48px; }
   background: #fafaf8;
 }
 .hl-meta-head.past    { background: #f0fdf4; border-bottom-color: #d1fae5; }
-.hl-meta-head.current { background: #301b46; border-bottom-color: #42275e; }
+.hl-meta-head.current { background: #fec437; border-bottom-color: #e5b032; }
 .hl-meta-head.future  { background: #f7f5fb; border-bottom-color: #e8e2f0; }
 
 .hl-meta-num {
-  font-family: 'Montserrat', sans-serif;
+  font-family: 'Open Sans', sans-serif;
   font-size: .88rem; font-weight: 800; color: #301b46; letter-spacing: -.5px;
 }
-.hl-meta-head.current .hl-meta-num { color: #fec437; }
+.hl-meta-head.current .hl-meta-num { color: #273240; }
 .hl-meta-head.past    .hl-meta-num { color: #166534; }
 
 .hl-meta-period {
   font-size: .65rem; color: #888;
 }
-.hl-meta-head.current .hl-meta-period { color: #666; }
+.hl-meta-head.current .hl-meta-period { color: #273240; }
 
 .hl-meta-head .meta-pill { margin-left: auto; font-size: .55rem; padding: 2px 8px; }
 .hl-meta-head.current .meta-pill {
-  background: rgba(254,196,55,.18); color: #fec437; border: 1px solid rgba(254,196,55,.4);
+  background: rgba(39,50,64,.15); color: #273240; border: 1px solid rgba(39,50,64,.25);
 }
 
 /* Corpo: squads + épicos */
@@ -966,7 +981,7 @@ main { padding: 48px; }
 .hl-squad-block:last-child { border-bottom: none; padding-bottom: 2px; margin-bottom: 0; }
 
 .hl-squad-label {
-  font-family: 'Montserrat', sans-serif;
+  font-family: 'Open Sans', sans-serif;
   font-size: .5rem; font-weight: 700;
   text-transform: uppercase; letter-spacing: 1.5px;
   padding: 5px 14px 4px;
@@ -1015,11 +1030,11 @@ main { padding: 48px; }
   margin-left: auto;
   display: flex; align-items: center; gap: 6px;
   padding: 4px 10px 4px 10px;
-  background: rgba(255,255,255,.07);
-  border: 1px solid rgba(255,255,255,.13);
+  background: #f5f5f5;
+  border: 1px solid #c5c5c5;
   border-radius: 20px;
-  color: #999;
-  font-family: 'Montserrat', sans-serif;
+  color: #273240;
+  font-family: 'Open Sans', sans-serif;
   font-size: .68rem;
   cursor: pointer;
   flex-shrink: 0;
@@ -1027,17 +1042,17 @@ main { padding: 48px; }
   letter-spacing: .02em;
 }
 .hl-parking-btn:hover {
-  background: rgba(255,255,255,.12);
-  border-color: rgba(255,255,255,.22);
-  color: #ccc;
+  background: #e6e6e6;
+  border-color: #c5c5c5;
+  color: #273240;
 }
 .hl-parking-btn.pl-active {
-  background: rgba(244,162,97,.14);
-  border-color: rgba(254,196,55,.4);
-  color: #fec437;
+  background: #fef9e7;
+  border-color: #fec437;
+  color: #273240;
 }
 .hl-parking-btn-count {
-  background: rgba(255,255,255,.1);
+  background: #e6e6e6;
   border-radius: 10px;
   padding: 1px 6px;
   font-size: .63rem;
@@ -1045,7 +1060,7 @@ main { padding: 48px; }
   line-height: 1.4;
 }
 .hl-parking-btn.pl-active .hl-parking-btn-count {
-  background: rgba(244,162,97,.22);
+  background: rgba(254,196,55,.25);
 }
 .hl-parking-btn-arrow {
   font-size: .6rem;
@@ -1060,8 +1075,8 @@ main { padding: 48px; }
   position: absolute;
   top: 0; right: 0; bottom: 0;
   width: 300px;
-  background: #1e1e1e;
-  border-left: 1px solid rgba(255,255,255,.09);
+  background: #f5f5f5;
+  border-left: 1px solid #e6e6e6;
   transform: translateX(100%);
   transition: transform .35s cubic-bezier(.4,0,.2,1);
   z-index: 10;
@@ -1075,39 +1090,39 @@ main { padding: 48px; }
 .hl-parking-panel-head {
   display: flex; align-items: center; gap: 8px;
   padding: 11px 14px 10px;
-  border-bottom: 1px solid rgba(255,255,255,.07);
+  border-bottom: 1px solid #e6e6e6;
   flex-shrink: 0;
 }
 .hl-parking-panel-title {
-  font-family: 'Montserrat', sans-serif;
+  font-family: 'Open Sans', sans-serif;
   font-size: .72rem; font-weight: 700;
   text-transform: uppercase; letter-spacing: .08em;
-  color: #fec437;
+  color: #273240;
 }
 .hl-parking-panel-count {
-  font-size: .62rem; color: #555; font-style: italic;
+  font-size: .62rem; color: #9c9c9c; font-style: italic;
 }
 .hl-parking-panel-close {
   margin-left: auto;
   background: none; border: none;
-  color: #555; cursor: pointer;
+  color: #9c9c9c; cursor: pointer;
   font-size: 1rem; line-height: 1;
   padding: 3px 5px; border-radius: 4px;
   transition: color .15s, background .15s;
 }
-.hl-parking-panel-close:hover { color: #ccc; background: rgba(255,255,255,.07); }
+.hl-parking-panel-close:hover { color: #273240; background: #e6e6e6; }
 .hl-parking-panel-body {
   flex: 1; overflow-y: auto;
   padding: 8px 6px 12px;
-  scrollbar-width: thin; scrollbar-color: #333 transparent;
+  scrollbar-width: thin; scrollbar-color: #c5c5c5 transparent;
 }
 .hl-parking-panel-body .hl-epic {
   padding: 5px 10px;
   margin: 0 2px;
   border-radius: 5px;
 }
-.hl-parking-panel-body .hl-epic:hover { background: rgba(255,255,255,.05); }
-.hl-parking-panel-body .hl-name { color: #c8c8c8; }
+.hl-parking-panel-body .hl-epic:hover { background: #e6e6e6; }
+.hl-parking-panel-body .hl-name { color: #273240; }
 
 /* Cancelado no parking lot — texto riscado */
 .hl-parking-panel-body .pl-cancelled .hl-name {
@@ -1118,7 +1133,7 @@ main { padding: 48px; }
 
 /* Expandível de internos dentro do painel escuro */
 .pl-internal-wrap {
-  border-top: 1px solid rgba(255,255,255,.08);
+  border-top: 1px solid #e6e6e6;
   margin-top: 6px;
 }
 .pl-internal-toggle {
@@ -1126,18 +1141,18 @@ main { padding: 48px; }
   padding: 7px 12px;
   display: flex; align-items: center; gap: 6px;
   background: none; border: none; cursor: pointer;
-  font-family: 'Montserrat', sans-serif;
+  font-family: 'Open Sans', sans-serif;
   font-size: .62rem; font-weight: 600;
   color: #666;
   text-align: left;
   transition: color .15s;
 }
-.pl-internal-toggle:hover { color: #999; }
-.pl-internal-toggle.open  { color: #aaa; }
+.pl-internal-toggle:hover { color: #273240; }
+.pl-internal-toggle.open  { color: #273240; }
 .pl-internal-toggle .toggle-chevron { font-size: .7rem; }
 .pl-internal-panel {
-  background: rgba(255,255,255,.03);
-  border-top: 1px solid rgba(255,255,255,.05);
+  background: #fafafa;
+  border-top: 1px solid #e6e6e6;
 }
 
 /* ── MOBILE MATRIX ── */
@@ -1148,8 +1163,8 @@ main { padding: 48px; }
   /* Header compacto */
   header { padding: 10px 16px; gap: 8px; }
   .header-date { display: none; }
-  .logo-img { height: 18px; }
-  .logo-roadmap { font-size: .82rem; }
+  .logo-img { height: 22px; }
+  .logo-roadmap { font-size: 11px; }
   .header-btn { padding: 6px 11px; font-size: .73rem; }
 
   /* Main */
@@ -1182,7 +1197,7 @@ main { padding: 48px; }
     display: flex; align-items: center; gap: 8px;
     padding: 9px 14px;
     border-left: 3px solid;
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'Open Sans', sans-serif;
     font-size: .68rem; font-weight: 700;
     text-transform: uppercase; letter-spacing: .8px;
     color: var(--dark);
@@ -1297,7 +1312,7 @@ main { padding: 48px; }
   <div class="login-right">
     <div class="login-box">
       <div class="login-logo">
-        <img src="https://omnibees.com/wp-content/themes/omnibees/assets/img/main-logo.svg" alt="Omnibees" />
+        <img src="omnibees-logo.png" alt="Omnibees" />
       </div>
       <div class="login-card">
         <div class="login-title">Bem-vindo ao Product Roadmap</div>
@@ -1328,15 +1343,15 @@ main { padding: 48px; }
 <div id="app">
   <header>
     <div class="logo">
-      <img src="https://omnibees.com/wp-content/themes/omnibees/assets/img/main-logo.svg" alt="Omnibees" class="logo-img" />
-      <span class="logo-roadmap">Roadmap</span>
+      <img src="omnibees-logo.png" alt="Omnibees" class="logo-img" />
+      <span class="logo-roadmap">Product Roadmap</span>
     </div>
     <div class="header-meta">
       <span class="header-date" id="headerDate"></span>
       <span class="header-refresh-info" id="headerRefreshInfo"></span>
-      <button class="header-btn" onclick="loadData()">↻ Atualizar</button>
+      <button class="header-btn header-btn-icon" onclick="loadData()" title="Atualizar"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.5 2v6h-6"/><path d="M2.5 22v-6h6"/><path d="M2.5 11.5a10 10 0 0 1 18.4-4.5"/><path d="M21.5 12.5a10 10 0 0 1-18.4 4.5"/></svg></button>
       <div class="pivot-settings-wrap">
-        <button class="header-btn" onclick="togglePivotSettings()" title="Configurar Pivot ID">⚙</button>
+        <button class="header-btn header-btn-icon" onclick="togglePivotSettings()" title="Configurações"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button>
         <div class="pivot-popover" id="pivotPopover">
           <div class="pivot-popover-title">Configuração da Fonte de Dados</div>
           <label for="pivotIdInput">Pivot ID (Aha!)</label>
@@ -1348,7 +1363,7 @@ main { padding: 48px; }
           <div class="pivot-popover-hint" id="pivotPopoverHint"></div>
         </div>
       </div>
-      <button class="header-btn" onclick="doLogout()">Sair</button>
+      <button class="header-btn header-btn-icon" onclick="doLogout()" title="Sair"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg></button>
     </div>
   </header>
 
@@ -1376,7 +1391,7 @@ function updateRefreshInfo() {
   const el = document.getElementById('headerRefreshInfo');
   if (!el) return;
   const next = new Date(Date.now() + AUTO_REFRESH_MS);
-  el.textContent = `↻ próximo refresh às ${next.toLocaleTimeString('pt-PT', { hour: '2-digit', minute: '2-digit' })}`;
+  el.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:4px"><path d="M21.5 2v6h-6"/><path d="M2.5 22v-6h6"/><path d="M2.5 11.5a10 10 0 0 1 18.4-4.5"/><path d="M21.5 12.5a10 10 0 0 1-18.4 4.5"/></svg>próximo refresh às ${next.toLocaleTimeString('pt-PT', { hour: '2-digit', minute: '2-digit' })}`;
 }
 
 function startAutoRefresh() {
