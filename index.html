@@ -4,7 +4,7 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Omnibees Roadmap</title>
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet"/>
 <style>
 :root {
   --bg: #f3f1f7;
@@ -40,65 +40,180 @@ body {
 /* ── LOGIN ── */
 #loginScreen {
   position: fixed; inset: 0;
-  background: var(--dark);
-  display: flex; align-items: center; justify-content: center;
+  background: #fcfcfc;
+  display: flex;
   z-index: 100;
   transition: opacity .5s, visibility .5s;
 }
 #loginScreen.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
 
-.login-box {
+/* Left panel — illustration */
+.login-left {
+  flex: 1;
+  background: linear-gradient(135deg, #f8f6fb 0%, #ede8f5 50%, #e0d9ef 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px;
+  position: relative;
+  overflow: hidden;
+}
+.login-left::before {
+  content: '';
+  position: absolute;
+  top: -120px; right: -120px;
+  width: 400px; height: 400px;
+  background: radial-gradient(circle, rgba(254,196,55,.15) 0%, transparent 70%);
+  border-radius: 50%;
+}
+.login-left::after {
+  content: '';
+  position: absolute;
+  bottom: -80px; left: -80px;
+  width: 300px; height: 300px;
+  background: radial-gradient(circle, rgba(78,64,118,.08) 0%, transparent 70%);
+  border-radius: 50%;
+}
+.login-illustration {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 520px;
+}
+.login-illustration svg {
+  width: 100%;
+  height: auto;
+}
+.login-left-title {
+  position: relative;
+  z-index: 1;
+  font-family: 'Open Sans', sans-serif;
+  font-weight: 700;
+  font-size: 1.8rem;
+  color: #273240;
+  margin-bottom: 12px;
   text-align: center;
-  width: 340px;
+}
+.login-left-desc {
+  position: relative;
+  z-index: 1;
+  font-family: 'Open Sans', sans-serif;
+  font-size: .9rem;
+  color: #6b7280;
+  text-align: center;
+  max-width: 380px;
+  line-height: 1.6;
+}
+
+/* Right panel — form */
+.login-right {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #fcfcfc;
+  padding: 40px;
+}
+.login-box {
+  width: 410px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+.login-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.login-logo img {
+  height: 48px;
+}
+.login-card {
+  width: 100%;
+  background: #fff;
+  border: 1px solid #e6e6e6;
+  border-radius: 4px;
+  padding: 30px;
 }
 .login-title {
-  font-family: 'Montserrat', sans-serif;
-  font-size: 2.4rem;
-  font-weight: 800;
-  color: #fff;
-  letter-spacing: -1px;
-  margin-bottom: 4px;
+  font-family: 'Open Sans', sans-serif;
+  font-weight: 700;
+  font-size: 20px;
+  color: #273240;
+  line-height: 30px;
+  margin-bottom: 5px;
 }
-.login-title span { color: #fec437; }
-.login-sub { color: #9a86b5; font-size: .85rem; margin-bottom: 40px; }
-
+.login-sub {
+  font-family: 'Open Sans', sans-serif;
+  font-size: 12px;
+  color: #273240;
+  line-height: 20px;
+  margin-bottom: 20px;
+}
+.login-field {
+  position: relative;
+  width: 100%;
+  margin-bottom: 20px;
+}
+.login-field label {
+  position: absolute;
+  top: -8px;
+  left: 15px;
+  background: #fff;
+  padding: 0 5px;
+  font-family: 'Open Sans', sans-serif;
+  font-size: 10px;
+  color: #4e4076;
+  line-height: 20px;
+  z-index: 1;
+}
 .login-input {
   width: 100%;
-  background: #3d2558;
-  border: 1px solid #4e3268;
-  border-radius: 8px;
-  padding: 14px 18px;
-  color: #fff;
-  font-family: 'Montserrat', sans-serif;
-  font-size: .95rem;
+  height: 48px;
+  background: #fff;
+  border: 1px solid #c5c5c5;
+  border-radius: 4px;
+  padding: 0 15px;
+  color: #273240;
+  font-family: 'Open Sans', sans-serif;
+  font-size: 12px;
   outline: none;
-  text-align: center;
-  letter-spacing: 4px;
-  margin-bottom: 12px;
+  letter-spacing: 3px;
   transition: border-color .2s;
 }
-.login-input:focus { border-color: #fec437; }
+.login-input:focus { border-color: #4e4076; }
+.login-input::placeholder { color: #c5c5c5; letter-spacing: 0; }
 .login-btn {
   width: 100%;
-  padding: 14px;
+  height: 32px;
   background: #fec437;
-  color: #301b46;
+  color: #fff;
   border: none;
-  border-radius: 8px;
-  font-family: 'Montserrat', sans-serif;
-  font-size: .95rem;
-  font-weight: 700;
+  border-radius: 4px;
+  font-family: 'Open Sans', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
   cursor: pointer;
   transition: opacity .2s;
+  line-height: 20px;
 }
 .login-btn:hover { opacity: .88; }
 .login-error {
   color: #e63946;
-  font-size: .8rem;
-  margin-top: 10px;
+  font-family: 'Open Sans', sans-serif;
+  font-size: 11px;
+  margin-top: 8px;
   display: none;
 }
 .login-error.show { display: block; }
+
+/* Responsive: hide left panel on small screens */
+@media (max-width: 900px) {
+  .login-left { display: none; }
+  .login-right { flex: 1; }
+}
 
 /* ── APP ── */
 #app { display: none; min-height: 100vh; }
@@ -1101,13 +1216,100 @@ main { padding: 48px; }
 
 <!-- LOGIN -->
 <div id="loginScreen">
-  <div class="login-box">
-    <img src="https://omnibees.com/wp-content/themes/omnibees/assets/img/main-logo.svg" alt="Omnibees" style="height:36px;filter:brightness(0) invert(1);margin-bottom:16px;" />
-    <div class="login-title" style="font-size:1.4rem;margin-bottom:2px;">Product <span>Roadmap</span></div>
-    <div class="login-sub">Comité de Direção · Omnibees Product</div>
-    <input type="password" class="login-input" id="loginInput" placeholder="password" />
-    <button class="login-btn" onclick="doLogin()">Entrar</button>
-    <div class="login-error" id="loginError">Password incorreta</div>
+  <!-- Left: Illustration -->
+  <div class="login-left">
+    <div class="login-illustration">
+      <svg viewBox="0 0 480 380" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="cardShadow" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#4e4076" stop-opacity=".06"/>
+            <stop offset="100%" stop-color="#4e4076" stop-opacity=".02"/>
+          </linearGradient>
+          <linearGradient id="progressGrad" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stop-color="#fec437"/>
+            <stop offset="100%" stop-color="#ffd76a"/>
+          </linearGradient>
+          <linearGradient id="purpleGrad" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stop-color="#4e4076"/>
+            <stop offset="100%" stop-color="#7b6ba5"/>
+          </linearGradient>
+        </defs>
+
+        <!-- Main card -->
+        <rect x="24" y="20" width="432" height="340" rx="20" fill="white" filter="drop-shadow(0 8px 32px rgba(78,64,118,.08))"/>
+
+        <!-- Subtle grid lines -->
+        <line x1="140" y1="80" x2="140" y2="310" stroke="#f0edf5" stroke-width="1"/>
+        <line x1="228" y1="80" x2="228" y2="310" stroke="#f0edf5" stroke-width="1"/>
+        <line x1="316" y1="80" x2="316" y2="310" stroke="#f0edf5" stroke-width="1"/>
+        <line x1="404" y1="80" x2="404" y2="310" stroke="#f0edf5" stroke-width="1"/>
+
+        <!-- Column headers -->
+        <text x="184" y="60" text-anchor="middle" font-family="Open Sans, sans-serif" font-size="10" fill="#b0a3c7" font-weight="600" letter-spacing="1">Q1</text>
+        <text x="272" y="60" text-anchor="middle" font-family="Open Sans, sans-serif" font-size="10" fill="#b0a3c7" font-weight="600" letter-spacing="1">Q2</text>
+        <text x="360" y="60" text-anchor="middle" font-family="Open Sans, sans-serif" font-size="10" fill="#b0a3c7" font-weight="600" letter-spacing="1">Q3</text>
+
+        <!-- Row 1 — label + bar -->
+        <rect x="48" y="90" width="44" height="8" rx="4" fill="#d8d3e3"/>
+        <rect x="140" y="84" width="148" height="20" rx="10" fill="url(#purpleGrad)" opacity=".85"/>
+        <circle cx="282" cy="94" r="4" fill="white" opacity=".6"/>
+
+        <!-- Row 2 — label + bar (yellow, longer) -->
+        <rect x="48" y="134" width="36" height="8" rx="4" fill="#d8d3e3"/>
+        <rect x="168" y="128" width="192" height="20" rx="10" fill="url(#progressGrad)"/>
+        <circle cx="354" cy="138" r="4" fill="white" opacity=".6"/>
+
+        <!-- Row 3 — label + bar -->
+        <rect x="48" y="178" width="52" height="8" rx="4" fill="#d8d3e3"/>
+        <rect x="140" y="172" width="112" height="20" rx="10" fill="url(#purpleGrad)" opacity=".55"/>
+
+        <!-- Row 4 — label + bar (yellow, short) -->
+        <rect x="48" y="222" width="40" height="8" rx="4" fill="#d8d3e3"/>
+        <rect x="228" y="216" width="88" height="20" rx="10" fill="url(#progressGrad)" opacity=".7"/>
+
+        <!-- Row 5 — label + bar -->
+        <rect x="48" y="266" width="48" height="8" rx="4" fill="#d8d3e3"/>
+        <rect x="184" y="260" width="132" height="20" rx="10" fill="url(#purpleGrad)" opacity=".4"/>
+
+        <!-- Today marker -->
+        <line x1="272" y1="72" x2="272" y2="310" stroke="#fec437" stroke-width="1.5" stroke-dasharray="4 3" opacity=".7"/>
+        <rect x="257" y="312" width="30" height="16" rx="8" fill="#fec437" opacity=".15"/>
+        <text x="272" y="323" text-anchor="middle" font-family="Open Sans, sans-serif" font-size="7" fill="#d4a520" font-weight="600">Hoje</text>
+
+        <!-- Floating accent card — top right -->
+        <rect x="370" y="28" width="76" height="40" rx="12" fill="white" filter="drop-shadow(0 4px 12px rgba(78,64,118,.1))"/>
+        <circle cx="390" cy="48" r="8" fill="#fec437" opacity=".2"/>
+        <path d="M386 48 l3 3 l6-6" stroke="#fec437" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        <rect x="404" y="42" width="30" height="5" rx="2.5" fill="#e8e4f0"/>
+        <rect x="404" y="51" width="20" height="4" rx="2" fill="#f0edf5"/>
+
+        <!-- Floating accent card — bottom left -->
+        <rect x="4" y="290" width="64" height="52" rx="12" fill="white" filter="drop-shadow(0 4px 12px rgba(78,64,118,.1))"/>
+        <text x="36" y="313" text-anchor="middle" font-family="Open Sans, sans-serif" font-size="16" fill="#4e4076" font-weight="700">68%</text>
+        <rect x="16" y="322" width="40" height="4" rx="2" fill="#f0edf5"/>
+        <rect x="16" y="322" width="27" height="4" rx="2" fill="#fec437"/>
+      </svg>
+    </div>
+    <div class="login-left-title">Acompanhe o seu Roadmap</div>
+    <div class="login-left-desc">Visualize metas, épicos e progresso de produto de forma intuitiva e organizada.</div>
+  </div>
+  <!-- Right: Login form -->
+  <div class="login-right">
+    <div class="login-box">
+      <div class="login-logo">
+        <img src="https://omnibees.com/wp-content/themes/omnibees/assets/img/main-logo.svg" alt="Omnibees" />
+      </div>
+      <div class="login-card">
+        <div class="login-title">Bem-vindo ao Product Roadmap</div>
+        <div class="login-sub">Comité de Direção · Omnibees Product</div>
+        <div class="login-field">
+          <label>Password</label>
+          <input type="password" class="login-input" id="loginInput" placeholder="&#x2022;&#x2022;&#x2022;&#x2022;&#x2022;&#x2022;&#x2022;&#x2022;&#x2022;&#x2022;&#x2022;&#x2022;" />
+        </div>
+        <button class="login-btn" onclick="doLogin()">Entrar</button>
+        <div class="login-error" id="loginError">Password incorreta</div>
+      </div>
+    </div>
   </div>
 </div>
 
