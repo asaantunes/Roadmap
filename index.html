@@ -2131,7 +2131,7 @@ function toggleHlMore(btn) {
   extras.forEach(el => el.classList.toggle('visible', isOpen));
   const count = btn.dataset.count || '';
   btn.innerHTML = isOpen
-    ? `<span class="hl-more-chevron">›</span>ocultar épicos`
+    ? `<span class="hl-more-chevron">›</span>ver top 3`
     : `<span class="hl-more-chevron">›</span>+${count} épico${count > 1 ? 's' : ''}`;
 }
 
