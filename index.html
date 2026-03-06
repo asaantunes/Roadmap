@@ -1657,7 +1657,7 @@ function renderTimeline({ past, current, future }) {
     const left  = (startMonth / 12 * 100).toFixed(2);
     const width = (MONTHS_PER_META / 12 * 100).toFixed(2);
     const period = group.period ? ` · ${group.period}` : '';
-    return `<div class="timeline-bar ${group.type}" style="left:${left}%;width:${width}%"
+    return `<div class="timeline-bar ${group.type}" style="left:calc(${left}% + 2.5px);width:calc(${width}% - 5px)"
               onclick="document.getElementById('meta-${group.year}-${group.metaNum}')?.scrollIntoView({behavior:'smooth',block:'start'})"
               title="Meta ${group.metaNum}${period}">
               Meta ${group.metaNum}${period}
