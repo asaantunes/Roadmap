@@ -1003,10 +1003,24 @@ main { padding: 48px; }
   overflow: hidden; flex: 1; min-width: 0;
 }
 .hl-epic .risk-badge { font-size: .62rem; padding: 2px 7px; margin-left: 18px; margin-bottom: 2px; }
-.hl-more {
+.hl-more-toggle {
+  display: flex; align-items: center; gap: 5px;
+  width: 100%; background: none; border: none; cursor: pointer;
   font-size: .65rem; color: #aaa; font-style: italic;
-  padding: 2px 14px 4px 36px;
+  padding: 3px 14px 4px 32px;
+  text-align: left;
+  font-family: 'Open Sans', sans-serif;
+  transition: color .15s;
 }
+.hl-more-toggle:hover { color: #666; }
+.hl-more-toggle.open  { color: #555; font-style: normal; }
+.hl-more-chevron {
+  display: inline-block; font-style: normal;
+  transition: transform .2s; flex-shrink: 0;
+}
+.hl-more-toggle.open .hl-more-chevron { transform: rotate(90deg); }
+.hl-more-panel { display: none; }
+.hl-more-panel.expanded { display: block; }
 
 /* ── METAS FUTURAS — botão trigger no header ── */
 .hl-parking-btn {
@@ -1885,20 +1899,31 @@ function renderHighlights(metas, squads, lookup, parkingLotEpics = []) {
       if (!allHlEpics.length) return '';
       anyEpic = true;
 
-      const hlEpics  = allHlEpics.slice(0, HIGHLIGHTS_MAX_PER_SQUAD);
-      const remaining = allHlEpics.length - hlEpics.length;
+      const hlEpics = allHlEpics.slice(0, HIGHLIGHTS_MAX_PER_SQUAD);
+      const hlExtra = allHlEpics.slice(HIGHLIGHTS_MAX_PER_SQUAD);
+      const remaining = hlExtra.length;
 
       const sc = SQUAD_STYLE[squad] || { color: '#aaa', lines: [squad] };
-      const epicsHtml = hlEpics.map(e => {
-        const si = getStatusInfo(e.workflow_status?.name);
+
+      const renderHlEpic = e => {
+        const si   = getStatusInfo(e.workflow_status?.name);
         const risk = getRisk(e);
         return `<div class="hl-epic">
           <span class="status-dot" style="background:${si.color}" title="${e.workflow_status?.name || ''}"></span>
           <span class="hl-name">${e.name}</span>
           ${risk ? riskBadge(risk) : ''}
         </div>`;
-      }).join('')
-      + (remaining > 0 ? `<div class="hl-more">+${remaining} épico${remaining > 1 ? 's' : ''}</div>` : '');
+      };
+
+      const moreSection = remaining > 0 ? `
+        <button class="hl-more-toggle" onclick="toggleHlMore(this)">
+          <span class="hl-more-chevron">›</span>+${remaining} épico${remaining > 1 ? 's' : ''}
+        </button>
+        <div class="hl-more-panel">
+          ${hlExtra.map(renderHlEpic).join('')}
+        </div>` : '';
+
+      const epicsHtml = hlEpics.map(renderHlEpic).join('') + moreSection;
 
       const hlCellKey = `${g.year}_${g.metaNum}_${squad.replace(/[^\w]/g,'_')}`;
       return `
@@ -2097,6 +2122,17 @@ function renderEpicRow(epic, type) {
         ` : ''}
       </div>
     </div>`;
+}
+
+// ─── TOGGLE "+N épicos" NOS DESTAQUES ─────────────────────────────
+function toggleHlMore(btn) {
+  const panel  = btn.nextElementSibling;
+  const isOpen = panel.classList.toggle('expanded');
+  btn.classList.toggle('open', isOpen);
+  const count = btn.textContent.match(/\d+/)?.[0] || '';
+  btn.innerHTML = isOpen
+    ? `<span class="hl-more-chevron">›</span>ocultar épicos`
+    : `<span class="hl-more-chevron">›</span>+${count} épico${count > 1 ? 's' : ''}`;
 }
 
 // ─── TOGGLE ÉPICOS INTERNOS (expandível dentro de cada célula ou painel) ─────
