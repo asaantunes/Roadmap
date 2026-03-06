@@ -1014,11 +1014,7 @@ main { padding: 48px; }
 }
 .hl-more-toggle:hover { color: #666; }
 .hl-more-toggle.open  { color: #555; font-style: normal; }
-.hl-more-chevron {
-  display: inline-block; font-style: normal;
-  transition: transform .2s; flex-shrink: 0;
-}
-.hl-more-toggle.open .hl-more-chevron { transform: rotate(90deg); }
+.hl-more-chevron { font-style: normal; flex-shrink: 0; }
 .hl-extra { display: none; }
 .hl-extra.visible { display: flex; }
 
@@ -1917,7 +1913,7 @@ function renderHighlights(metas, squads, lookup, parkingLotEpics = []) {
 
       const moreBtn = remaining > 0 ? `
         <button class="hl-more-toggle" onclick="toggleHlMore(this)" data-count="${remaining}">
-          <span class="hl-more-chevron">›</span>+${remaining} épico${remaining > 1 ? 's' : ''}
+          <span class="hl-more-chevron">↓</span>+${remaining} épico${remaining > 1 ? 's' : ''}
         </button>` : '';
 
       const epicsHtml = allEpicsHtml + moreBtn;
@@ -2129,8 +2125,8 @@ function toggleHlMore(btn) {
   extras.forEach(el => el.classList.toggle('visible', isOpen));
   const count = btn.dataset.count || '';
   btn.innerHTML = isOpen
-    ? `<span class="hl-more-chevron">›</span>ocultar épicos`
-    : `<span class="hl-more-chevron">›</span>+${count} épico${count > 1 ? 's' : ''}`;
+    ? `<span class="hl-more-chevron">↑</span>ocultar épicos`
+    : `<span class="hl-more-chevron">↓</span>+${count} épico${count > 1 ? 's' : ''}`;
 }
 
 // ─── TOGGLE ÉPICOS INTERNOS (expandível dentro de cada célula ou painel) ─────
