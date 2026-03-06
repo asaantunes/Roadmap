@@ -1019,8 +1019,8 @@ main { padding: 48px; }
   transition: transform .2s; flex-shrink: 0;
 }
 .hl-more-toggle.open .hl-more-chevron { transform: rotate(90deg); }
-.hl-more-panel { display: none; }
-.hl-more-panel.expanded { display: block; }
+.hl-extra { display: none; }
+.hl-extra.visible { display: flex; }
 
 /* ── METAS FUTURAS — botão trigger no header ── */
 .hl-parking-btn {
@@ -1899,31 +1899,28 @@ function renderHighlights(metas, squads, lookup, parkingLotEpics = []) {
       if (!allHlEpics.length) return '';
       anyEpic = true;
 
-      const hlEpics = allHlEpics.slice(0, HIGHLIGHTS_MAX_PER_SQUAD);
-      const hlExtra = allHlEpics.slice(HIGHLIGHTS_MAX_PER_SQUAD);
-      const remaining = hlExtra.length;
+      const remaining = Math.max(0, allHlEpics.length - HIGHLIGHTS_MAX_PER_SQUAD);
 
       const sc = SQUAD_STYLE[squad] || { color: '#aaa', lines: [squad] };
 
-      const renderHlEpic = e => {
+      const renderHlEpic = (e, hidden = false) => {
         const si   = getStatusInfo(e.workflow_status?.name);
         const risk = getRisk(e);
-        return `<div class="hl-epic">
+        return `<div class="hl-epic${hidden ? ' hl-extra' : ''}">
           <span class="status-dot" style="background:${si.color}" title="${e.workflow_status?.name || ''}"></span>
           <span class="hl-name">${e.name}</span>
           ${risk ? riskBadge(risk) : ''}
         </div>`;
       };
 
-      const moreSection = remaining > 0 ? `
-        <button class="hl-more-toggle" onclick="toggleHlMore(this)">
-          <span class="hl-more-chevron">›</span>+${remaining} épico${remaining > 1 ? 's' : ''}
-        </button>
-        <div class="hl-more-panel">
-          ${hlExtra.map(renderHlEpic).join('')}
-        </div>` : '';
+      const allEpicsHtml = allHlEpics.map((e, i) => renderHlEpic(e, i >= HIGHLIGHTS_MAX_PER_SQUAD)).join('');
 
-      const epicsHtml = hlEpics.map(renderHlEpic).join('') + moreSection;
+      const moreBtn = remaining > 0 ? `
+        <button class="hl-more-toggle" onclick="toggleHlMore(this)" data-count="${remaining}">
+          <span class="hl-more-chevron">›</span>+${remaining} épico${remaining > 1 ? 's' : ''}
+        </button>` : '';
+
+      const epicsHtml = allEpicsHtml + moreBtn;
 
       const hlCellKey = `${g.year}_${g.metaNum}_${squad.replace(/[^\w]/g,'_')}`;
       return `
@@ -2126,10 +2123,11 @@ function renderEpicRow(epic, type) {
 
 // ─── TOGGLE "+N épicos" NOS DESTAQUES ─────────────────────────────
 function toggleHlMore(btn) {
-  const panel  = btn.nextElementSibling;
-  const isOpen = panel.classList.toggle('expanded');
-  btn.classList.toggle('open', isOpen);
-  const count = btn.textContent.match(/\d+/)?.[0] || '';
+  const block  = btn.closest('.hl-squad-block');
+  const extras = block.querySelectorAll('.hl-extra');
+  const isOpen = btn.classList.toggle('open');
+  extras.forEach(el => el.classList.toggle('visible', isOpen));
+  const count = btn.dataset.count || '';
   btn.innerHTML = isOpen
     ? `<span class="hl-more-chevron">›</span>ocultar épicos`
     : `<span class="hl-more-chevron">›</span>+${count} épico${count > 1 ? 's' : ''}`;
