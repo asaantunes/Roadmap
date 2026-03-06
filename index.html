@@ -464,6 +464,14 @@ main { padding: 48px; }
   flex-direction: column;
   gap: 1px;
 }
+.squad-team-info {
+  font-family: 'Open Sans', sans-serif;
+  font-size: 9.5px;
+  font-style: italic;
+  color: #9ca3af;
+  line-height: 1.3;
+  margin-top: 3px;
+}
 /* Data cells */
 .matrix-cell {
   background: var(--white);
@@ -1703,13 +1711,13 @@ const SQUAD_ORDER = [
 
 // cor (borda + dot), bg suave, linhas do label
 const SQUAD_STYLE = {
-  'Beehive':                 { color: '#F59E0B', bg: '#fffbeb', lines: ['Beehive'] },
-  'BeeHive UI':              { color: '#FCD34D', bg: '#fefce8', lines: ['BeeHive UI'] },
-  'Bee2Bee/BeeChannel':      { color: '#3B82F6', bg: '#eff6ff', lines: ['Bee2Bee', 'BeeChannel'] },
-  'BeeConnect/Partners API': { color: '#22C55E', bg: '#f0fdf4', lines: ['BeeConnect', 'Partners API'] },
-  'Visão 360':               { color: '#06B6D4', bg: '#ecfeff', lines: ['Visão 360'] },
-  'BeePrice':                { color: '#F472B6', bg: '#fdf4ff', lines: ['BeePrice'] },
-  'BeeDirect':               { color: '#A78BFA', bg: '#faf5ff', lines: ['BeeDirect'] },
+  'Beehive':                 { color: '#F59E0B', bg: '#fffbeb', lines: ['Beehive'],               team: '5 Dev · 2 QA' },
+  'BeeHive UI':              { color: '#FCD34D', bg: '#fefce8', lines: ['BeeHive UI'],             team: '6 Dev · 1 QA' },
+  'Bee2Bee/BeeChannel':      { color: '#3B82F6', bg: '#eff6ff', lines: ['Bee2Bee', 'BeeChannel'], team: '3 Dev' },
+  'BeeConnect/Partners API': { color: '#22C55E', bg: '#f0fdf4', lines: ['BeeConnect', 'Partners API'], team: '4 Dev' },
+  'Visão 360':               { color: '#06B6D4', bg: '#ecfeff', lines: ['Visão 360'],              team: '3 Dev · 1 QA' },
+  'BeePrice':                { color: '#F472B6', bg: '#fdf4ff', lines: ['BeePrice'],               team: '3 Dev' },
+  'BeeDirect':               { color: '#A78BFA', bg: '#faf5ff', lines: ['BeeDirect'],              team: '4 Dev · 2 QA' },
 };
 
 // Partial-match aliases: if data has only one part of a combined squad name, map it
@@ -1845,10 +1853,11 @@ function renderMatrix(metas, squads, lookup) {
     const nameHtml = sc.lines.length > 1
       ? `<span class="squad-name-main">${sc.lines[0]}</span><span class="squad-name-sub">${sc.lines[1]}</span>`
       : `<span class="squad-name">${sc.lines[0]}</span>`;
+    const teamHtml = sc.team ? `<span class="squad-team-info">${sc.team}</span>` : '';
 
     return `
       <div class="matrix-squad-label" style="border-left-color:${sc.color}; background:${sc.bg || 'var(--white)'};">
-        <div class="squad-name-wrap">${nameHtml}</div>
+        <div class="squad-name-wrap">${nameHtml}${teamHtml}</div>
       </div>
       ${cells}`;
   }).join('');
