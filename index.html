@@ -1871,7 +1871,7 @@ function isHighlighted(epic) {
 
 // Máximo de épicos mostrados por squad no painel de destaques.
 // Aumenta este valor se quiseres ver mais épicos por squad.
-const HIGHLIGHTS_MAX_PER_SQUAD = 3;
+const HIGHLIGHTS_MAX_PER_SQUAD = 4;
 
 function renderHighlights(metas, squads, lookup, parkingLotEpics = []) {
   const pillMap = {
@@ -2131,7 +2131,7 @@ function toggleHlMore(btn) {
   extras.forEach(el => el.classList.toggle('visible', isOpen));
   const count = btn.dataset.count || '';
   btn.innerHTML = isOpen
-    ? `<span class="hl-more-chevron">›</span>ver top 3`
+    ? `<span class="hl-more-chevron">›</span>ver top 4`
     : `<span class="hl-more-chevron">›</span>+${count} épico${count > 1 ? 's' : ''}`;
 }
 
