@@ -1903,7 +1903,7 @@ function renderHighlights(metas, squads, lookup, parkingLotEpics = []) {
       const hlCellKey = `${g.year}_${g.metaNum}_${squad.replace(/[^\w]/g,'_')}`;
       return `
         <div class="hl-squad-block">
-          <div class="hl-squad-label" onclick="scrollToMatrix('${hlCellKey}')" title="Ir para ${sc.lines.join(' / ')} · Meta ${g.metaNum}">
+          <div class="hl-squad-label" onclick="scrollToMatrix('${hlCellKey}')" title="Ver detalhes de Meta ${g.metaNum} · ${sc.lines.join(' / ')}">
             <span>${sc.lines.join(' / ')}</span>
             <span class="hl-squad-arrow">↓</span>
           </div>
