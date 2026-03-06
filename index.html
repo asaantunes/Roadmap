@@ -693,9 +693,6 @@ main { padding: 48px; }
 }
 .timeline-strip-rows {
   position: relative;
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
 }
 .timeline-row {
   position: relative;
@@ -1653,30 +1650,32 @@ function renderTimeline({ past, current, future }) {
     ? `<div class="timeline-today-label" style="left:${todayPct.toFixed(2)}%">Hoje</div>`
     : '';
 
-  // One bar per meta group
-  const rows = allGroups.map(group => {
-    const sp = pct(group._start);
-    const ep = pct(group._end);
-    if (sp === null || ep === null) return '';
-    const w = Math.max(ep - sp, 2).toFixed(2);
+  // Linha única — cada meta ocupa 2 meses fixos (independente das datas reais do Aha!)
+  const MONTHS_PER_META = 2;
+  const bars = allGroups.map(group => {
+    const startMonth = (group.metaNum - 1) * MONTHS_PER_META;
+    const left  = (startMonth / 12 * 100).toFixed(2);
+    const width = (MONTHS_PER_META / 12 * 100).toFixed(2);
     const period = group.period ? ` · ${group.period}` : '';
-    const todayLine = todayPct !== null
-      ? `<div class="timeline-today-line" style="left:${todayPct.toFixed(2)}%"></div>`
-      : '';
-    return `
-      <div class="timeline-row" onclick="document.getElementById('meta-${group.year}-${group.metaNum}')?.scrollIntoView({behavior:'smooth',block:'start'})">
-        ${sepLines}
-        <div class="timeline-bar ${group.type}" style="left:${sp.toFixed(2)}%;width:${w}%">
-          Meta ${group.metaNum}${period}
-        </div>
-        ${todayLine}
-      </div>`;
+    return `<div class="timeline-bar ${group.type}" style="left:${left}%;width:${width}%"
+              onclick="document.getElementById('meta-${group.year}-${group.metaNum}')?.scrollIntoView({behavior:'smooth',block:'start'})"
+              title="Meta ${group.metaNum}${period}">
+              Meta ${group.metaNum}${period}
+            </div>`;
   }).join('');
+
+  const todayLine = todayPct !== null
+    ? `<div class="timeline-today-line" style="left:${todayPct.toFixed(2)}%"></div>`
+    : '';
 
   return `
     <div class="timeline-strip">
       <div class="timeline-strip-months">${monthLabels}${todayMarker}</div>
-      <div class="timeline-strip-rows">${rows}</div>
+      <div class="timeline-strip-rows">
+        <div class="timeline-row">
+          ${sepLines}${bars}${todayLine}
+        </div>
+      </div>
     </div>`;
 }
 
