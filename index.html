@@ -1839,7 +1839,7 @@ function renderMatrix(metas, squads, lookup) {
         <div class="internal-expand-wrap">
           <button class="btn-internal-toggle" onclick="toggleInternalEpics(this)" data-count="${internal.length}">
             <span class="toggle-chevron"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6l4 4 4-4"/></svg></span>
-            <span class="toggle-text">Ver mais detalhes (${internal.length})</span>
+            <span class="toggle-text">Ver detalhes internos (${internal.length})</span>
           </button>
           <div class="internal-epics-panel">
             ${internal.map(e => renderEpicRow(e, type)).join('')}
@@ -2071,7 +2071,7 @@ function renderMobileMatrix(metas, squads, lookup) {
         <div class="internal-expand-wrap">
           <button class="btn-internal-toggle" onclick="toggleInternalEpics(this)" data-count="${internal.length}">
             <span class="toggle-chevron"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6l4 4 4-4"/></svg></span>
-            <span class="toggle-text">Ver mais detalhes (${internal.length})</span>
+            <span class="toggle-text">Ver detalhes internos (${internal.length})</span>
           </button>
           <div class="internal-epics-panel">
             ${internal.map(e => renderEpicRow(e, type)).join('')}
@@ -2152,7 +2152,7 @@ function toggleInternalEpics(btn) {
   const isOpen = panel.classList.toggle('expanded');
   btn.classList.toggle('open', isOpen);
   const count     = btn.dataset.count;
-  const closedTxt = btn.dataset.label || `Ver mais detalhes (${count})`;
+  const closedTxt = btn.dataset.label || `Ver detalhes internos (${count})`;
   btn.querySelector('.toggle-text').textContent =
     isOpen ? 'Ocultar detalhes internos' : closedTxt;
 }
