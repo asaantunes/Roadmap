@@ -586,6 +586,7 @@ main { padding: 48px; }
   white-space: nowrap;
   flex-shrink: 0;
 }
+.risk-urgent    { background: var(--risk-red); color: #fff; }
 .risk-unplanned { background: #fce8ea; color: var(--risk-red); }
 .risk-atrisk    { background: #fef3e2; color: #c76b00; }
 .risk-long      { background: #fefae0; color: #997000; }
@@ -1590,6 +1591,7 @@ function getRisk(epic) {
   // Check alert from pivot (primary source)
   if (epic._alert) {
     const a = epic._alert.toLowerCase();
+    if (a.includes('urgente') || a.includes('urgent'))             return 'urgent';
     if (a.includes('não planeado') || a.includes('nao planeado')) return 'unplanned';
     if (a.includes('risco'))                                       return 'atrisk';
     if (a.includes('longa') || a.includes('long'))                 return 'long';
@@ -1597,6 +1599,7 @@ function getRisk(epic) {
   // Fallback: native delivery risk field
   if (epic.due_date_risk) {
     const r = epic.due_date_risk.toLowerCase();
+    if (r.includes('urgente') || r.includes('urgent'))         return 'urgent';
     if (r.includes('unplanned') || r.includes('não planeado')) return 'unplanned';
     if (r.includes('risk') || r.includes('risco'))             return 'atrisk';
     if (r.includes('long') || r.includes('longa'))             return 'long';
@@ -1607,6 +1610,7 @@ function getRisk(epic) {
 function riskBadge(risk) {
   if (!risk) return '';
   const map = {
+    urgent:    ['‼ Urgente',       'risk-urgent'],
     unplanned: ['⚠ Não planeado', 'risk-unplanned'],
     atrisk:    ['⚡ Em risco',     'risk-atrisk'],
     long:      ['⏳ Entrega longa','risk-long'],
