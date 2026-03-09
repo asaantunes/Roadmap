@@ -1383,7 +1383,7 @@ main { padding: 48px; }
 
 <script>
 // ─── CONFIG ────────────────────────────────────────────────────────
-const SITE_PASSWORD     = 'omnibees2024';
+const SITE_PASSWORD_HASH = 'c2699a769aba98702871029843836cabadcf19b9675f5fa00cefe19f8fa69b1a'; // SHA-256
 const WORKER_URL        = 'https://lucky-star-d742.ana-g-antunes.workers.dev';
 const PIVOT_ID_DEFAULT  = '7612677886557207494'; // fallback hardcoded
 const AUTO_REFRESH_MS   = 24 * 60 * 60 * 1000;  // 24 horas
@@ -1416,8 +1416,15 @@ function stopAutoRefresh() {
 }
 
 // ─── AUTH ──────────────────────────────────────────────────────────
-function doLogin() {
-  if (document.getElementById('loginInput').value === SITE_PASSWORD) {
+async function sha256(str) {
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
+  return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
+}
+
+async function doLogin() {
+  const input = document.getElementById('loginInput').value;
+  const hash  = await sha256(input);
+  if (hash === SITE_PASSWORD_HASH) {
     document.getElementById('loginScreen').classList.add('hidden');
     document.getElementById('app').style.display = 'block';
     const now = new Date();
