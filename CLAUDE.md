@@ -13,18 +13,19 @@
 
 ## Aha! — Pivot e Campos
 - **Pivot ID**: `7612677886557207494`
-- **Field definitions** (byFd[N] em loadData):
-  - `81` = release name (rows — parsed via hierarchy, não byFd)
-  - `82` = start_date
-  - `83` = end_date
-  - `84` = parking_lot ("Yes" / "No") — fd 84 é filho de fd 83 (4.º nível)
-  - `85` = Prio Produto (numérico, menor = mais prioritário)
-  - `86` = epic name (html_value contém link para extrair `_epicRef`)
-  - `87` = progress (%)
-  - `88` = risk / alert
-  - `89` = status — usa `rich_value.name` (não plain_value)
-  - `90` = Epic Visibility ("Highlight" | "Internal" | "")
-- **Hierarquia rows**: `nameRow(fd81) → startRow(fd82) → endRow(fd83) → plRow(fd84)`
+- **Field definitions — rows** (hierarquia de releases):
+  - `85` = release name
+  - `86` = start_date
+  - `87` = end_date
+  - `88` = parking_lot ("Yes" / "No") — fd 88 é filho de fd 87 (4.º nível)
+- **Field definitions — epics** (byFd[N] em cells["0"][releaseIdx][epicIdx]):
+  - `89` = Prio Produto (numérico, menor = mais prioritário)
+  - `90` = epic name (html_value contém link para extrair `_epicRef`)
+  - `91` = progress (%)
+  - `92` = risk / alert
+  - `93` = status — usa `rich_value.name` (não plain_value)
+  - `94` = Epic Visibility ("Highlight" | "Internal" | "")
+- **Hierarquia rows**: `nameRow(fd85) → startRow(fd86) → endRow(fd87) → plRow(fd88)`
 
 ## Estrutura de Dados — Épico
 ```js

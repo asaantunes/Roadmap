@@ -1463,12 +1463,11 @@ async function loadData() {
     const cells   = pivotData.cells || {};
     const topRows = pivotData.top_level_rows || [];
 
-    // field_definitions: 81=release name, 82=start_date, 83=end_date, 84=parking_lot
-    //                    85=priority (Prio Produto), 86=epic name, 87=progress, 88=risk, 89=status
-    //                    90=epic visibility ("Highlight" | "Internal" | "")
-    // Hierarquia rows: nameRow(fd81) → startRow(fd82) → endRow(fd83) → plRow(fd84)
-    // cells["0"][releaseIdx][epicIdx] = array de field-values (fd 85-90)
-    // Nota: fd89 (status) usa rich_value.name (não plain_value)
+    // field_definitions (rows):  85=release name, 86=start_date, 87=end_date, 88=parking_lot
+    // field_definitions (epics): 89=Prio Produto, 90=epic name, 91=progress, 92=risk, 93=status, 94=visibility
+    // Hierarquia rows: nameRow(fd85) → startRow(fd86) → endRow(fd87) → plRow(fd88)
+    // cells["0"][releaseIdx][epicIdx] = array de field-values (fd 89-94)
+    // Nota: fd93 (status) usa rich_value.name (não plain_value)
     const allEpicsGrid = cells['0'] || [];
 
     const allMetas = topRows.map((rowRef, idx) => {
@@ -1490,19 +1489,19 @@ async function loadData() {
         const byFd = {};
         for (const fv of fieldVals) byFd[fv.field_definition_ref] = fv;
 
-        // field_definitions: 85=priority, 86=epic name, 87=progress, 88=risk, 89=status, 90=visibility
-        const nameField  = byFd[86];
+        // field_definitions: 89=priority, 90=epic name, 91=progress, 92=risk, 93=status, 94=visibility
+        const nameField  = byFd[90];
         const epicId     = nameField?.id || null;
         if (!epicId || seenIds.has(epicId)) return null;
         seenIds.add(epicId);
 
         const epicName   = nameField?.plain_value || '';
         const epicRef    = (nameField?.html_value || '').match(/\/epics\/([\w-]+)/)?.[1] || null;
-        const prioRaw    = byFd[85]?.plain_value;
-        const progress   = byFd[87]?.plain_value ?? null;
-        const riskVal    = byFd[88]?.plain_value || null;
-        const statusName = byFd[89]?.rich_value?.name || byFd[89]?.plain_value || null;
-        const visRaw     = byFd[90]?.plain_value || '';
+        const prioRaw    = byFd[89]?.plain_value;
+        const progress   = byFd[91]?.plain_value ?? null;
+        const riskVal    = byFd[92]?.plain_value || null;
+        const statusName = byFd[93]?.rich_value?.name || byFd[93]?.plain_value || null;
+        const visRaw     = byFd[94]?.plain_value || '';
 
         return {
           name: epicName,
