@@ -14,17 +14,17 @@
 ## Aha! — Pivot e Campos
 - **Pivot ID**: `7612677886557207494`
 - **Field definitions** (byFd[N] em loadData):
-  - `81` = release name (rows — parsed via hierarchy, não byFd)
-  - `82` = start_date
-  - `83` = end_date
-  - `84` = parking_lot ("Yes" / "No") — fd 84 é filho de fd 83 (4.º nível)
-  - `85` = Prio Produto (numérico, menor = mais prioritário)
-  - `86` = epic name (html_value contém link para extrair `_epicRef`)
-  - `87` = progress (%)
-  - `88` = risk / alert
-  - `89` = status — usa `rich_value.name` (não plain_value)
-  - `90` = Epic Visibility ("Highlight" | "Internal" | "")
-- **Hierarquia rows**: `nameRow(fd81) → startRow(fd82) → endRow(fd83) → plRow(fd84)`
+  - `89` = release name (rows — parsed via hierarchy, não byFd)
+  - `90` = start_date
+  - `91` = end_date
+  - `92` = parking_lot ("Yes" / "No") — fd 92 é filho de fd 91 (4.º nível)
+  - `93` = Prio Produto (numérico, menor = mais prioritário)
+  - `94` = epic name (html_value contém link para extrair `_epicRef`)
+  - `95` = progress (%)
+  - `96` = risk / alert
+  - `97` = status — usa `rich_value.name` (não plain_value)
+  - `98` = Epic Visibility ("Highlight" | "Internal" | "")
+- **Hierarquia rows**: `nameRow(fd89) → startRow(fd90) → endRow(fd91) → plRow(fd92)`
 
 ## Estrutura de Dados — Épico
 ```js
