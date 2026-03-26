@@ -903,7 +903,7 @@ main { padding: 48px; }
 .highlights-scroll {
   display: flex; gap: 16px;
   overflow-x: auto;
-  scroll-snap-type: x mandatory;
+  scroll-snap-type: none;
   padding: 16px 24px 16px;
   scrollbar-width: thin; scrollbar-color: #c5c5c5 transparent;
 }
@@ -1805,6 +1805,20 @@ function renderAll({ past, current, future, parkingLotEpics = [] }) {
     + renderMatrix(allGroups, squads, lookup)
     + renderMobileMatrix(allGroups, squads, lookup);
   document.getElementById('content').innerHTML = html;
+  initHighlightsScroll();
+}
+
+// Posiciona o scroll dos destaques para mostrar metade do último card "passado"
+function initHighlightsScroll() {
+  setTimeout(() => {
+    const scroll = document.getElementById('highlightsScroll');
+    if (!scroll) return;
+    const pastCards = [...scroll.querySelectorAll('.hl-meta.past')];
+    if (!pastCards.length) return;
+    const last = pastCards.at(-1);
+    // Scroll até mostrar só a metade direita do último card passado
+    scroll.scrollLeft = last.offsetLeft + last.offsetWidth / 2;
+  }, 50);
 }
 
 function renderMatrix(metas, squads, lookup) {
@@ -2048,7 +2062,7 @@ function renderHighlights(metas, squads, lookup, parkingLotEpics = []) {
         <span class="highlights-note">Foco principal de cada squad · ordenados por prioridade</span>
         ${parkingBtn}
       </div>
-      <div class="highlights-scroll">${cards}</div>
+      <div class="highlights-scroll" id="highlightsScroll">${cards}</div>
       ${parkingPanel}
     </div>`;
 }
