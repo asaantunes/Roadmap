@@ -13,19 +13,12 @@
 
 ## Aha! — Pivot e Campos
 - **Pivot ID**: `7612677886557207494`
-- **Field definitions — rows** (hierarquia de releases):
-  - `93` = release name
-  - `94` = start_date
-  - `95` = end_date
-  - `96` = parking_lot ("Yes" / "No") — fd 96 é filho de fd 95 (4.º nível)
-- **Field definitions — epics** (byFd[N] em cells["0"][releaseIdx][epicIdx]):
-  - `97` = Prio Produto (numérico, menor = mais prioritário)
-  - `98` = epic name (html_value contém link para extrair `_epicRef`)
-  - `99` = progress (%)
-  - `100` = risk / alert
-  - `101` = status — usa `rich_value.name` ou `plain_value`
-  - `102` = Epic Visibility ("Highlight" | "Internal" | "")
-- **Hierarquia rows**: `nameRow(fd93) → startRow(fd94) → endRow(fd95) → plRow(fd96)`
+- **Field refs — auto-resolvidos** via `field_definitions` da resposta da pivot (resistente a rebuilds):
+  - Rows: `releases.name`, `releases.start_date`, `releases.end_date`, `releases.parking_lot`
+  - Epics: `epics.name`, `epics.progress`, `epics.status`, `epics.manual_risk_comment`
+  - Custom fields (por título): `"Prio Produto"`, `"Epic Visibility"`
+- **Lookup**: objeto `FD` em `loadData()` com chaves `epicName`, `epicProgress`, `epicStatus`, `epicRisk`, `epicPrio`, `epicVisibility`
+- **Hierarquia rows**: segue `child_refs[0]` a 4 níveis (nameRow → startRow → endRow → plRow) — não depende de refs numéricos
 
 ## Estrutura de Dados — Épico
 ```js

@@ -1463,12 +1463,22 @@ async function loadData() {
     const cells   = pivotData.cells || {};
     const topRows = pivotData.top_level_rows || [];
 
-    // field_definitions: 93=release name, 94=start_date, 95=end_date, 96=parking_lot
-    //                    97=priority (Prio Produto), 98=epic name, 99=progress, 100=risk, 101=status
-    //                    102=epic visibility ("Highlight" | "Internal" | "")
-    // Hierarquia rows: nameRow(fd93) → startRow(fd94) → endRow(fd95) → plRow(fd96)
-    // cells["0"][releaseIdx][epicIdx] = array de field-values (fd 97-102)
-    // Nota: fd101 (status) usa rich_value.name ou plain_value
+    // Resolver field refs dinamicamente a partir de field_definitions (resistente a rebuilds da pivot)
+    const _fdDefs = pivotData.field_definitions || {};
+    const _fdByKey = {};
+    Object.values(_fdDefs).forEach(d => {
+      _fdByKey[`${d.table}.${d.field}`] = d.ref;
+      if (d.title) _fdByKey[`title.${d.title.toLowerCase()}`] = d.ref;
+    });
+    const FD = {
+      epicName:       _fdByKey['epics.name'],
+      epicProgress:   _fdByKey['epics.progress'],
+      epicStatus:     _fdByKey['epics.status'],
+      epicRisk:       _fdByKey['epics.manual_risk_comment'],
+      epicPrio:       _fdByKey['title.prio produto'],
+      epicVisibility: _fdByKey['title.epic visibility'],
+    };
+
     const allEpicsGrid = cells['0'] || [];
 
     const allMetas = topRows.map((rowRef, idx) => {
@@ -1490,19 +1500,18 @@ async function loadData() {
         const byFd = {};
         for (const fv of fieldVals) byFd[fv.field_definition_ref] = fv;
 
-        // field_definitions: 97=priority, 98=epic name, 99=progress, 100=risk, 101=status, 102=visibility
-        const nameField  = byFd[98];
+        const nameField  = byFd[FD.epicName];
         const epicId     = nameField?.id || null;
         if (!epicId || seenIds.has(epicId)) return null;
         seenIds.add(epicId);
 
         const epicName   = nameField?.plain_value || '';
         const epicRef    = (nameField?.html_value || '').match(/\/epics\/([\w-]+)/)?.[1] || null;
-        const prioRaw    = byFd[97]?.plain_value;
-        const progress   = byFd[99]?.plain_value ?? null;
-        const riskVal    = byFd[100]?.plain_value || null;
-        const statusName = byFd[101]?.rich_value?.name || byFd[101]?.plain_value || null;
-        const visRaw     = byFd[102]?.plain_value || '';
+        const prioRaw    = byFd[FD.epicPrio]?.plain_value;
+        const progress   = byFd[FD.epicProgress]?.plain_value ?? null;
+        const riskVal    = byFd[FD.epicRisk]?.plain_value || null;
+        const statusName = byFd[FD.epicStatus]?.rich_value?.name || byFd[FD.epicStatus]?.plain_value || null;
+        const visRaw     = byFd[FD.epicVisibility]?.plain_value || '';
 
         return {
           name: epicName,
