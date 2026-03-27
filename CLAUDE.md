@@ -81,7 +81,7 @@ default desconhecido → group 9
 - Épicos com nome a terminar em `-` estão ocultos na vista resumida (são "épicos de suporte")
 
 ## Commits Recentes (main)
-- `98ab007` — CTA 'Ver review de entregas' no card da Meta 1
-- `16265fc` — Altura dos cards: calc(100vh - 160px)
-- `4bad61f` — Badges de risco nos destaques
-- `ec74e4a` — Epic Visibility field (fd 66) + internal epics expansível
+- `656bba6` — Highlights: scroll inicial posicionado a mostrar metade do último card passado
+- `2980396` — loadData: resolver field refs dinamicamente via field_definitions da pivot
+- `c2419ca` — Fix: field refs 89-98 → 93-102 após rebuild da pivot Aha!
+- `0466e0d` — Risk badges: suporte para tag 'urgente'
