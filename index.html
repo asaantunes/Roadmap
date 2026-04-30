@@ -1551,7 +1551,7 @@ async function loadData() {
     for (const group of allGroups) {
       const s = group._start || new Date(0);
       const e = group._end   || new Date(9999,0);
-      if (e < today)       past.push(group);
+      if (e <= today)      past.push(group);
       else if (s <= today) current.push(group);
       else                 future.push(group);
     }
@@ -1980,10 +1980,14 @@ function renderHighlights(metas, squads, lookup, parkingLotEpics = []) {
 
     if (!anyEpic) return '';
 
-    const reviewCta = (g.metaNum === 1 && g.type === 'past')
+    const reportUrls = {
+      1: 'https://aha-conector.vercel.app/public/snapshots/98605584-d0c8-429e-921c-dcb8aabb7337',
+      2: 'https://aha-conector.vercel.app/public/snapshots/b93d6467-d8ca-46ac-aacb-7693c6f2623e',
+    };
+    const reviewCta = (g.type === 'past' && reportUrls[g.metaNum])
       ? `<div class="hl-meta-footer">
            <a class="hl-review-btn"
-              href="https://aha-conector.vercel.app/public/snapshots/98605584-d0c8-429e-921c-dcb8aabb7337"
+              href="${reportUrls[g.metaNum]}"
               target="_blank" rel="noopener noreferrer">
              Ver relatório de fecho de meta ↗
            </a>
