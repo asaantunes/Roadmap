@@ -1549,7 +1549,7 @@ async function loadData() {
 
     // 2. Agrupar por meta e classificar
     const allGroups = groupMetasByNumber(metas);
-    const today = new Date(); today.setHours(0,0,0,0);
+    const today = new Date(); today.setHours(23,59,59,999);
     const past = [], current = [], future = [];
     for (const group of allGroups) {
       const s = group._start || new Date(0);
