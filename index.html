@@ -927,6 +927,26 @@ main { padding: 48px; }
 }
 .hl-meta.past { opacity: .85; }
 
+/* Placeholder card (meta ainda sem épicos) */
+.hl-meta-placeholder { background: #fafafa; border-style: dashed; }
+.hl-empty {
+  flex: 1;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  padding: 32px 20px;
+  text-align: center;
+  color: #6b7280;
+  gap: 8px;
+}
+.hl-empty-icon { font-size: 1.8rem; opacity: .55; }
+.hl-empty-title {
+  font-family: 'Montserrat', sans-serif;
+  font-size: .85rem; font-weight: 700;
+  color: #4A5568;
+  letter-spacing: -.2px;
+}
+.hl-empty-sub { font-size: .72rem; line-height: 1.4; color: #9ca3af; max-width: 220px; }
+
 /* Footer CTA (ex: review de entregas) */
 .hl-meta-footer {
   flex-shrink: 0;
@@ -1549,6 +1569,25 @@ async function loadData() {
 
     // 2. Agrupar por meta e classificar
     const allGroups = groupMetasByNumber(metas);
+
+    // Injectar placeholder Meta 5 se ainda não existir (cartão sem épicos)
+    const latestYear = allGroups.length
+      ? Math.max(...allGroups.map(g => g.year))
+      : new Date().getFullYear();
+    if (!allGroups.some(g => g.year === latestYear && g.metaNum === 5)) {
+      allGroups.push({
+        metaNum: 5,
+        year: latestYear,
+        key: `${latestYear}-05`,
+        period: META_PERIODS[4],
+        squads: [],
+        _start: new Date(latestYear, 8, 1),
+        _end: new Date(latestYear, 9, 31),
+        _isPlaceholder: true,
+      });
+      allGroups.sort((a, b) => a.year !== b.year ? a.year - b.year : a.metaNum - b.metaNum);
+    }
+
     const today = new Date(); today.setHours(23,59,59,999);
     const past = [], current = [], future = [];
     for (const group of allGroups) {
@@ -1811,7 +1850,9 @@ function renderAll({ past, current, future, parkingLotEpics = [] }) {
   initHighlightsScroll();
 }
 
-// Posiciona o scroll dos destaques para mostrar metade do último card "passado"
+// Posiciona o scroll dos destaques: Meta 2 (último card "past") no início da
+// área visível, deixando uma fração da Meta 1 visível à esquerda e cards
+// futuros (incl. Meta 5) à direita.
 function initHighlightsScroll() {
   setTimeout(() => {
     const scroll = document.getElementById('highlightsScroll');
@@ -1819,8 +1860,9 @@ function initHighlightsScroll() {
     const pastCards = [...scroll.querySelectorAll('.hl-meta.past')];
     if (!pastCards.length) return;
     const last = pastCards.at(-1);
-    // Scroll até mostrar só a metade direita do último card passado
-    scroll.scrollLeft = last.offsetLeft + last.offsetWidth / 2;
+    // Mostra ~15% do card anterior à esquerda como dica de contexto
+    const peek = last.offsetWidth * 0.15;
+    scroll.scrollLeft = Math.max(0, last.offsetLeft - peek);
   }, 50);
 }
 
@@ -1928,6 +1970,26 @@ function renderHighlights(metas, squads, lookup, parkingLotEpics = []) {
 
   const cards = metas.map(g => {
     const [pillClass, pillLabel] = pillMap[g.type];
+
+    // Placeholder card: meta sem épicos definidos ainda (planeamento futuro)
+    if (g._isPlaceholder) {
+      const dates = formatDateRange(g._start, g._end);
+      return `
+        <div class="hl-meta ${g.type} hl-meta-placeholder">
+          <div class="hl-meta-head ${g.type}">
+            <span class="meta-col-num">Meta ${g.metaNum}</span>
+            <span class="meta-col-period">${g.period} ${g.year}</span>
+            <span class="meta-col-dates">${dates}</span>
+            <span class="meta-pill ${pillClass}">${pillLabel}</span>
+          </div>
+          <div class="hl-empty">
+            <div class="hl-empty-icon">🗓️</div>
+            <div class="hl-empty-title">Em planeamento</div>
+            <div class="hl-empty-sub">Os épicos desta meta ainda não foram definidos.</div>
+          </div>
+        </div>`;
+    }
+
     let anyEpic = false;
 
     const squadBlocks = squads.map(squad => {
