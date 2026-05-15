@@ -1494,12 +1494,15 @@ async function loadData() {
       if (d.title) _fdByKey[`title.${d.title.toLowerCase()}`] = d.ref;
     });
     const FD = {
-      epicName:       _fdByKey['epics.name'],
-      epicProgress:   _fdByKey['epics.progress'],
-      epicStatus:     _fdByKey['epics.status'],
-      epicRisk:       _fdByKey['epics.manual_risk_comment'],
-      epicPrio:       _fdByKey['title.prio produto'],
-      epicVisibility: _fdByKey['title.epic visibility'],
+      epicName:         _fdByKey['epics.name'],
+      epicProgress:     _fdByKey['epics.progress'],
+      epicStatus:       _fdByKey['epics.status'],
+      // manual_risk_comment passou a ter APENAS "em risco de entrega"
+      epicRisk:         _fdByKey['epics.manual_risk_comment'],
+      // Novo campo "Tipo de Entrega" — traz Urgente, Não planeado, Entrega longa
+      epicDeliveryType: _fdByKey['title.tipo de entrega'],
+      epicPrio:         _fdByKey['title.prio produto'],
+      epicVisibility:   _fdByKey['title.epic visibility'],
     };
 
     const allEpicsGrid = cells['0'] || [];
@@ -1530,11 +1533,12 @@ async function loadData() {
 
         const epicName   = nameField?.plain_value || '';
         const epicRef    = (nameField?.html_value || '').match(/\/epics\/([\w-]+)/)?.[1] || null;
-        const prioRaw    = byFd[FD.epicPrio]?.plain_value;
-        const progress   = byFd[FD.epicProgress]?.plain_value ?? null;
-        const riskVal    = byFd[FD.epicRisk]?.plain_value || null;
-        const statusName = byFd[FD.epicStatus]?.rich_value?.name || byFd[FD.epicStatus]?.plain_value || null;
-        const visRaw     = byFd[FD.epicVisibility]?.plain_value || '';
+        const prioRaw      = byFd[FD.epicPrio]?.plain_value;
+        const progress     = byFd[FD.epicProgress]?.plain_value ?? null;
+        const riskVal      = byFd[FD.epicRisk]?.plain_value || null;
+        const deliveryType = byFd[FD.epicDeliveryType]?.plain_value || null;
+        const statusName   = byFd[FD.epicStatus]?.rich_value?.name || byFd[FD.epicStatus]?.plain_value || null;
+        const visRaw       = byFd[FD.epicVisibility]?.plain_value || '';
 
         return {
           name: epicName,
@@ -1543,7 +1547,8 @@ async function loadData() {
           _priority: (prioRaw != null && prioRaw !== '') ? Number(prioRaw) : null,
           progress: progress != null ? Math.round(Number(progress)) : null,
           workflow_status: statusName ? { name: statusName } : null,
-          _alert: riskVal,
+          _alert: riskVal,                  // só "em risco de entrega"
+          _deliveryType: deliveryType,      // urgente / não planeado / entrega longa
           _visibility: visRaw.toLowerCase(), // 'highlight' | 'internal' | ''
         };
       }).filter(e => e && e.name);
@@ -1638,16 +1643,24 @@ function getStatusInfo(statusName) {
 }
 
 // ─── DELIVERY RISK ─────────────────────────────────────────────────
+// Fonte de dados (após divisão do Aha!):
+//   - epic._deliveryType  → "Tipo de Entrega" (urgente, não planeado, longa)
+//   - epic._alert         → manual_risk_comment (apenas "em risco de entrega")
+// Ordem de prioridade: urgente > não planeado > em risco > entrega longa
 function getRisk(epic) {
-  // Check alert from pivot (primary source)
+  // 1) Novo campo "Tipo de Entrega" — urgente / não planeado / entrega longa
+  if (epic._deliveryType) {
+    const t = epic._deliveryType.toLowerCase();
+    if (t.includes('urgente') || t.includes('urgent'))            return 'urgent';
+    if (t.includes('não planeado') || t.includes('nao planeado')) return 'unplanned';
+    if (t.includes('longa') || t.includes('long'))                return 'long';
+  }
+  // 2) Campo antigo manual_risk_comment — agora só "em risco"
   if (epic._alert) {
     const a = epic._alert.toLowerCase();
-    if (a.includes('urgente') || a.includes('urgent'))             return 'urgent';
-    if (a.includes('não planeado') || a.includes('nao planeado')) return 'unplanned';
-    if (a.includes('risco'))                                       return 'atrisk';
-    if (a.includes('longa') || a.includes('long'))                 return 'long';
+    if (a.includes('risco') || a.includes('risk')) return 'atrisk';
   }
-  // Fallback: native delivery risk field
+  // 3) Fallback: native delivery risk field (caso a pivot venha sem _deliveryType)
   if (epic.due_date_risk) {
     const r = epic.due_date_risk.toLowerCase();
     if (r.includes('urgente') || r.includes('urgent'))         return 'urgent';
